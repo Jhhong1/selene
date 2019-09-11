@@ -1,0 +1,10 @@
+/node_modules
+/dist
+.gitignore
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
