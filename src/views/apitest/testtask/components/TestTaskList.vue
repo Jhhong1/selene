@@ -1,0 +1,234 @@
+<template>
+  <div>
+    <router-link tag="el-button" class="el-button--primary el-button--mini p-button" :to="{name: 'AddTestTask', query: $route.query}">添加测试任务</router-link>
+    <el-table class="table-class td" :data="taskList">
+      <el-table-column label="名称" min-width="100">
+        <template slot-scope="scope">
+          <router-link tag="el-button" :to="{ name: 'TestTaskDetail', params: { name: scope.row.name, id: scope.row.id }, query: $route.query }" class="el-button--text">{{scope.row.name}}</router-link>
+        </template>
+      </el-table-column>
+      <el-table-column label="描述信息" min-width="150">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top-start">
+           <p>{{ scope.row.description }}</p>
+           <div slot="reference" class="name-wrapper">
+             {{ scope.row.description }}
+           </div>
+         </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" min-width="150">
+        <template slot-scope="scope">
+         <template v-if="scope.row.status === 'Done'">
+           <tag-done></tag-done>
+         </template>
+         <template v-else-if="scope.row.status === 'Starting'">
+           <tag-running></tag-running>
+         </template>
+         <template v-else>
+           <tag-not-run></tag-not-run>
+         </template>
+       </template>
+      </el-table-column>
+      <el-table-column label="结果" min-width="50">
+        <template slot-scope="scope">
+         <template v-if="scope.row.result === 'Failed'">
+           <el-popover trigger="hover" placement="top-start">
+             <p>{{scope.row.errorMessage}}</p>
+             <div slot="reference">
+               <tag-failed></tag-failed>
+             </div>
+           </el-popover>
+         </template>
+         <template v-else-if="scope.row.result === 'Succeed'">
+           <tag-success></tag-success>
+         </template>
+         <template v-else>-</template>
+       </template>
+      </el-table-column>
+      <el-table-column label="操作" min-width="100">
+        <template slot-scope="scope">
+          <router-link tag="el-button" :to="{ name: 'TestTaskDetail', params: { name: scope.row.name, id: scope.row.id}, query: $route.query}" class="el-button--text el-button--mini">查看</router-link>
+          <el-button type="text" size="mini" @click="choices(scope.row.id)">执行</el-button>
+          <el-button type="text" size="mini" @click="deleteRow(scope.$index, taskList, scope.row.id)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination class="pagination-class"
+     background
+     layout="total, sizes, prev, pager, next"
+     :total="count"
+     :page-sizes="pageSizes"
+     :page-size="pageSize"
+     :current-page="currentPage"
+     @size-change="handleSizeChange"
+     @current-change="currentChange">
+   </el-pagination>
+   <el-dialog
+    title="执行"
+    :close-on-click-modal=false
+    :visible.sync="dialogVisible"
+    :before-close="clearSelect"
+    class="dialog-header"
+   >
+    <el-form :model="labels" ref="labels">
+      <el-form-item label="标签" :label-width="formLabelWidth" prop="tags">
+        <el-select v-model="labels.tags" placeholder="请选择标签" class="select_class">
+          <el-option label="无" value=""></el-option>
+          <el-option label="all" value="all"></el-option>
+          <el-option label="bat" value="bat"></el-option>
+          <el-option label="smoke" value="smoke"></el-option>
+          <el-option label="regression" value="regression"></el-option>
+          <el-option label="container" value="container"></el-option>
+          <el-option label="maintenance" value="maintenance"></el-option>
+          <el-option label="alarm" value="alarm"></el-option>
+          <el-option label="scene" value="scene"></el-option>
+          <el-option label="devops" value="devops"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item size="mini" style="text-align: right">
+        <el-button type="info" plain size="mini" @click="cancel('labels')">取消</el-button>
+        <el-button type="primary" plain size="mini" @click="submit('labels')">确定</el-button>
+      </el-form-item>
+    </el-form>
+   </el-dialog>
+  </div>
+</template>
+<script>
+export default {
+  name: 'TestTaskList',
+  data () {
+    return {
+      count: null,
+      pageSizes: [10, 20, 50],
+      pageSize: 10,
+      currentPage: 1,
+      taskList: [],
+      projectName: this.$route.query.project_name,
+      dialogVisible: false,
+      formLabelWidth: '45px',
+      labels: {
+        tags: ''
+      },
+      taskId: null
+    }
+  },
+  methods: {
+    currentChange (val) {
+      this.currentPage = val
+      this.getTaskList()
+    },
+    handleSizeChange (val) {
+      this.pageSize = val
+      this.getTaskList()
+    },
+    getTaskList () {
+      this.$api.api.getTaskList(this.currentPage, this.pageSize, this.projectName).then(
+        (response) => {
+          this.taskList = response.data.results
+          this.count = response.data.count
+        }
+      ).catch(
+        (error) => {
+          console.log(error)
+        }
+      )
+    },
+    choices (id) {
+      this.taskId = id
+      this.dialogVisible = true
+    },
+    deleteTask (taskId) {
+      this.$api.api.deleteTestTask(taskId).then(
+        (response) => {
+          this.$message({
+            showClose: true,
+            message: '删除测试任务成功',
+            type: 'success'
+          })
+        }
+      ).catch(
+        (error) => {
+          console.log(error)
+        }
+      )
+    },
+    deleteRow (index, rows, taskId) {
+      const h = this.$createElement
+      this.$msgbox({
+        title: '提示',
+        message: h('p', null, [
+          h('span', null, '确定删除该测试任务吗？')
+        ]),
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            this.deleteTask(taskId)
+            done()
+          } else {
+            done()
+          }
+        }
+      }).then(() => {
+        rows.splice(index, 1)
+      }).catch(() => {})
+    },
+    timer () {
+      return setTimeout(
+        () => {
+          this.getTaskList()
+        }, 2000
+      )
+    },
+    clearSelect () {
+      this.taskId = null
+      this.$refs['labels'].resetFields()
+      this.dialogVisible = false
+    },
+    cancel (formName) {
+      this.taskId = null
+      this.$refs[formName].resetFields()
+      this.dialogVisible = false
+    },
+    submit (formName) {
+      let payload = {
+        'level': 'task',
+        'tasks': this.taskId,
+        'tags': this.labels.tags
+      }
+      this.$api.api.executeCase(JSON.stringify(payload), this.projectName).then(
+        (response) => {
+          this.taskId = null
+          this.$refs[formName].resetFields()
+          this.dialogVisible = false
+        }
+      ).catch(
+        (error) => {
+          console.log(error)
+        }
+      )
+    }
+  },
+  created () {
+    this.getTaskList()
+  },
+  watch: {
+    taskList () {
+      this.timer()
+    }
+  },
+  mounted () {
+  },
+  destroyed () {
+    clearTimeout(this.timer())
+  }
+}
+</script>
+
+<style scoped>
+.dialog-header >>> .el-dialog__header {
+  text-align: left
+}
+</style>

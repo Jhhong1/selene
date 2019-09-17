@@ -1,0 +1,151 @@
+.bg-color {
+    background-color: #f9fafd;
+}
+.bg-purple-light {
+    background: #e5e9f2;
+    text-align: left;
+    padding-left: 10px;
+    height: 30px;
+    line-height: 30px;
+}
+.col-class {
+    border: 1px dashed skyblue;
+    color: skyblue;
+    margin-top: 10px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 4px;
+}
+:hover.col-class {
+    background-color: #e8f3f7;
+    cursor: pointer;
+}
+.add-class {
+    padding: 0;
+}
+.select_class {
+    display: block;
+}
+.asserts-row {
+    /*border-top: 1px rgb(219, 219, 222) dashed;*/
+    border-bottom: 1px rgb(219, 219, 222) dashed;
+    background-color: white;
+    height: 35px;
+    text-align: left;
+    padding-left: 10px;
+    line-height: 35px;
+}
+.el-form__item {
+    margin-bottom: 18px;
+}
+.no-data-show {
+    line-height: 40px;
+    text-align: center;
+    height: 40px;
+}
+.button-position {
+    position: relative;
+    margin-left: 88%;
+}
+.testcase {
+    position: relative;
+    float: left;
+    /*margin-bottom: 20px;*/
+    /*top: 60px;*/
+}
+.bread {
+    position: relative;
+    height: 40px;
+    line-height: 40px;
+    background-color: white;
+    padding-left: 20px;
+    top: 0px;
+    margin-bottom: 20px;
+}
+.case-form {
+    border: 1px solid #f9fafd;
+    margin: 20px 20px 0 20px;
+    padding: 30px 40px 0 0;
+    background-color: white;
+}
+
+.p-button {
+    margin-top: 8px;
+    float: left;
+}
+.table-class {
+    position: relative;
+    top: 20px;
+}
+.pagination-class {
+    margin-top: 50px;
+    float: right;
+    margin-bottom: 20px;
+}
+.el-button__text {
+    color: #606266;
+    width: 70.5%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+}
+.row-class {
+    margin-bottom: 10px;
+}
+.col-th {
+    padding: 20px 0;
+}
+.col-td {
+    padding: 16px 0;
+}
+.clearfix {
+    text-align: left;
+}
+.el--swith {
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+    width: 40px;
+}
+.method-class {
+    display: block;
+}
+.test-left {
+    text-align: left;
+    font-size: 14px;
+}
+.cl-line-high {
+    line-height: 40px;
+    height: 40px;
+}
+.tag-success-class {
+    height: 20px;
+    line-height: 20px;
+    width: 50px;
+    color: white;
+    background-color: rgb(27, 179, 147);
+    border-radius: 12px;
+    font-size: 10px;
+    text-align: center;
+}
+.tag-failed-class {
+    height: 20px;
+    line-height: 20px;
+    width: 50px;
+    color: white;
+    background-color: red;
+    border-radius: 12px;
+    font-size: 10px;
+    text-align: center;
+}
+.tag-not-class {
+    height: 20px;
+    line-height: 20px;
+    width: 50px;
+    color: white;
+    background-color: rgb(181, 183, 183);
+    border-radius: 12px;
+    font-size: 10px;
+    text-align: center;
+}
