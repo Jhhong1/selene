@@ -20,6 +20,6 @@ export default {
     [LOG_OUT]() {
         removeStore('username')
         removeStore('token')
-        removeStore('apiCaseLists')
+        removeStore('project')
     }
 }

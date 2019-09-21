@@ -149,3 +149,7 @@
     font-size: 10px;
     text-align: center;
 }
+.rotating {
+    transform: none;
+    -webkit-transform: rotate(90deg);
+}

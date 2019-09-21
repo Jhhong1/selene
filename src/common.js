@@ -1,5 +1,7 @@
+import { Notification } from 'element-ui'
+
 export function success(msg) {
-    this.$notify({
+    Notification({
         title: '成功',
         message: msg,
         type: 'success'
@@ -7,7 +9,7 @@ export function success(msg) {
 }
 
 export function error(msg) {
-    this.$notify({
+    Notification({
         title: '失败',
         message: msg,
         type: 'error'

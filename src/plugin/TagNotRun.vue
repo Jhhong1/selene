@@ -1,12 +1,12 @@
 <template>
-    <div>
-        <router-view></router-view>
+    <div class="tag-not-class">
+        未执行
     </div>
 </template>
 
 <script>
 export default {
-    name: 'TestCase'
+    name: 'TagNotRun'
 }
 </script>
 

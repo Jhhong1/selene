@@ -1,57 +1,79 @@
 <template>
     <div class="home">
         <el-container>
-            <el-header>
-                <div class="image-container">
-                    <el-image :src="url" fit="fill" style="height: 60px; width: 160px"></el-image>
-                </div>
-                <template v-if="$route.path.indexOf('project') > 0 && $route.path.indexOf('addproject') < 0">
-                    <el-select v-model="value" filterable size="mini" style="float: left;margin-left: 20px;width: 120px" @change="handleChange">
-                        <el-option v-for="item in projectList" :key="item.name" :label="item.name" :value="item.name"></el-option>
-                    </el-select>
-                </template>
-                <el-dropdown>
-                    <i class="el-icon-setting"></i>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>
-                            <el-button type="text" @click="dialogFormVisible = true">更改密码</el-button>
-                        </el-dropdown-item>
-                        <template v-if="$route.fullPath !== '/home/'">
+            <template v-if="$route.path.indexOf('apitest') > 0">
+                <el-aside style="width: 200px">
+                    <el-menu :default-active="activeNav" router class="sidebar">
+                        <el-submenu v-for="(menu, mindex) in navigate" :index="menu.path" :key="mindex">
+                            <template slot="title">
+                                <i :class="menu.icon"></i>
+                                {{ menu.meta.title }}
+                            </template>
+                            <el-menu-item
+                                v-for="(item, ind) in menu.children"
+                                :key="ind"
+                                :index="$route.matched[2].path + '/' + item.path + '?project_name=' + $route.query.project_name"
+                                @click="highLightNav"
+                            >
+                                {{ item.meta.title }}
+                            </el-menu-item>
+                        </el-submenu>
+                    </el-menu>
+                </el-aside>
+            </template>
+            <el-container>
+                <el-header>
+                    <div class="image-container">
+                        <el-image :src="url" fit="fill" style="height: 60px; width: 160px"></el-image>
+                    </div>
+                    <template v-if="$route.path.indexOf('project') > 0 && $route.path.indexOf('addproject') < 0">
+                        <el-select v-model="value" filterable size="mini" style="float: left;margin-left: 20px;width: 120px" @change="handleChange">
+                            <el-option v-for="item in projectList" :key="item.name" :label="item.name" :value="item.name"></el-option>
+                        </el-select>
+                    </template>
+                    <el-dropdown>
+                        <i class="el-icon-setting"></i>
+                        <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>
-                                <router-link tag="el-button" :to="{ name: 'ProjectList' }" class="el-button--text">项目</router-link>
+                                <el-button type="text" @click="dialogFormVisible = true">更改密码</el-button>
                             </el-dropdown-item>
-                        </template>
-                        <el-dropdown-item>
-                            <Logout></Logout>
-                        </el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-                <span style="margin-left: 5px">{{ username }}</span>
-            </el-header>
-            <el-main>
-                <router-view></router-view>
-            </el-main>
+                            <template v-if="$route.fullPath !== '/home/'">
+                                <el-dropdown-item>
+                                    <router-link tag="el-button" :to="{ name: 'ProjectList' }" class="el-button--text">项目</router-link>
+                                </el-dropdown-item>
+                            </template>
+                            <el-dropdown-item>
+                                <Logout></Logout>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <span style="margin-left: 5px">{{ username }}</span>
+                </el-header>
+                <el-main>
+                    <router-view></router-view>
+                </el-main>
+            </el-container>
+            <el-dialog
+                :visible.sync="dialogFormVisible"
+                :before-close="handleClose"
+                :close-on-click-modal="false"
+                title="更改密码"
+                class="el-dialog_body el-dialog_footer dialog-header"
+            >
+                <el-form :model="form" status-icon :rules="rules" ref="form">
+                    <el-form-item label="新密码" :label-width="formLabelWidth" prop="password">
+                        <el-input type="password" v-model="form.password" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="确认密码" :label-width="formLabelWidth" prop="repassword">
+                        <el-input type="password" v-model="form.repassword" auto-complete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="cancel">取 消</el-button>
+                    <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+                </div>
+            </el-dialog>
         </el-container>
-        <el-dialog
-            :visible.sync="dialogFormVisible"
-            :before-close="handleClose"
-            :close-on-click-modal="false"
-            title="更改密码"
-            class="el-dialog_body el-dialog_footer dialog-header"
-        >
-            <el-form :model="form" status-icon :rules="rules" ref="form">
-                <el-form-item label="新密码" :label-width="formLabelWidth" prop="password">
-                    <el-input type="password" v-model="form.password" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="确认密码" :label-width="formLabelWidth" prop="repassword">
-                    <el-input type="password" v-model="form.repassword" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="cancel">取 消</el-button>
-                <el-button type="primary" @click="submitForm('form')">确 定</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 <script>
@@ -90,9 +112,10 @@ export default {
             }
         }
         return {
+            activeNav: '/home/project/apitest/config/?project_name=' + this.$route.query.project_name,
             username: this.$store.state.username,
             dialogFormVisible: false,
-            value: null,
+            value: this.$route.query.project_name,
             url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
             projectList: this.projects(),
             form: {
@@ -138,15 +161,16 @@ export default {
             this.dialogFormVisible = false
         },
         projects() {
-            if (this.$store.state.project.length === 0) {
-                let res = JSON.parse(window.localStorage.getItem('project'))
-                this.$store.commit('STORE_PROJECT', res)
-            }
             return this.$store.state.project
         },
         handleChange() {
             let path = this.$route.path + '?project_name=' + this.value
             this.$router.push(path)
+        },
+        highLightNav() {
+            if (this.$route.matched.length > 3) {
+                this.activeNav = this.$route.matched[3].path + '?project_name=' + this.$route.query.project_name
+            }
         }
     },
     watch: {
@@ -154,14 +178,39 @@ export default {
             this.value = this.$route.query.project_name
         }
     },
-    mounted() {}
+    computed: {
+        navigate() {
+            let navList = []
+            let navs1 = null
+            let routeList = this.$router.options.routes
+            for (let i = 0, len = routeList.length; i < len; i++) {
+                if (routeList[i].hasOwnProperty('children')) {
+                    navs1 = routeList[i].children
+                }
+            }
+
+            for (let j = 0, len = navs1.length; j < len; j++) {
+                if (navs1[j].hasOwnProperty('navBar') && navs1[j].hasOwnProperty('children')) {
+                    navList = navs1[j].children
+                }
+            }
+            return navList
+        }
+    },
+    mounted() {
+        this.highLightNav()
+    },
+    updated() {
+        this.highLightNav()
+    }
 }
 </script>
 <style scoped>
 .el-container {
     position: absolute;
     min-height: 800px;
-    overflow: hidden;
+    min-width: 1200px;
+    overflow: auto;
     border: 1px solid #eee;
     top: 0px;
     bottom: 0px;
@@ -175,15 +224,8 @@ export default {
     color: #ffffff;
     text-align: right;
     line-height: 60px;
-    z-index: 99;
+    z-index: 1001;
 }
-
-/* .el-aside {
-    background-color: #d3dce6;
-    color: #333;
-    text-align: center;
-    line-height: 200px;
-} */
 
 .el-main {
     background-color: #e9eef3;
@@ -217,5 +259,12 @@ export default {
     float: left;
     height: 60px;
     width: 160px;
+}
+.sidebar {
+    min-height: 800px;
+    height: 100%;
+    z-index: 1000;
+    padding-bottom: 10px;
+    margin-bottom: -10px;
 }
 </style>

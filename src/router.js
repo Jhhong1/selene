@@ -7,6 +7,7 @@ import ForgetPassword from '@/views/forgetpassword/ForgetPassword'
 import ResetPassword from '@/views/resetpassword/ResetPassword'
 
 import Home from './views/Home.vue'
+
 import ProjectList from '@/views/project/components/ProjectList'
 import AddProject from '@/views/project/components/AddProject'
 import ProjectDetail from '@/views/project/components/ProjectDetail'
@@ -14,8 +15,31 @@ import ProjectDetail from '@/views/project/components/ProjectDetail'
 import ApiTest from '@/views/apitest/ApiTest'
 
 import GlobalConfig from '@/views/apitest/globalconfig/GlobalConfig'
+import GlobalConfigList from '@/views/apitest/globalconfig/components/GlobalConfigList'
+import AddGlobalConfig from '@/views/apitest/globalconfig/components/AddGlobalConfig'
+import UpdateGlobalConfig from '@/views/apitest/globalconfig/components/UpdateGlobalConfig'
+import GlobalConfigDetail from '@/views/apitest/globalconfig/components/GlobalConfigDetail'
 
 import ApiTestCase from '@/views/apitest/testcase/TestCase'
+import ApiCaseList from '@/views/apitest/testcase/componets/CaseList'
+import AddApiCase from '@/views/apitest/testcase/componets/AddCase'
+import ApiCaseDetail from '@/views/apitest/testcase/componets/CaseDetail'
+import UpdateApiCase from '@/views/apitest/testcase/componets/UpdateCase'
+
+import ApiTestSet from '@/views/apitest/testset/TestSet'
+import ApiTestSetList from '@/views/apitest/testset/components/TestSetList'
+import AddApiTestSet from '@/views/apitest/testset/components/AddTestSet'
+import ApiTestSetDetail from '@/views/apitest/testset/components/TestSetDetail'
+import ApiTestSetUpdate from '@/views/apitest/testset/components/UpdateTestSet'
+
+import TestTask from '@/views/apitest/testtask/TestTask'
+import TestTaskList from '@/views/apitest/testtask/components/TestTaskList'
+import AddTestTask from '@/views/apitest/testtask/components/AddTestTask'
+import TestTaskDetail from '@/views/apitest/testtask/components/TestTaskDetail'
+import TaskTestSetDetail from '@/views/apitest/testtask/components/TaskTestSetDetail'
+
+import Report from '@/views/apitest/report/Report'
+import ReportList from '@/views/apitest/report/components/ReportList'
 
 Vue.use(Router)
 
@@ -103,21 +127,205 @@ export default new Router({
                             children: [
                                 {
                                     path: 'config',
-                                    name: 'GlobalConfig',
                                     component: GlobalConfig,
                                     meta: {
                                         title: '配置',
                                         requireAuth: true
-                                    }
+                                    },
+                                    children: [
+                                        {
+                                            path: '',
+                                            name: 'GlobalConfigList',
+                                            component: GlobalConfigList,
+                                            meta: {
+                                                title: '配置列表',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'addconfig',
+                                            name: 'AddGlobalConfig',
+                                            component: AddGlobalConfig,
+                                            meta: {
+                                                title: '添加配置',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'updateconfig/:id',
+                                            name: 'UpdateGlobalConfig',
+                                            component: UpdateGlobalConfig,
+                                            meta: {
+                                                title: '更新配置',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'configdetail/:id',
+                                            name: 'GlobalConfigDetail',
+                                            component: GlobalConfigDetail,
+                                            meta: {
+                                                title: '配置详情',
+                                                requireAuth: true
+                                            }
+                                        }
+                                    ]
                                 },
                                 {
                                     path: 'cases',
-                                    name: 'ApiTestCase',
                                     component: ApiTestCase,
                                     meta: {
                                         title: '测试用例',
                                         requireAuth: true
-                                    }
+                                    },
+                                    children: [
+                                        {
+                                            path: '',
+                                            name: 'ApiCaseList',
+                                            component: ApiCaseList,
+                                            meta: {
+                                                title: '测试用例',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'addcase',
+                                            name: 'AddApiCase',
+                                            component: AddApiCase,
+                                            meta: {
+                                                title: '添加测试用例',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'detail/:id',
+                                            name: 'ApiCaseDetail',
+                                            component: ApiCaseDetail,
+                                            meta: {
+                                                title: '用例详情',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'update/:id',
+                                            name: 'UpdateApiCase',
+                                            component: UpdateApiCase,
+                                            meta: {
+                                                title: '更新用例',
+                                                requireAuth: true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    path: 'testset',
+                                    component: ApiTestSet,
+                                    meta: {
+                                        title: '测试集',
+                                        requireAuth: true
+                                    },
+                                    children: [
+                                        {
+                                            path: '',
+                                            name: 'ApiTestSetList',
+                                            component: ApiTestSetList,
+                                            meta: {
+                                                title: '测试集',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'addset',
+                                            name: 'AddApiTestSet',
+                                            component: AddApiTestSet,
+                                            meta: {
+                                                title: '添加测试集',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'detail/:id/',
+                                            name: 'ApiTestSetDetail',
+                                            component: ApiTestSetDetail,
+                                            meta: {
+                                                title: '测试集详情',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'update/:id',
+                                            name: 'ApiTestSetUpdate',
+                                            component: ApiTestSetUpdate,
+                                            meta: {
+                                                title: '更新测试集',
+                                                requireAuth: true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    path: 'task',
+                                    component: TestTask,
+                                    meta: {
+                                        title: '测试任务',
+                                        requireAuth: true
+                                    },
+                                    children: [
+                                        {
+                                            path: '',
+                                            name: 'TestTaskList',
+                                            component: TestTaskList,
+                                            meta: {
+                                                title: '测试任务列表',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'addTestTask',
+                                            name: 'AddTestTask',
+                                            component: AddTestTask,
+                                            meta: {
+                                                title: '添加测试任务',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'testTaskDetail/:name/:id',
+                                            name: 'TestTaskDetail',
+                                            component: TestTaskDetail,
+                                            meta: {
+                                                title: '测试任务详情',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'testSetDetail/:taskName/:taskId/:setName/:id',
+                                            name: 'TaskTestSetDetail',
+                                            component: TaskTestSetDetail,
+                                            meta: {
+                                                title: '测试集详情',
+                                                requireAuth: true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    path: 'report',
+                                    component: Report,
+                                    meta: {
+                                        title: '测试报告',
+                                        requireAuth: true
+                                    },
+                                    children: [
+                                        {
+                                            path: '',
+                                            name: 'ReportList',
+                                            component: ReportList,
+                                            meta: {
+                                                requireAuth: true
+                                            }
+                                        }
+                                    ]
                                 }
                             ]
                         }
