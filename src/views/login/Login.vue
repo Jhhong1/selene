@@ -69,31 +69,31 @@ export default {
     },
     methods: {
         submitForm(formName) {
-            let that = this
+            const _that = this
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    that.checkIn()
+                    _that.checkIn()
                 } else {
                     return false
                 }
             })
         },
         checkIn() {
-            // var that = this
+            const that = this
             this.$api.api
                 .login({
-                    username: this.ruleForm.username,
-                    password: this.ruleForm.password
+                    username: that.ruleForm.username,
+                    password: that.ruleForm.password
                 })
                 .then(response => {
                     let info = response.data
-                    info.username = this.ruleForm.username
-                    this.$store.commit('STORE_USER_INFO', info)
-                    this.$router.push({ name: 'ProjectList' })
+                    info.username = that.ruleForm.username
+                    that.$store.commit('STORE_USER_INFO', info)
+                    that.$router.push({ name: 'ProjectList' })
                 })
                 .catch(error => {
                     const errmsg = error.response.data
-                    this.notify.error(errmsg)
+                    that.notify.error(errmsg)
                 })
         }
     }

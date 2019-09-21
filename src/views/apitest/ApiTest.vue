@@ -1,15 +1,13 @@
 <template>
-  <div>
-    <router-view></router-view>
-  </div>
+    <div>
+        <router-view></router-view>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'ApiTest'
+    name: 'ApiTest'
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

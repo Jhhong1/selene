@@ -60,19 +60,12 @@ export default {
             this.$api.api
                 .createApiProject(obj)
                 .then(() => {
-                    this.$notify({
-                        title: '成功',
-                        message: '创建项目成功',
-                        type: 'success'
-                    })
+                    this.notify.success('创建项目成功')
                     this.$refs[formName].resetFields()
                     this.$router.push({ name: 'ProjectList' })
                 })
                 .catch(error => {
-                    this.$notify.error({
-                        title: '失败',
-                        message: error.response.request.responseText
-                    })
+                    this.notify.error(error.response.request.responseText)
                 })
         },
         submit(formName) {

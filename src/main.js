@@ -18,12 +18,17 @@ import router from './router'
 import store from '@/store'
 import * as notify from '@/common'
 
-// import TagSuccess from "@/plugin/TagSuccess";
-// import TagDone from "@/plugin/TagDone";
-// import TagFailed from "@/plugin/TagFailed";
-// import TagRunning from "@/plugin/TagRunning";
-// import TagNotRun from "@/plugin/TagNotRun";
-// import Label from "@/plugin/Label";
+import Input from '@/plugin/Input'
+import TagSuccess from '@/plugin/TagSuccess'
+import TagDone from '@/plugin/TagDone'
+import TagFailed from '@/plugin/TagFailed'
+import TagRunning from '@/plugin/TagRunning'
+import TagNotRun from '@/plugin/TagNotRun'
+import Label from '@/plugin/Label'
+import VueJsonEditor from '@/plugin/JsonEditor'
+import Asserts from '@/plugin/AssertCom'
+import Extracts from '@/plugin/Extracts'
+import SetCase from '@/plugin/TestSetCases'
 
 Vue.config.productionTip = false
 Vue.prototype.$moment = moment
@@ -32,13 +37,19 @@ Vue.prototype.$api = api
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
+
+Vue.component('j-input', Input)
 Vue.component('v-chart', ECharts)
-// Vue.component('tag-success', TagSuccess)
-// Vue.component('tag-done', TagDone)
-// Vue.component('tag-failed', TagFailed)
-// Vue.component('tag-running', TagRunning)
-// Vue.component('tag-not-run', TagNotRun)
-// Vue.component('j-label', Label)
+Vue.component('tag-success', TagSuccess)
+Vue.component('tag-done', TagDone)
+Vue.component('tag-failed', TagFailed)
+Vue.component('tag-running', TagRunning)
+Vue.component('tag-not-run', TagNotRun)
+Vue.component('j-label', Label)
+Vue.component('j-editor', VueJsonEditor)
+Vue.component('j-assert', Asserts)
+Vue.component('j-extract', Extracts)
+Vue.component('set-case', SetCase)
 
 Vue.prototype.notify = notify
 
