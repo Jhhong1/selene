@@ -41,6 +41,14 @@ import TaskTestSetDetail from '@/views/apitest/testtask/components/TaskTestSetDe
 import Report from '@/views/apitest/report/Report'
 import ReportList from '@/views/apitest/report/components/ReportList'
 
+import Permission from '@/views/permissions/Permission'
+
+import Group from '@/views/permissions/group/Group'
+import GroupList from '@/views/permissions/group/components/GroupList'
+import AddGroup from '@/views/permissions/group/components/AddGroup'
+
+import User from '@/views/permissions/users/Users'
+
 Vue.use(Router)
 
 export default new Router({
@@ -107,10 +115,61 @@ export default new Router({
                     }
                 },
                 {
+                    path: 'permission',
+                    name: 'Permission',
+                    component: Permission,
+                    navBar: 'permission',
+                    meta: {
+                        title: '权限管理',
+                        requireAuth: true
+                    },
+                    children: [
+                        {
+                            path: 'group',
+                            icon: 'el-icon-s-cooperation',
+                            component: Group,
+                            meta: {
+                                title: '权限组',
+                                requireAuth: true
+                            },
+                            children: [
+                                {
+                                    path: '',
+                                    name: 'GroupList',
+                                    component: GroupList,
+                                    meta: {
+                                        title: '权限组',
+                                        requireAuth: true
+                                    }
+                                },
+                                {
+                                    path: 'addGroup',
+                                    name: 'AddGroup',
+                                    component: AddGroup,
+                                    meta: {
+                                        title: '添加权限组',
+                                        requireAuth: true
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            path: 'users',
+                            name: 'User',
+                            icon: 'el-icon-user',
+                            component: User,
+                            meta: {
+                                title: '用户',
+                                requireAuth: true
+                            }
+                        }
+                    ]
+                },
+                {
                     path: 'project',
                     name: 'ProjectDetail',
                     component: ProjectDetail,
-                    navBar: true,
+                    navBar: 'home',
                     meta: {
                         requireAuth: true
                     },
