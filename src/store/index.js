@@ -8,6 +8,7 @@ Vue.use(Vuex)
 const state = {
     username: getStore('username'),
     token: getStore('token'),
+    userinfo: getStore('userinfo'),
     timeout: '',
     apiCaseLists: [],
     project: []

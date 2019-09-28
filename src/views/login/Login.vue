@@ -88,6 +88,8 @@ export default {
                 .then(response => {
                     let info = response.data
                     info.username = that.ruleForm.username
+                    that.$store.commit('STORE_USER_NAME', info)
+                    that.$store.commit('STORE_USER_TOKEN', info)
                     that.$store.commit('STORE_USER_INFO', info)
                     that.$router.push({ name: 'ProjectList' })
                 })

@@ -21,6 +21,18 @@
                     </el-menu>
                 </el-aside>
             </template>
+            <template v-else-if="$route.path.indexOf('permission') > 0">
+                <el-aside style="width: 200px">
+                    <el-menu :default-active="activeNav" router class="sidebar">
+                        <el-menu-item v-for="(menu, mindex) in navigate" :index="$route.matched[1].path + '/' + menu.path" :key="mindex">
+                            <template slot="title">
+                                <i :class="menu.icon"></i>
+                                {{ menu.meta.title }}
+                            </template>
+                        </el-menu-item>
+                    </el-menu>
+                </el-aside>
+            </template>
             <el-container>
                 <el-header>
                     <div class="image-container">
@@ -37,6 +49,11 @@
                             <el-dropdown-item>
                                 <el-button type="text" @click="dialogFormVisible = true">更改密码</el-button>
                             </el-dropdown-item>
+                            <template v-if="userInfo.is_superuser">
+                                <el-dropdown-item>
+                                    <router-link tag="el-button" :to="{ name: 'GroupList' }" class="el-button--text">权限管理</router-link>
+                                </el-dropdown-item>
+                            </template>
                             <template v-if="$route.fullPath !== '/home/'">
                                 <el-dropdown-item>
                                     <router-link tag="el-button" :to="{ name: 'ProjectList' }" class="el-button--text">项目</router-link>
@@ -112,8 +129,7 @@ export default {
             }
         }
         return {
-            activeNav: '/home/project/apitest/config/?project_name=' + this.$route.query.project_name,
-            username: this.$store.state.username,
+            activeNav: this.active(),
             dialogFormVisible: false,
             value: this.$route.query.project_name,
             url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -130,6 +146,13 @@ export default {
         }
     },
     methods: {
+        active() {
+            if (this.$route.path.indexOf('apitest') > 0) {
+                return '/home/project/apitest/config/?project_name=' + this.$route.query.project_name
+            } else {
+                return '/home/permission/group'
+            }
+        },
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
@@ -168,14 +191,11 @@ export default {
             this.$router.push(path)
         },
         highLightNav() {
-            if (this.$route.matched.length > 3) {
+            if (this.$route.matched.length > 3 && this.$route.path.indexOf('apitest') > 0) {
                 this.activeNav = this.$route.matched[3].path + '?project_name=' + this.$route.query.project_name
+            } else if (this.$route.matched.length > 2 && this.$route.path.indexOf('permission') > 0) {
+                this.activeNav = this.$route.matched[2].path
             }
-        }
-    },
-    watch: {
-        $route() {
-            this.value = this.$route.query.project_name
         }
     },
     computed: {
@@ -183,18 +203,41 @@ export default {
             let navList = []
             let navs1 = null
             let routeList = this.$router.options.routes
-            for (let i = 0, len = routeList.length; i < len; i++) {
-                if (routeList[i].hasOwnProperty('children')) {
-                    navs1 = routeList[i].children
+            if (this.$route.path.indexOf('apitest') > 0) {
+                for (let i = 0, len = routeList.length; i < len; i++) {
+                    if (routeList[i].hasOwnProperty('children')) {
+                        navs1 = routeList[i].children
+                    }
                 }
-            }
-
-            for (let j = 0, len = navs1.length; j < len; j++) {
-                if (navs1[j].hasOwnProperty('navBar') && navs1[j].hasOwnProperty('children')) {
-                    navList = navs1[j].children
+                for (let j = 0, len = navs1.length; j < len; j++) {
+                    if (navs1[j].hasOwnProperty('navBar') && navs1[j].navBar === 'home' && navs1[j].hasOwnProperty('children')) {
+                        navList = navs1[j].children
+                    }
+                }
+            } else {
+                for (let i = 0, len = routeList.length; i < len; i++) {
+                    if (routeList[i].hasOwnProperty('children')) {
+                        navs1 = routeList[i].children
+                    }
+                }
+                for (let j = 0, len = navs1.length; j < len; j++) {
+                    if (navs1[j].hasOwnProperty('navBar') && navs1[j].navBar === 'permission' && navs1[j].hasOwnProperty('children')) {
+                        navList = navs1[j].children
+                    }
                 }
             }
             return navList
+        },
+        username() {
+            let name1 = localStorage.getItem('username')
+            let name2 = this.$store.state.username
+            if (name1 !== name2) {
+                this.$store.commit('STORE_USER_NAME', { username: name1 })
+            }
+            return name1
+        },
+        userInfo() {
+            return JSON.parse(localStorage.getItem('userinfo'))
         }
     },
     mounted() {
@@ -202,6 +245,11 @@ export default {
     },
     updated() {
         this.highLightNav()
+    },
+    watch: {
+        $route() {
+            this.value = this.$route.query.project_name
+        }
     }
 }
 </script>
