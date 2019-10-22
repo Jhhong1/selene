@@ -43,11 +43,12 @@ export const createTestCase = params => {
 }
 
 // 测试用例列表
-export const testCaseList = (page = 1, pagesize = 10) => {
+export const testCaseList = (page = 1, pagesize = 10, projectName = '') => {
     return axios.get('/v1/apitest/apiCases/', {
         params: {
             page: page,
-            page_size: pagesize
+            page_size: pagesize,
+            project: projectName
         }
     })
 }
@@ -317,4 +318,48 @@ export const resultStatics = (taskId, projectName = '') => {
             project: projectName
         }
     })
+}
+// 获取权限列表
+export const getPermissionList = () => {
+    return axios.get('/v1/permissions/')
+}
+
+// 创建权限组
+export const createGroup = data => {
+    return axios.post('/v1/groups/', data)
+}
+
+// 获取权限组列表
+export const getGroupList = () => {
+    return axios.get('/v1/groups/')
+}
+
+// 删除权限组
+export const deleteGroup = id => {
+    return axios.delete(`/v1/groups/${id}/`)
+}
+
+// 获取权限组详情
+export const getGroupDetail = id => {
+    return axios.get(`/v1/groups/${id}/`)
+}
+
+// 更新权限组
+export const updateGroup = (id, payload) => {
+    return axios.put(`/v1/groups/${id}/`, payload)
+}
+
+// 获取用户列表
+export const getUserList = () => {
+    return axios.get('/v1/user/')
+}
+
+// 删除用户
+export const deleteUser = id => {
+    return axios.delete(`/v1/user/${id}/`)
+}
+
+// 用户权限管理
+export const boundPermission = payload => {
+    return axios.post('/v1/boundPermission/', payload)
 }

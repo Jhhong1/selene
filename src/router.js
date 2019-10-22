@@ -46,8 +46,11 @@ import Permission from '@/views/permissions/Permission'
 import Group from '@/views/permissions/group/Group'
 import GroupList from '@/views/permissions/group/components/GroupList'
 import AddGroup from '@/views/permissions/group/components/AddGroup'
+import GroupDetail from '@/views/permissions/group/components/GroupDetail'
+import UpdateGroup from '@/views/permissions/group/components/UpdateGroup'
 
 import User from '@/views/permissions/users/Users'
+import UserList from '@/views/permissions/users/components/UserList'
 
 Vue.use(Router)
 
@@ -150,18 +153,46 @@ export default new Router({
                                         title: '添加权限组',
                                         requireAuth: true
                                     }
+                                },
+                                {
+                                    path: 'detail/:id',
+                                    name: 'GroupDetail',
+                                    component: GroupDetail,
+                                    meta: {
+                                        title: '权限组详情',
+                                        requireAuth: true
+                                    }
+                                },
+                                {
+                                    path: 'update/:id',
+                                    name: 'UpdateGroup',
+                                    component: UpdateGroup,
+                                    meta: {
+                                        title: '更新权限组',
+                                        requireAuth: true
+                                    }
                                 }
                             ]
                         },
                         {
                             path: 'users',
-                            name: 'User',
                             icon: 'el-icon-user',
                             component: User,
                             meta: {
                                 title: '用户',
                                 requireAuth: true
-                            }
+                            },
+                            children: [
+                                {
+                                    path: '',
+                                    name: 'UserList',
+                                    component: UserList,
+                                    meta: {
+                                        title: '用户列表',
+                                        requireAuth: true
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },

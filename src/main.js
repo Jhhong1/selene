@@ -29,6 +29,7 @@ import VueJsonEditor from '@/plugin/JsonEditor'
 import Asserts from '@/plugin/AssertCom'
 import Extracts from '@/plugin/Extracts'
 import SetCase from '@/plugin/TestSetCases'
+import ProjectPermission from '@/plugin/ProjectPermissions'
 
 Vue.config.productionTip = false
 Vue.prototype.$moment = moment
@@ -50,6 +51,7 @@ Vue.component('j-editor', VueJsonEditor)
 Vue.component('j-assert', Asserts)
 Vue.component('j-extract', Extracts)
 Vue.component('set-case', SetCase)
+Vue.component('j-project', ProjectPermission)
 
 Vue.prototype.notify = notify
 
@@ -68,8 +70,9 @@ router.beforeEach((to, from, next) => {
     }
     // 验证用户是否存储token
     if (to.matched.some(r => r.meta.requireAuth)) {
-        if (store.state.token) {
-            axios.defaults.headers['Authorization'] = 'Bearer ' + store.state.token
+        let token = localStorage.getItem('token')
+        if (token) {
+            axios.defaults.headers['Authorization'] = 'Bearer ' + token
             next()
         } else {
             next({

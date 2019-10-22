@@ -1,8 +1,13 @@
 <template>
     <div>
-        <router-link tag="el-button" class="el-button--primary el-button--mini p-button" :to="{ name: 'AddApiTestSet', query: $route.query }">
-            添加测试集
-        </router-link>
+        <template v-if="permissions.indexOf('apitest.add_apiset') > -1">
+            <router-link tag="el-button" class="el-button--primary el-button--mini p-button" :to="{ name: 'AddApiTestSet', query: $route.query }">
+                添加测试集
+            </router-link>
+        </template>
+        <template v-else>
+            <el-button class="el-button--primary el-button--mini p-button" disabled>添加测试集</el-button>
+        </template>
         <el-table class="table-class td" :data="setList">
             <el-table-column label="名称" min-width="100">
                 <template slot-scope="scope">
@@ -65,10 +70,25 @@
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :command="{ type: 'del', index: scope.$index, row: scope.row.id }">删除</el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.delete_apiset') === -1"
+                            >
+                                删除
+                            </el-dropdown-item>
                             <el-dropdown-item :command="{ type: 'view', row: scope.row.id }">查看</el-dropdown-item>
-                            <el-dropdown-item :command="{ type: 'update', row: scope.row.id }">更新</el-dropdown-item>
-                            <el-dropdown-item :command="{ type: 'exec', row: scope.row.id }">执行</el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'update', row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.change_apiset') === -1"
+                            >
+                                更新
+                            </el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'exec', row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.execute_apiset') === -1"
+                            >
+                                执行
+                            </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -98,7 +118,8 @@ export default {
             pageSize: 10,
             currentPage: 1,
             setList: [],
-            projectName: this.$route.query.project_name
+            projectName: this.$route.query.project_name,
+            permissions: []
         }
     },
     methods: {
@@ -201,10 +222,14 @@ export default {
             return setTimeout(() => {
                 this.getSets()
             }, 2000)
+        },
+        getPermissions() {
+            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         }
     },
     created() {
         this.getSets()
+        this.getPermissions()
     },
     watch: {
         setList() {

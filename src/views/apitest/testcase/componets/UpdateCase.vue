@@ -21,7 +21,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="变量" :label-width="formLabelWidth" prop="variables">
-                <input-counter v-model="addCase.variables"></input-counter>
+                <j-input v-model="addCase.variables"></j-input>
             </el-form-item>
             <el-form-item label="认证方式" :label-width="formLabelWidth" prop="authMethod">
                 <el-row>
