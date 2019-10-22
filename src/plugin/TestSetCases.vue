@@ -35,8 +35,22 @@
             </el-table-column>
             <el-table-column label="操作" min-width="100">
                 <template slot-scope="scope">
-                    <el-button type="text" size="mini" @click="removeAction(scope.$index, testSetCases, scope.row)">移除</el-button>
-                    <el-button type="text" size="mini" @click="copyRow(scope.$index, scope.row)">复制</el-button>
+                    <el-button
+                        type="text"
+                        size="mini"
+                        @click="removeAction(scope.$index, testSetCases, scope.row)"
+                        :disabled="permissions.indexOf('apitest.remove_apiset') === -1"
+                    >
+                        移除
+                    </el-button>
+                    <el-button
+                        type="text"
+                        size="mini"
+                        @click="copyRow(scope.$index, scope.row)"
+                        :disabled="permissions.indexOf('apitest.copy_apiset') === -1"
+                    >
+                        复制
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -57,24 +71,29 @@ export default {
     },
     data() {
         return {
-            testSetCases: this.value
+            testSetCases: this.value,
+            permissions: []
         }
     },
     methods: {
         makeSortTable() {
-            const table = document.querySelector('.el-table__body-wrapper table tbody ')
-            const self = this
-            Sortable.create(table, {
-                onEnd({ newIndex, oldIndex }) {
-                    if (newIndex === oldIndex) {
-                        return false
-                    } else {
-                        const targetRow = self.testSetCases.splice(oldIndex, 1)[0]
-                        self.testSetCases.splice(newIndex, 0, targetRow)
-                        self.$emit('changeOrder', self.testSetCases)
+            if (this.permissions.indexOf('apitest.cases_apiset') > -1) {
+                const table = document.querySelector('.el-table__body-wrapper table tbody ')
+                const self = this
+                Sortable.create(table, {
+                    onEnd({ newIndex, oldIndex }) {
+                        if (newIndex === oldIndex) {
+                            return false
+                        } else {
+                            const targetRow = self.testSetCases.splice(oldIndex, 1)[0]
+                            self.testSetCases.splice(newIndex, 0, targetRow)
+                            self.$emit('changeOrder', self.testSetCases)
+                        }
                     }
-                }
-            })
+                })
+            } else {
+                return false
+            }
         },
         copyRow(index, testcase) {
             let newIndex = index + 1
@@ -106,9 +125,13 @@ export default {
                     this.$emit('removeRow', row)
                 })
                 .catch(() => {})
+        },
+        getPermissions() {
+            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         }
     },
     mounted() {
+        this.getPermissions()
         this.makeSortTable()
     },
     watch: {

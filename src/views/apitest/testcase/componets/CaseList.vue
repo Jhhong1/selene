@@ -1,8 +1,13 @@
 <template>
     <div>
-        <router-link tag="el-button" :to="{ name: 'AddApiCase', query: $route.query }" class="el-button--primary el-button--mini p-button">
-            添加测试用例
-        </router-link>
+        <template v-if="permissions.indexOf('apitest.add_apicases') > -1">
+            <router-link tag="el-button" :to="{ name: 'AddApiCase', query: $route.query }" class="el-button--primary el-button--mini p-button">
+                添加测试用例
+            </router-link>
+        </template>
+        <template v-else>
+            <el-button class="el-button--primary el-button--mini p-button" disabled>添加测试用例</el-button>
+        </template>
         <el-table class="table-class td" :data="dataTable">
             <el-table-column label="用例名称" min-width="200">
                 <template slot-scope="scope">
@@ -66,10 +71,25 @@
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :command="{ type: 'del', index: scope.$index, row: scope.row.id }">删除</el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.delete_apicases') === -1"
+                            >
+                                删除
+                            </el-dropdown-item>
                             <el-dropdown-item :command="{ type: 'view', row: scope.row.id }">查看</el-dropdown-item>
-                            <el-dropdown-item :command="{ type: 'update', row: scope.row.id }">更新</el-dropdown-item>
-                            <el-dropdown-item :command="{ type: 'exec', row: scope.row.id }">执行</el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'update', row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.change_apicases') === -1"
+                            >
+                                更新
+                            </el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'exec', row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.execute_apicases') === -1"
+                            >
+                                执行
+                            </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -99,19 +119,20 @@ export default {
             pageSizes: [10, 20, 50],
             pageSize: 10,
             currentPage: 1,
-            projectName: this.$route.query.project_name
+            projectName: this.$route.query.project_name,
+            permissions: []
         }
     },
     methods: {
         getCases() {
             this.$api.api
-                .testCaseList(this.currentPage, this.pageSize)
+                .testCaseList(this.currentPage, this.pageSize, this.projectName)
                 .then(response => {
                     this.dataTable = response.data.results
                     this.count = response.data.count
                 })
                 .catch(error => {
-                    this.notify.error(error)
+                    this.notify.error(error.response.data)
                 })
         },
         removeCase(caseId) {
@@ -128,7 +149,7 @@ export default {
                 .executeCase(JSON.stringify(data), this.projectName)
                 .then(() => {})
                 .catch(error => {
-                    this.notify.error(error)
+                    this.notify.error(error.response.data)
                 })
         },
         deleteRow(index, rows, caseId) {
@@ -177,10 +198,14 @@ export default {
             return setTimeout(() => {
                 this.getCases()
             }, 2000)
+        },
+        getPermissions() {
+            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         }
     },
     created() {
         this.getCases()
+        this.getPermissions()
     },
     watch: {
         dataTable() {

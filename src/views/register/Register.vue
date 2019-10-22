@@ -110,7 +110,7 @@ export default {
             this.$api.api
                 .register(this.ruleForm)
                 .then(() => {
-                    this.regsucess()
+                    this.notify.success('注册用户成功')
                     this.$router.push({ name: 'Login' })
                 })
                 .catch(error => {

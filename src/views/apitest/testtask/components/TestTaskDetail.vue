@@ -108,19 +108,19 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="测试集" name="cases">
-                    <el-dropdown
-                        size="mini"
-                        split-button
-                        type="primary"
-                        @click="execute"
-                        @command="handleCommand"
-                        style="float: right; margin-right: 50px"
-                    >
-                        执行
+                    <el-dropdown size="mini" split-button type="primary" @command="handleCommand" style="float: right; margin-right: 50px">
+                        操作
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="linked">关联测试集</el-dropdown-item>
+                            <el-dropdown-item command="linked" :disabled="permissions.indexOf('apitest.associate_apitasks') === -1">
+                                关联测试集
+                            </el-dropdown-item>
                             <!--<el-dropdown-item command="createCase">创建测试集</el-dropdown-item>-->
-                            <el-dropdown-item command="delete">删除</el-dropdown-item>
+                            <el-dropdown-item command="exec" :disabled="permissions.indexOf('apitest.execute_apitasks') === -1">
+                                执行
+                            </el-dropdown-item>
+                            <el-dropdown-item command="delete" :disabled="permissions.indexOf('apitest.delete_apitasks') === -1">
+                                删除
+                            </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                     <el-table row-key="id" :data="taskSets" style="padding-left: 20px; padding-right: 20px">
@@ -179,7 +179,12 @@
                         </el-table-column>
                         <el-table-column label="操作" min-width="100">
                             <template slot-scope="scope">
-                                <el-button type="text" size="mini" @click="removeAction(scope.$index, taskSets, scope.row.testset.id)">
+                                <el-button
+                                    type="text"
+                                    size="mini"
+                                    @click="removeAction(scope.$index, taskSets, scope.row.testset.id)"
+                                    :disabled="permissions.indexOf('apitest.remove_apitasks') === -1"
+                                >
                                     移除
                                 </el-button>
                             </template>
@@ -282,7 +287,8 @@ export default {
                 tags: ''
             },
             formLabelWidth: '45px',
-            load: null
+            load: null,
+            permissions: []
         }
     },
     methods: {
@@ -370,6 +376,8 @@ export default {
                     .then(() => {})
                     .catch(() => {})
             } else if (command === 'createCase') {
+            } else if (command === 'exec') {
+                this.execute()
             }
         },
         linked() {
@@ -475,11 +483,15 @@ export default {
             } else if (this.activeName === 'cases') {
                 this.getTaskTestSets()
             }
+        },
+        getPermissions() {
+            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         }
     },
     created() {
         this.getTaskDetail()
         this.getTaskTestSets()
+        this.getPermissions()
     },
     mounted() {
         if (this.load) {

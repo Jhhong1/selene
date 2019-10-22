@@ -1,8 +1,13 @@
 <template>
     <div>
-        <router-link tag="el-button" class="el-button--primary el-button--mini p-button" :to="{ name: 'AddTestTask', query: $route.query }">
-            添加测试任务
-        </router-link>
+        <template v-if="permissions.indexOf('apitest.add_apitasks') > -1">
+            <router-link tag="el-button" class="el-button--primary el-button--mini p-button" :to="{ name: 'AddTestTask', query: $route.query }">
+                添加测试任务
+            </router-link>
+        </template>
+        <template v-else>
+            <el-button class="el-button--primary el-button--mini p-button" disabled>添加测试任务</el-button>
+        </template>
         <el-table class="table-class td" :data="taskList">
             <el-table-column label="名称" min-width="100">
                 <template slot-scope="scope">
@@ -61,9 +66,19 @@
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :command="{ type: 'del', index: scope.$index, row: scope.row.id }">删除</el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.add_apitasks') === -1"
+                            >
+                                删除
+                            </el-dropdown-item>
                             <el-dropdown-item :command="{ type: 'view', name: scope.row.name, row: scope.row.id }">查看</el-dropdown-item>
-                            <el-dropdown-item :command="{ type: 'exec', row: scope.row.id }">执行</el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'exec', row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.execute_apitasks') === -1"
+                            >
+                                执行
+                            </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -120,7 +135,8 @@ export default {
             labels: {
                 tags: ''
             },
-            taskId: null
+            taskId: null,
+            permissions: []
         }
     },
     methods: {
@@ -219,10 +235,14 @@ export default {
                 .catch(error => {
                     this.notify.error(error)
                 })
+        },
+        getPermissions() {
+            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         }
     },
     created() {
         this.getTaskList()
+        this.getPermissions()
     },
     watch: {
         taskList() {

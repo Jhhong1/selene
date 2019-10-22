@@ -14,14 +14,20 @@
                                 size="mini"
                                 split-button
                                 type="primary"
-                                @click="configChoice"
                                 @command="handleCommandConfig"
                                 style="float: right; margin-right: 50px"
                             >
-                                配置引用
+                                操作
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="update">更新</el-dropdown-item>
-                                    <el-dropdown-item command="delete">删除</el-dropdown-item>
+                                    <el-dropdown-item command="refer" :disabled="permissions.indexOf('apitest.config_apiset') === -1">
+                                        配置引用
+                                    </el-dropdown-item>
+                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.change_apiset') === -1">
+                                        更新
+                                    </el-dropdown-item>
+                                    <el-dropdown-item command="delete" :disabled="permissions.indexOf('apitest.delete_apiset') === -1">
+                                        删除
+                                    </el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </el-row>
@@ -204,18 +210,16 @@
                 </el-tab-pane>
                 <el-tab-pane label="测试用例" name="cases">
                     <el-row>
-                        <el-dropdown
-                            size="mini"
-                            split-button
-                            type="primary"
-                            @click="execute"
-                            @command="handleCommand"
-                            style="float: right; margin-right: 50px"
-                        >
-                            执行
+                        <el-dropdown size="mini" split-button type="primary" @command="handleCommand" style="float: right; margin-right: 50px">
+                            操作
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="linked">关联测试用例</el-dropdown-item>
-                                <el-dropdown-item command="createCase">创建测试用例</el-dropdown-item>
+                                <el-dropdown-item command="exec" :disabled="permissions.indexOf('apitest.execute_apiset') === -1">
+                                    执行
+                                </el-dropdown-item>
+                                <el-dropdown-item command="linked" :disabled="permissions.indexOf('apitest.cases_apiset') === -1">
+                                    关联测试用例
+                                </el-dropdown-item>
+                                <!-- <el-dropdown-item command="createCase">创建测试用例</el-dropdown-item> -->
                             </el-dropdown-menu>
                         </el-dropdown>
                     </el-row>
@@ -288,7 +292,8 @@ export default {
             count: null,
             configList: [],
             selectValue: '',
-            configReference: {}
+            configReference: {},
+            permissions: []
         }
     },
     methods: {
@@ -417,12 +422,16 @@ export default {
                     .catch(() => {})
             } else if (command === 'update') {
                 this.$router.push({ name: 'ApiTestSetUpdate', params: { id: this.setId }, query: this.$route.query })
+            } else if (command === 'refer') {
+                this.configChoice()
             }
         },
         handleCommand(command) {
             if (command === 'linked') {
                 this.linked()
             } else if (command === 'createCase') {
+            } else if (command === 'exec') {
+                this.execute()
             }
         },
         linked() {
@@ -530,9 +539,13 @@ export default {
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)
                 })
+        },
+        getPermissions() {
+            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         }
     },
     created() {
+        this.getPermissions()
         this.getTestSetDetail()
         this.getSetConfig()
         this.getTestSetCases()

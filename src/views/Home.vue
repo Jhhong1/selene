@@ -12,9 +12,10 @@
                             <el-menu-item
                                 v-for="(item, ind) in menu.children"
                                 :key="ind"
-                                :index="$route.matched[2].path + '/' + item.path + '?project_name=' + $route.query.project_name"
+                                :index="$route.matched[2].path + '/' + item.path + '?project_name=' + value"
                                 @click="highLightNav"
                             >
+                                <!-- {{ $route.matched[2].path + '/' + item.path + '?project_name=' + value }} -->
                                 {{ item.meta.title }}
                             </el-menu-item>
                         </el-submenu>
@@ -101,6 +102,7 @@ export default {
     component: {
         Logout
     },
+    inject: ['reload'],
     data() {
         const validatePass = (rule, value, callback) => {
             const passregex = /^[a-z]+[a-z0-9_-]{7,15}$/
@@ -133,7 +135,7 @@ export default {
             dialogFormVisible: false,
             value: this.$route.query.project_name,
             url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-            projectList: this.projects(),
+            projectList: [],
             form: {
                 password: '',
                 repassword: ''
@@ -148,7 +150,7 @@ export default {
     methods: {
         active() {
             if (this.$route.path.indexOf('apitest') > 0) {
-                return '/home/project/apitest/config/?project_name=' + this.$route.query.project_name
+                return '/home/project/apitest/config/?project_name=' + this.value
             } else {
                 return '/home/permission/group'
             }
@@ -184,15 +186,16 @@ export default {
             this.dialogFormVisible = false
         },
         projects() {
-            return this.$store.state.project
+            this.projectList = JSON.parse(localStorage.getItem('project'))
         },
         handleChange() {
             let path = this.$route.path + '?project_name=' + this.value
             this.$router.push(path)
+            this.reload()
         },
         highLightNav() {
             if (this.$route.matched.length > 3 && this.$route.path.indexOf('apitest') > 0) {
-                this.activeNav = this.$route.matched[3].path + '?project_name=' + this.$route.query.project_name
+                this.activeNav = this.$route.matched[3].path + '?project_name=' + this.value
             } else if (this.$route.matched.length > 2 && this.$route.path.indexOf('permission') > 0) {
                 this.activeNav = this.$route.matched[2].path
             }
@@ -242,6 +245,7 @@ export default {
     },
     mounted() {
         this.highLightNav()
+        this.projects()
     },
     updated() {
         this.highLightNav()

@@ -11,10 +11,15 @@
                         <div style="display: inline-block">基本信息</div>
                         <!--阻止事件冒泡-->
                         <div class="button-position" @click.stop.prevent>
-                            <el-dropdown size="mini" split-button type="primary" @click="update" @command="handleCommand">
-                                更新
+                            <el-dropdown size="mini" split-button type="primary" @command="handleCommand">
+                                操作
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="del">删除</el-dropdown-item>
+                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.change_config') === -1">
+                                        更新
+                                    </el-dropdown-item>
+                                    <el-dropdown-item command="del" :disabled="permissions.indexOf('apitest.delete_config') === -1">
+                                        删除
+                                    </el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -113,7 +118,8 @@ export default {
             configDetail: {},
             activeNames: ['1', '2'],
             configId: this.$route.params.id,
-            projectName: this.$route.query.project_name
+            projectName: this.$route.query.project_name,
+            permissions: []
         }
     },
     methods: {
@@ -164,11 +170,17 @@ export default {
                 })
                     .then(() => {})
                     .catch(() => {})
+            } else if (command === 'update') {
+                this.update()
             }
+        },
+        getPermissions() {
+            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         }
     },
     created() {
         this.getConfigDetail()
+        this.getPermissions()
     },
     mounted() {}
 }

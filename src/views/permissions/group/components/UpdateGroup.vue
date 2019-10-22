@@ -2,15 +2,15 @@
     <div>
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'GroupList' }" class="is-link">权限组</el-breadcrumb-item>
-            <el-breadcrumb-item>添加权限组</el-breadcrumb-item>
+            <el-breadcrumb-item>详情</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form class="case-form permission-case" :model="group" ref="group" :rules="rules">
+        <el-form class="case-form permission-case" :model="group" ref="group">
             <el-card shadow="never">
                 <div slot="header" class="text-class">
                     <span>基本信息</span>
                 </div>
                 <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
-                    <el-input v-model="group.name" size="mini"></el-input>
+                    <el-input v-model="group.name" size="mini" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="描述" :label-width="formLabelWidth" prop="description">
                     <el-input v-model="group.description" :rows="6" type="textarea"></el-input>
@@ -78,39 +78,22 @@
         </el-form>
     </div>
 </template>
-
 <script>
 export default {
-    name: 'AddGroup',
+    name: 'UpdateGroup',
     data() {
-        const validateName = (rule, value, callback) => {
-            try {
-                if (!value) {
-                    callback(new Error('请输入名称'))
-                } else if (value.length < 0 || value.length > 80) {
-                    callback(new Error('请输入1~80位长度的名称'))
-                } else {
-                    callback()
-                }
-            } catch (e) {}
-        }
         return {
-            pData: [],
-            permissions: [],
-            formLabelWidth: '120px',
             group: {},
-            rules: {
-                name: [{ validator: validateName, required: true, trigger: 'blur' }]
-            }
+            formLabelWidth: '120px',
+            id: this.$route.params.id
         }
     },
     methods: {
-        getPermissions() {
-            let _this = this
+        getGroup() {
             this.$api.api
-                .getPermissionList()
+                .getGroupDetail(this.id)
                 .then(response => {
-                    _this.pData = response.data
+                    this.group = response.data
                 })
                 .catch(error => {
                     this.notify.error(error)
@@ -121,21 +104,14 @@ export default {
             this.$router.push({ name: 'GroupList' })
         },
         confirm() {
-            this.$refs['group'].validate(valid => {
-                if (valid) {
-                    console.log(JSON.stringify(this.group))
-                    this.addGroup(JSON.stringify(this.group))
-                } else {
-                    return false
-                }
-            })
+            this.updateGroup(this.id, JSON.stringify(this.group))
         },
-        addGroup(payload) {
+        updateGroup(groupId, payload) {
             this.$api.api
-                .createGroup(payload)
+                .updateGroup(groupId, payload)
                 .then(() => {
-                    this.notify.success('添加权限组成功')
-                    this.$router.push({ name: 'GroupList' })
+                    this.notify.success('更新权限组成功')
+                    this.$router.push({ name: 'GroupDetail', params: { id: this.id } })
                 })
                 .catch(error => {
                     this.notify.error(error)
@@ -143,11 +119,10 @@ export default {
         }
     },
     created() {
-        this.getPermissions()
+        this.getGroup()
     }
 }
 </script>
-
 <style scoped>
 .is-link >>> .is-link {
     color: #409eff !important;

@@ -1,8 +1,13 @@
 <template>
     <div>
-        <router-link tag="el-button" :to="{ name: 'AddGlobalConfig', query: $route.query }" class="el-button--primary el-button--mini p-button">
-            添加配置
-        </router-link>
+        <template v-if="permissions.indexOf('apitest.add_config') > -1">
+            <router-link tag="el-button" :to="{ name: 'AddGlobalConfig', query: $route.query }" class="el-button--primary el-button--mini p-button">
+                添加配置
+            </router-link>
+        </template>
+        <template v-else>
+            <el-button class="el-button--primary el-button--mini p-button" disabled>添加配置</el-button>
+        </template>
         <el-table class="table-class td" :data="dataTable">
             <el-table-column label="名称" min-width="150">
                 <template slot-scope="scope">
@@ -27,10 +32,25 @@
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :command="{ type: 'del', index: scope.$index, row: scope.row.id }">删除</el-dropdown-item>
-                            <el-dropdown-item :command="{ type: 'setGlobal', row: scope.row.id }">设为全局变量</el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.delete_config') === -1"
+                            >
+                                删除
+                            </el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'setGlobal', row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.change_config') === -1"
+                            >
+                                设为全局变量
+                            </el-dropdown-item>
                             <el-dropdown-item :command="{ type: 'view', row: scope.row.id }">查看</el-dropdown-item>
-                            <el-dropdown-item :command="{ type: 'update', row: scope.row.id }">更新</el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'update', row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.change_config') === -1"
+                            >
+                                更新
+                            </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -61,7 +81,8 @@ export default {
             pageSizes: [10, 20, 50],
             pageSize: 10,
             currentPage: 1,
-            loading: true
+            loading: true,
+            permissions: []
         }
     },
     methods: {
@@ -145,10 +166,14 @@ export default {
             } else if (command.type === 'update') {
                 this.$router.push({ name: 'UpdateGlobalConfig', params: { id: command.row }, query: _this.$route.query })
             }
+        },
+        getPermissions() {
+            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         }
     },
     created() {
         this.getConfigList()
+        this.getPermissions()
     },
     watch: {
         dataTable() {

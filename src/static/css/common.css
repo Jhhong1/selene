@@ -153,3 +153,6 @@
     transform: none;
     -webkit-transform: rotate(90deg);
 }
+.project-class {
+    padding-left: 10px;
+}
