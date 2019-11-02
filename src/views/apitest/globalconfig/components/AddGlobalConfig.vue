@@ -8,8 +8,14 @@
             <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
                 <el-input v-model="configForm.name" size="mini"></el-input>
             </el-form-item>
-            <el-form-item label="BaseURL" :label-width="formLabelWidth" prop="baseurl">
+            <el-form-item label="显示名称" :label-width="formLabelWidth" prop="display">
+                <el-input v-model="configForm.display" size="mini"></el-input>
+            </el-form-item>
+            <el-form-item label="请求地址" :label-width="formLabelWidth" prop="baseurl">
                 <el-input v-model="configForm.baseurl" size="mini"></el-input>
+            </el-form-item>
+            <el-form-item label="请求代理" :label-width="formLabelWidth" prop="proxy">
+                <j-input v-model="configForm.proxy" :select="true"></j-input>
             </el-form-item>
             <el-form-item label="认证方式" :label-width="formLabelWidth" prop="authMethod">
                 <el-row>
@@ -67,8 +73,8 @@ export default {
                     if (!passregex.test(value)) {
                         callback(new Error('用例名称必须以小写字母开头，包含小写字母、数字、下划线、中横线'))
                     } else {
-                        if (value.length < 6 || value.length > 20) {
-                            callback(new Error('用例名称长度不得少于6位，大于20位'))
+                        if (value.length < 1 || value.length > 20) {
+                            callback(new Error('用例名称长度不得少于1位，大于20位'))
                         } else {
                             callback()
                         }
@@ -80,11 +86,9 @@ export default {
             try {
                 let strRegex = '^((https|http)?://)'
                 let urlRegex = new RegExp(strRegex)
-                if (!value) {
-                    callback(new Error('请输入请求地址'))
-                } else {
+                if (value) {
                     if (!urlRegex.test(value)) {
-                        callback(new Error('请输入正确的请求地址'))
+                        callback(new Error('请求地址以http://或https://开头'))
                     } else {
                         callback()
                     }
@@ -94,6 +98,7 @@ export default {
         return {
             projectName: this.$route.query.project_name,
             configForm: {
+                proxy: {},
                 authMethod: 'BasicAuth',
                 auth: {},
                 headers: {},
@@ -102,7 +107,7 @@ export default {
             formLabelWidth: '120px',
             rules: {
                 name: [{ validator: validateCaseName, required: true, trigger: 'blur' }],
-                baseurl: [{ validator: validateUrl, required: true, trigger: 'blur' }]
+                baseurl: [{ validator: validateUrl, required: false, trigger: 'blur' }]
             }
         }
     },
@@ -130,6 +135,7 @@ export default {
                 if (valid) {
                     _this.configForm.project = _this.projectName
                     let payload = _this.configForm
+                    console.log(payload)
                     _this.create(JSON.stringify(payload), _this.projectName, formName)
                 } else {
                     return false

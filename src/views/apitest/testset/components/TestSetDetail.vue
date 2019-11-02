@@ -36,6 +36,17 @@
                             <el-col :span="22">{{ setDetail.name }}</el-col>
                         </el-row>
                         <el-row :gutter="10" class="row-class test-left">
+                            <el-col :span="2">显示名称</el-col>
+                            <el-col :span="22">
+                                <template v-if="setDetail.display">
+                                    {{ setDetail.display }}
+                                </template>
+                                <template v-else>
+                                    -
+                                </template>
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">创建日期</el-col>
                             <el-col :span="22">{{ $moment(setDetail.createTime).format('YYYY-MM-DD HH:mm:ss') }}</el-col>
                         </el-row>
@@ -225,47 +236,72 @@
                     </el-row>
                     <set-case :value="testSetCases" @copy="copyRow" @changeOrder="changeRow" @removeRow="removeRow"></set-case>
                     <!--关联测试用例-->
-                    <el-dialog
-                        title="关联测试用例"
-                        :visible.sync="dialogFormVisible"
-                        :close-on-click-modal="false"
-                        :before-close="choiceCancel"
-                        class="dialog-header table-class dialog-class el-table_empty-block"
-                        style="position: fixed"
-                        @open="getCases"
-                        @opened="showChoices"
-                    >
-                        <template>
-                            <el-table
-                                ref="multiple"
-                                :data="testcases"
-                                tooltip-effect="dark"
-                                @selection-change="handleSelectionChange"
-                                style="width: 100%"
-                            >
-                                <el-table-column type="selection" width="55"> </el-table-column>
-                                <el-table-column label="用例名称" width="120" prop="name"> </el-table-column>
-                                <el-table-column label="请求方法" width="120" prop="method"> </el-table-column>
-                                <el-table-column label="请求地址" prop="url" show-overflow-tooltip> </el-table-column>
-                            </el-table>
-                            <el-pagination
-                                class="pagination-class"
-                                background
-                                layout="total, sizes, prev, pager, next"
-                                :total="count"
-                                :page-sizes="pageSizes"
-                                :page-size="pageSize"
-                                :current-page="currentPage"
-                                @size-change="handleSizeChange"
-                                @current-change="currentChange"
-                            >
-                            </el-pagination>
-                            <div class="footer">
-                                <el-button size="mini" plain @click="choiceCancel">取消</el-button>
-                                <el-button type="primary" size="mini" plain @click="choice">确定</el-button>
-                            </div>
-                        </template>
-                    </el-dialog>
+                    <j-link
+                        :value="testcases"
+                        :show="dialogFormVisible"
+                        :selected="testSetCases"
+                        :no="count"
+                        @visible="listenVisible"
+                        @pageSize="listenPageSize"
+                        @currentPage="listenCurrentPage"
+                        @getCases="listenGetCases"
+                        @choice="listenChoice"
+                    ></j-link>
+                </el-tab-pane>
+                <el-tab-pane label="前置处理器" name="setup">
+                    <el-row>
+                        <el-dropdown size="mini" split-button type="primary" @command="handleSetUp" style="float: right; margin-right: 50px">
+                            操作
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="setup" :disabled="permissions.indexOf('apitest.cases_apiset') === -1">
+                                    关联测试用例
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </el-row>
+                    <set-case :value="setupCases" :attr="setup" :copy="false" @changeOrder="changeSetUpRow" @removeRow="removeSetUpRow"></set-case>
+                    <!--关联测试用例-->
+                    <j-link
+                        :value="testcases"
+                        :show="setupFormVisible"
+                        :selected="setupCases"
+                        :no="count"
+                        @visible="listenSetUpVisible"
+                        @pageSize="listenSetUpPageSize"
+                        @currentPage="listenSetUpCurrentPage"
+                        @getCases="listenSetUpGetCases"
+                        @choice="listenSetUpChoice"
+                    ></j-link>
+                </el-tab-pane>
+                <el-tab-pane label="后置处理器" name="teardown">
+                    <el-row>
+                        <el-dropdown size="mini" split-button type="primary" @command="handleTearDown" style="float: right; margin-right: 50px">
+                            操作
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="teardown" :disabled="permissions.indexOf('apitest.cases_apiset') === -1">
+                                    关联测试用例
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </el-row>
+                    <set-case
+                        :value="teardownCases"
+                        :attr="teardown"
+                        :copy="false"
+                        @changeOrder="changeTearDownRow"
+                        @removeRow="removeTearDownRow"
+                    ></set-case>
+                    <j-link
+                        :value="testcases"
+                        :show="teardownFormVisible"
+                        :selected="teardownCases"
+                        :no="count"
+                        @visible="listenTearDownVisible"
+                        @pageSize="listenTearDownPageSize"
+                        @currentPage="listenTearDownCurrentPage"
+                        @getCases="listenTearDownGetCases"
+                        @choice="listenTearDownChoice"
+                    ></j-link>
                 </el-tab-pane>
             </el-tabs>
         </template>
@@ -283,17 +319,19 @@ export default {
             setDetail: {},
             testcases: [],
             testSetCases: [],
+            setupCases: [],
+            teardownCases: [],
             dialogFormVisible: false,
+            setupFormVisible: false,
+            teardownFormVisible: false,
             dialogConfigVisible: false,
-            multipleSelection: [],
-            pageSizes: [10, 20, 50],
-            pageSize: 10,
-            currentPage: 1,
             count: null,
             configList: [],
             selectValue: '',
             configReference: {},
-            permissions: []
+            permissions: [],
+            setup: 'setup',
+            teardown: 'teardown'
         }
     },
     methods: {
@@ -375,7 +413,7 @@ export default {
             this.$api.api
                 .changeCasesOrder(payload, project)
                 .then(() => {
-                    _this.getTestSetCases()
+                    _this.getTestSetCases(_this.setId, _this.projectName)
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)
@@ -429,7 +467,6 @@ export default {
         handleCommand(command) {
             if (command === 'linked') {
                 this.linked()
-            } else if (command === 'createCase') {
             } else if (command === 'exec') {
                 this.execute()
             }
@@ -437,7 +474,6 @@ export default {
         linked() {
             this.dialogFormVisible = true
         },
-        createCase() {},
         remove(id) {
             this.$api.api
                 .deleteApiTestSet(id)
@@ -449,9 +485,9 @@ export default {
                     this.notify.error(error.response.request.responseText)
                 })
         },
-        getCases() {
+        getCases(pageSize, page) {
             this.$api.api
-                .testCaseList(this.currentPage, this.pageSize)
+                .testCaseList(page, pageSize, this.projectName)
                 .then(response => {
                     this.testcases = response.data.results
                     this.count = response.data.count
@@ -460,59 +496,34 @@ export default {
                     this.notify.error(error.response.request.responseText)
                 })
         },
-        choiceCancel() {
-            this.dialogFormVisible = false
-            this.$refs.multiple.clearSelection()
-        },
-        handleSelectionChange(val) {
-            this.multipleSelection = val
-        },
-        showChoices() {
-            for (let i = 0, len = this.testcases.length; i < len; i++) {
-                let choice = this.testcases[i]
-                for (let k = 0, l = this.testSetCases.length; k < l; k++) {
-                    let c = this.testSetCases[k]
-                    try {
-                        if (c.testcase.id === choice.id) {
-                            this.$refs.multiple.toggleRowSelection(choice, true)
-                        }
-                    } catch (e) {
-                        this.notify.error(e)
-                    }
-                }
-            }
-        },
-        choice() {
-            let payload = {
-                apiset_id: this.$route.params.id,
-                cases: this.multipleSelection
-            }
+        getTestSetCases() {
+            let _this = this
             this.$api.api
-                .caseToTestset(JSON.stringify(payload))
-                .then(() => {
-                    this.dialogFormVisible = false
-                    this.notify.success('添加测试用例成功')
-                    this.getTestSetCases()
+                .TestSetCases(_this.setId, _this.projectName)
+                .then(response => {
+                    _this.testSetCases = response.data
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)
                 })
         },
-        currentChange(val) {
-            this.currentPage = val
-            this.getCases()
-        },
-        handleSizeChange(val) {
-            this.pageSize = val
-            this.getCases()
-        },
-        getTestSetCases() {
-            let testSetId = this.setId
+        getSetUpCases() {
             let _this = this
             this.$api.api
-                .TestSetCases(testSetId, this.projectName)
+                .TestSetCases(_this.setId, _this.projectName, 'setup')
                 .then(response => {
-                    _this.testSetCases = response.data
+                    _this.setupCases = response.data
+                })
+                .catch(error => {
+                    this.notify.error(error.response.request.responseText)
+                })
+        },
+        getTeardownCases() {
+            let _this = this
+            this.$api.api
+                .TestSetCases(_this.setId, _this.projectName, 'teardown')
+                .then(response => {
+                    _this.teardownCases = response.data
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)
@@ -542,6 +553,172 @@ export default {
         },
         getPermissions() {
             this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
+        },
+        handleSetUp(command) {
+            if (command === 'setup') {
+                this.setupFormVisible = true
+            }
+        },
+        handleTearDown(command) {
+            if (command === 'teardown') {
+                this.teardownFormVisible = true
+            }
+        },
+        linkCases(payload) {
+            return this.$api.api.caseToTestset(JSON.stringify(payload))
+        },
+        listenVisible(event) {
+            this.dialogFormVisible = event
+        },
+        listenPageSize(event) {
+            this.getCases(event.pageSize, event.currentPage)
+        },
+        listenCurrentPage(event) {
+            this.getCases(event.pageSize, event.currentPage)
+        },
+        listenGetCases(event) {
+            this.getCases(event.pageSize, event.currentPage)
+        },
+        listenChoice(event) {
+            let payload = {
+                apiset_id: this.$route.params.id,
+                cases: event.cases
+            }
+            this.linkCases(payload)
+                .then(() => {
+                    this.notify.success('添加测试用例成功')
+                    this.dialogFormVisible = false
+                    this.getTestSetCases()
+                })
+                .catch(error => {
+                    this.notify.error(error.response.data)
+                })
+        },
+        listenSetUpVisible(event) {
+            this.setupFormVisible = event
+        },
+        listenSetUpPageSize(event) {
+            this.getCases(event.pageSize, event.currentPage)
+        },
+        listenSetUpCurrentPage(event) {
+            this.getCases(event.pageSize, event.currentPage)
+        },
+        listenSetUpGetCases(event) {
+            this.getCases(event.pageSize, event.currentPage)
+        },
+        listenSetUpChoice(event) {
+            let payload = {
+                apiset_id: this.$route.params.id,
+                cases: event.cases,
+                handler: 'setup'
+            }
+            this.linkCases(payload)
+                .then(() => {
+                    this.notify.success('添加测试用例成功')
+                    this.setupFormVisible = false
+                    this.getSetUpCases()
+                })
+                .catch(error => {
+                    this.notify.error(error.response.data)
+                })
+        },
+        removeSetUpRow(event) {
+            let payload = {
+                case_id: event.testcase.id,
+                testset_id: this.setId,
+                orderNum: event.orderNum,
+                handler: 'setup'
+            }
+            this.removeSetUpCases(payload)
+        },
+        removeSetUpCases(payload) {
+            this.$api.api
+                .removeCaseFromSet(JSON.stringify(payload), this.projectName)
+                .then(() => {
+                    this.notify.success('移除测试用例成功')
+                    this.getSetUpCases()
+                })
+                .catch(error => {
+                    this.notify.error(error)
+                })
+        },
+        changeSetUpRow(event) {
+            let payload = {
+                apiset_id: this.setId,
+                cases: JSON.stringify(event),
+                handler: 'setup'
+            }
+            this.$api.api
+                .changeCasesOrder(JSON.stringify(payload), this.projectName)
+                .then(() => {
+                    this.getSetUpCases()
+                })
+                .catch(error => {
+                    this.notify.error(error.response)
+                })
+        },
+        listenTearDownVisible(event) {
+            this.teardownFormVisible = event
+        },
+        listenTearDownPageSize(event) {
+            this.getCases(event.pageSize, event.currentPage)
+        },
+        listenTearDownCurrentPage(event) {
+            this.getCases(event.pageSize, event.currentPage)
+        },
+        listenTearDownGetCases(event) {
+            this.getCases(event.pageSize, event.currentPage)
+        },
+        listenTearDownChoice(event) {
+            let payload = {
+                apiset_id: this.$route.params.id,
+                cases: event.cases,
+                handler: 'teardown'
+            }
+            this.linkCases(payload)
+                .then(() => {
+                    this.notify.success('添加测试用例成功')
+                    this.teardownFormVisible = false
+                    this.getTeardownCases()
+                })
+                .catch(error => {
+                    this.notify.error(error.response.data)
+                })
+        },
+        removeTearDownRow(event) {
+            let payload = {
+                case_id: event.testcase.id,
+                testset_id: this.setId,
+                orderNum: event.orderNum,
+                handler: 'teardown'
+            }
+            this.removeTearDownCases(payload)
+        },
+        removeTearDownCases(payload) {
+            this.$api.api
+                .removeCaseFromSet(JSON.stringify(payload), this.projectName)
+                .then(() => {
+                    this.notify.success('移除测试用例成功')
+                    this.getTeardownCases()
+                })
+                .catch(error => {
+                    this.notify.error(error)
+                })
+        },
+        changeTearDownRow(event) {
+            let payload = {
+                apiset_id: this.setId,
+                cases: JSON.stringify(event),
+                handler: 'teardown'
+            }
+            this.$api.api
+                .changeCasesOrder(JSON.stringify(payload), this.projectName)
+                .then(() => {
+                    this.getTeardownCases()
+                })
+                .catch(error => {
+                    this.notify.error(error.response)
+                })
         }
     },
     created() {
@@ -549,6 +726,8 @@ export default {
         this.getTestSetDetail()
         this.getSetConfig()
         this.getTestSetCases()
+        this.getSetUpCases()
+        this.getTeardownCases()
     },
     mounted() {}
 }
@@ -562,41 +741,10 @@ export default {
     text-align: left;
     font-size: 14px;
 }
-.dialog-header >>> .el-dialog__header {
-    padding: 20px 20px 0 !important;
-    height: 20px;
-    text-align: left;
-    line-height: 20px;
-}
-.table-class >>> table {
-    height: 40px;
-    line-height: 40px;
-}
-.dialog-class >>> .el-dialog {
-    /*height: 600px;*/
-    overflow: scroll;
-}
-.footer {
-    height: 40px;
-    line-height: 40px;
-    margin-top: 40px;
-    position: relative;
-    float: right;
-    bottom: 20px;
-}
-.pagination-class {
-    margin-top: 50px;
-    float: left;
-    margin-bottom: 20px;
-}
 .is-plain:focus,
 .is-plain:hover {
     color: #606266;
     border-color: white;
 }
 </style>
-<style>
-.el-table__empty-block {
-    height: 400px;
-}
-</style>
+<style></style>

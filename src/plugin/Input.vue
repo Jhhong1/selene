@@ -12,7 +12,14 @@
             <template v-if="parameters !== undefined && parameters.length">
                 <el-row v-for="(param, index) in parameters" :key="index" :gutter="3">
                     <el-col :span="12">
-                        <el-input v-model="param.name" @change="changeValue(param, index)" size="mini"></el-input>
+                        <template v-if="showSelect">
+                            <el-select v-model="param.name" size="mini" class="select_class" @change="changeValue(param, index)">
+                                <el-option v-for="(st, index) in selectes" :key="index" :label="st.label" :value="st.value"></el-option>
+                            </el-select>
+                        </template>
+                        <template v-else>
+                            <el-input v-model="param.name" @change="changeValue(param, index)" size="mini"></el-input>
+                        </template>
                     </el-col>
                     <el-col :span="11">
                         <el-input v-model="param.value" @change="changeValue(param, index)" size="mini"></el-input>
@@ -42,7 +49,17 @@
                         {{ param.name }}
                     </el-col>
                     <el-col :span="12">
-                        {{ param.value }}
+                        <template v-if="param.value.length < 50">
+                            {{ param.value }}
+                        </template>
+                        <template v-else>
+                            <el-popover trigger="hover" placement="top-start">
+                                <p>{{ param.value }}</p>
+                                <div slot="reference" class="name-wrapper">
+                                    {{ param.value }}
+                                </div>
+                            </el-popover>
+                        </template>
                     </el-col>
                 </el-row>
             </template>
@@ -65,13 +82,44 @@ export default {
         edit: {
             type: Boolean,
             default: true
+        },
+        select: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
         return {
             resources: this.value,
             show: this.edit,
-            parameters: []
+            parameters: [],
+            showSelect: this.select,
+            selectes: [
+                {
+                    label: '用户名',
+                    value: 'username'
+                },
+                {
+                    label: '密码',
+                    value: 'password'
+                },
+                {
+                    label: '代理端口',
+                    value: 'port'
+                },
+                {
+                    label: '代理类型',
+                    value: 'protocol'
+                },
+                {
+                    label: '链接体系',
+                    value: 'scheme'
+                },
+                {
+                    label: 'IP地址',
+                    value: 'ip'
+                }
+            ]
         }
     },
     methods: {
@@ -131,6 +179,9 @@ export default {
         value: function(newValue) {
             this.resources = newValue
             this.changeToArry(newValue, this.parameters)
+        },
+        select: function(newValue) {
+            this.showSelect = newValue
         }
     }
 }
@@ -144,5 +195,10 @@ export default {
 .row-class {
     margin-bottom: 1px;
     text-align: center;
+}
+.name-wrapper {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>

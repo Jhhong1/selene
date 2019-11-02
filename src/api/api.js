@@ -157,10 +157,11 @@ export const removeCaseFromSet = (data, projectName = '') => {
     })
 }
 // 获取与测试集关联的测试用例列表
-export const TestSetCases = (testSetId, projectName = '') => {
+export const TestSetCases = (testSetId, projectName = '', handler = '') => {
     return axios.get('/v1/apitest/testset_case/' + testSetId + '/', {
         params: {
-            project: projectName
+            project: projectName,
+            handler: handler
         }
     })
 }
@@ -192,12 +193,21 @@ export const getTaskList = (page = 1, pageSize = 10, projectName = '') => {
 }
 // 获取测试任务详情
 export const getTaskDetail = (taskId, projectName = '') => {
-    return axios.get('/v1/apitest/apiTask/' + taskId + '/', {
+    return axios.get(`/v1/apitest/apiTask/${taskId}/`, {
         params: {
             project: projectName
         }
     })
 }
+// 更新测试任务
+export const updateTask = (taskId, data, projectName = '') => {
+    return axios.put(`/v1/apitest/apiTask/${taskId}/`, data, {
+        params: {
+            project: projectName
+        }
+    })
+}
+
 // 删除测试任务
 export const deleteTestTask = taskId => {
     return axios.delete('/v1/apitest/apiTask/' + taskId + '/')
@@ -236,12 +246,13 @@ export const taskTestSetDetail = (id, task = '', project = '') => {
     })
 }
 // 测试任务测试集中的测试用例
-export const taskSetCases = (task = '', testsetId = '', project = '') => {
+export const taskSetCases = (task = '', testsetId = '', project = '', handler = '') => {
     return axios.get('/v1/apitest/task_set_cases/', {
         params: {
             task: task,
             testset_id: testsetId,
-            project: project
+            project: project,
+            handler: handler
         }
     })
 }

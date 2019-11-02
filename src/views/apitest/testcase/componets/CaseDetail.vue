@@ -39,9 +39,9 @@
                                 <template v-else>
                                     <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">-</el-col>
                                 </template>
-                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">创建时间</el-col>
-                                <template v-if="cases.createTime">
-                                    <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">{{ cases.createTime }}</el-col>
+                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">显示名称</el-col>
+                                <template v-if="cases.display">
+                                    <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">{{ cases.display }}</el-col>
                                 </template>
                                 <template v-else>
                                     <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">-</el-col>
@@ -86,11 +86,9 @@
                                     <template v-else>
                                         <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">-</el-col>
                                     </template>
-                                    <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">开始时间</el-col>
-                                    <template v-if="cases.caserelationship.startRunTime">
-                                        <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">
-                                            {{ cases.startRunTime }}
-                                        </el-col>
+                                    <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">创建时间</el-col>
+                                    <template v-if="cases.createTime">
+                                        <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">{{ cases.createTime }}</el-col>
                                     </template>
                                     <template v-else>
                                         <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">-</el-col>
@@ -106,6 +104,17 @@
                                     <template v-else>
                                         <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">-</el-col>
                                     </template>
+                                    <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">开始时间</el-col>
+                                    <template v-if="cases.caserelationship.startRunTime">
+                                        <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">
+                                            {{ cases.startRunTime }}
+                                        </el-col>
+                                    </template>
+                                    <template v-else>
+                                        <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">-</el-col>
+                                    </template>
+                                </el-row>
+                                <el-row :gutter="10" class="row-class">
                                     <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">失败原因</el-col>
                                     <template v-if="cases.caserelationship.errorMessage">
                                         <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">
@@ -139,12 +148,21 @@
                                 <el-row :gutter="10" class="row-class">
                                     <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">执行结果</el-col>
                                     <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">-</el-col>
-                                    <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">开始时间</el-col>
-                                    <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">-</el-col>
+                                    <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">创建时间</el-col>
+                                    <template v-if="cases.createTime">
+                                        <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">{{ cases.createTime }}</el-col>
+                                    </template>
+                                    <template v-else>
+                                        <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">-</el-col>
+                                    </template>
                                 </el-row>
                                 <el-row :gutter="10" class="row-class">
                                     <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">结束时间</el-col>
                                     <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">-</el-col>
+                                    <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">开始时间</el-col>
+                                    <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">-</el-col>
+                                </el-row>
+                                <el-row :gutter="10" class="row-class">
                                     <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">失败原因</el-col>
                                     <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">-</el-col>
                                 </el-row>

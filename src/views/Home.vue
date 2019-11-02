@@ -96,6 +96,7 @@
 </template>
 <script>
 import Logout from '@/views/logout/Logout'
+import bird from '@/static/images/bird.jpeg'
 export default {
     name: 'Home',
     components: { Logout },
@@ -134,7 +135,7 @@ export default {
             activeNav: this.active(),
             dialogFormVisible: false,
             value: this.$route.query.project_name,
-            url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+            url: bird,
             projectList: [],
             form: {
                 password: '',
@@ -253,6 +254,12 @@ export default {
     watch: {
         $route() {
             this.value = this.$route.query.project_name
+        }
+    },
+    beforeRouteUpdate(to, from, next) {
+        if (to.query.project_name) {
+            this.projects()
+            next()
         }
     }
 }

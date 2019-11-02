@@ -35,6 +35,7 @@ import ApiTestSetUpdate from '@/views/apitest/testset/components/UpdateTestSet'
 import TestTask from '@/views/apitest/testtask/TestTask'
 import TestTaskList from '@/views/apitest/testtask/components/TestTaskList'
 import AddTestTask from '@/views/apitest/testtask/components/AddTestTask'
+import UpdateTask from '@/views/apitest/testtask/components/UpdateTask'
 import TestTaskDetail from '@/views/apitest/testtask/components/TestTaskDetail'
 import TaskTestSetDetail from '@/views/apitest/testtask/components/TaskTestSetDetail'
 
@@ -376,6 +377,15 @@ export default new Router({
                                             component: AddTestTask,
                                             meta: {
                                                 title: '添加测试任务',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'updateTask/:id',
+                                            name: 'UpdateTask',
+                                            component: UpdateTask,
+                                            meta: {
+                                                title: '更新测试任务',
                                                 requireAuth: true
                                             }
                                         },

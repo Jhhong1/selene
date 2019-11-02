@@ -8,6 +8,9 @@
             <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
                 <el-input v-model="setForm.name" maxlength="20" readonly></el-input>
             </el-form-item>
+            <el-form-item label="显示名称" :label-width="formLabelWidth" prop="display">
+                <el-input v-model="setForm.display" maxlength="20"></el-input>
+            </el-form-item>
             <el-form-item label="标签" :label-width="formLabelWidth" prop="labels">
                 <el-select v-model="setForm.tags" multiple placeholder="请选择" class="method-class">
                     <el-option label="bat" value="bat"></el-option>

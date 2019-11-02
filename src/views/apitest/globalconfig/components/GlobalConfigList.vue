@@ -11,20 +11,42 @@
         <el-table class="table-class td" :data="dataTable">
             <el-table-column label="名称" min-width="150">
                 <template slot-scope="scope">
-                    <router-link
-                        tag="el-button"
-                        :to="{ name: 'GlobalConfigDetail', params: { id: scope.row.id }, query: $route.query }"
-                        class="el-button--text"
-                    >
-                        {{ scope.row.name }}
-                    </router-link>
-                    <template v-if="scope.row.globalConfig">
-                        &nbsp;
-                        <el-tag size="mini">全局变量</el-tag>
-                    </template>
+                    <el-col class="config-name" :span="14">
+                        <ul class="ul-style">
+                            <li>
+                                <router-link
+                                    :to="{ name: 'GlobalConfigDetail', params: { id: scope.row.id }, query: $route.query }"
+                                    class="el-link el-link--primary"
+                                >
+                                    {{ scope.row.name }}
+                                </router-link>
+                            </li>
+                            <li class="text-style">
+                                <template v-if="scope.row.display">
+                                    <template v-if="scope.row.display.length > 30">
+                                        <el-popover trigger="hover" placement="top-start">
+                                            <p>{{ scope.row.display }}</p>
+                                            <div slot="reference" class="name-wrapper">
+                                                {{ scope.row.display }}
+                                            </div>
+                                        </el-popover>
+                                    </template>
+                                    <template v-else>
+                                        {{ scope.row.display }}
+                                    </template>
+                                </template>
+                            </li>
+                        </ul>
+                    </el-col>
+                    <el-col :span="10">
+                        <template v-if="scope.row.globalConfig">
+                            &nbsp;
+                            <el-tag size="mini">全局变量</el-tag>
+                        </template>
+                    </el-col>
                 </template>
             </el-table-column>
-            <el-table-column label="BaseURL" min-width="300" prop="baseurl"></el-table-column>
+            <el-table-column label="请求地址" min-width="300" prop="baseurl"></el-table-column>
             <el-table-column label="操作" min-width="100">
                 <template slot-scope="scope">
                     <el-dropdown @command="handleCommand">
@@ -32,12 +54,6 @@
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item
-                                :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.delete_config') === -1"
-                            >
-                                删除
-                            </el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'setGlobal', row: scope.row.id }"
                                 :disabled="permissions.indexOf('apitest.change_config') === -1"
@@ -50,6 +66,12 @@
                                 :disabled="permissions.indexOf('apitest.change_config') === -1"
                             >
                                 更新
+                            </el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.delete_config') === -1"
+                            >
+                                删除
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
