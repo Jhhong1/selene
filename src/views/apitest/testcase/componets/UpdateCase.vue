@@ -8,6 +8,9 @@
             <el-form-item label="用例名称" :label-width="formLabelWidth" prop="name">
                 <el-input readonly v-model="addCase.name" size="mini"></el-input>
             </el-form-item>
+            <el-form-item label="显示名称" :label-width="formLabelWidth" prop="display">
+                <el-input v-model="addCase.display" size="mini"></el-input>
+            </el-form-item>
             <el-form-item label="请求地址" :label-width="formLabelWidth" prop="url">
                 <el-input v-model="addCase.url" maxlength="255" size="mini"></el-input>
             </el-form-item>

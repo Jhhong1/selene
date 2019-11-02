@@ -35,6 +35,15 @@
                                 </el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
+                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">显示名称</el-col>
+                                <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">
+                                    <template v-if="configDetail.display">
+                                        {{ configDetail.display }}
+                                    </template>
+                                    <template v-else>
+                                        -
+                                    </template>
+                                </el-col>
                                 <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">更新时间</el-col>
                                 <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">
                                     {{ $moment(configDetail.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
@@ -47,13 +56,19 @@
                     <el-card>
                         <div>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">BaseURL</el-col>
+                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">请求地址</el-col>
                                 <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">{{ configDetail.baseurl }}</el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
                                 <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">头部信息</el-col>
                                 <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">
                                     <j-input v-model="configDetail.headers" :edit="false"></j-input>
+                                </el-col>
+                            </el-row>
+                            <el-row :gutter="10" class="row-class">
+                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">请求代理</el-col>
+                                <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">
+                                    <j-input v-model="configDetail.proxy" :edit="false"></j-input>
                                 </el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">

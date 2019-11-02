@@ -8,6 +8,9 @@
             <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
                 <el-input v-model="taskForm.name" size="mini" maxlength="20"></el-input>
             </el-form-item>
+            <el-form-item label="显示名称" :label-width="formLabelWidth" prop="display">
+                <el-input v-model="taskForm.display" size="mini" maxlength="20"></el-input>
+            </el-form-item>
             <el-form-item label="描述信息" :label-width="formLabelWidth" prop="description">
                 <el-input v-model="taskForm.description" type="textarea" :autosize="{ minRows: 10 }"></el-input>
             </el-form-item>

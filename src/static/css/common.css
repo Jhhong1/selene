@@ -156,3 +156,25 @@
 .project-class {
     padding-left: 10px;
 }
+.config-name {
+    height: 40px;
+}
+.ul-style {
+    list-style-type: none;
+    padding-inline-start: 0px;
+    margin: 0 auto;
+}
+
+.ul-style li {
+    height: 20px;
+    line-height: 20px;
+}
+.name-wrapper {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.text-style {
+    color: darkgray;
+    font-size: 6px;
+}

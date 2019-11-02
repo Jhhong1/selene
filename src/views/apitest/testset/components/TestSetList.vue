@@ -11,13 +11,31 @@
         <el-table class="table-class td" :data="setList">
             <el-table-column label="名称" min-width="100">
                 <template slot-scope="scope">
-                    <router-link
-                        tag="el-button"
-                        :to="{ name: 'ApiTestSetDetail', params: { id: scope.row.id }, query: $route.query }"
-                        class="el-button--text"
-                    >
-                        {{ scope.row.name }}
-                    </router-link>
+                    <ul class="ul-style">
+                        <li>
+                            <router-link
+                                :to="{ name: 'ApiTestSetDetail', params: { id: scope.row.id }, query: $route.query }"
+                                class="el-link el-link--primary"
+                            >
+                                {{ scope.row.name }}
+                            </router-link>
+                        </li>
+                        <li class="text-style">
+                            <template v-if="scope.row.display">
+                                <template v-if="scope.row.display.length > 30">
+                                    <el-popover trigger="hover" placement="top-start">
+                                        <p>{{ scope.row.display }}</p>
+                                        <div slot="reference" class="name-wrapper">
+                                            {{ scope.row.display }}
+                                        </div>
+                                    </el-popover>
+                                </template>
+                                <template v-else>
+                                    {{ scope.row.display }}
+                                </template>
+                            </template>
+                        </li>
+                    </ul>
                 </template>
             </el-table-column>
             <el-table-column label="描述信息" min-width="150">
@@ -70,12 +88,6 @@
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item
-                                :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.delete_apiset') === -1"
-                            >
-                                删除
-                            </el-dropdown-item>
                             <el-dropdown-item :command="{ type: 'view', row: scope.row.id }">查看</el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'update', row: scope.row.id }"
@@ -88,6 +100,12 @@
                                 :disabled="permissions.indexOf('apitest.execute_apiset') === -1"
                             >
                                 执行
+                            </el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.delete_apiset') === -1"
+                            >
+                                删除
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>

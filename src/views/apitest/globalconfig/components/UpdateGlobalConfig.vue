@@ -8,8 +8,14 @@
             <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
                 <el-input readonly v-model="configForm.name" size="mini"></el-input>
             </el-form-item>
-            <el-form-item label="BaseURL" :label-width="formLabelWidth" prop="url">
+            <el-form-item label="显示名称" :label-width="formLabelWidth" prop="display">
+                <el-input v-model="configForm.display" size="mini"></el-input>
+            </el-form-item>
+            <el-form-item label="请求地址" :label-width="formLabelWidth" prop="url">
                 <el-input v-model="configForm.baseurl" maxlength="255" size="mini"></el-input>
+            </el-form-item>
+            <el-form-item label="请求代理" :label-width="formLabelWidth" prop="proxy">
+                <j-input v-model="configForm.proxy" :select="true"></j-input>
             </el-form-item>
             <el-form-item label="头部信息" :label-width="formLabelWidth" prop="variables">
                 <j-input v-model="configForm.headers"></j-input>

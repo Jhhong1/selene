@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-table :data="testSetCases" row-key="orderNum" style="padding-left: 20px; padding-right: 20px">
+        <el-table :data="testSetCases" :class="custom" row-key="orderNum" style="padding-left: 20px; padding-right: 20px">
             <el-table-column label="用例名称" min-width="50" prop="testcase.name"> </el-table-column>
             <el-table-column label="状态" min-width="50">
                 <template slot-scope="scope">
@@ -43,14 +43,16 @@
                     >
                         移除
                     </el-button>
-                    <el-button
-                        type="text"
-                        size="mini"
-                        @click="copyRow(scope.$index, scope.row)"
-                        :disabled="permissions.indexOf('apitest.copy_apiset') === -1"
-                    >
-                        复制
-                    </el-button>
+                    <template v-if="showCopy">
+                        <el-button
+                            type="text"
+                            size="mini"
+                            @click="copyRow(scope.$index, scope.row)"
+                            :disabled="permissions.indexOf('apitest.copy_apiset') === -1"
+                        >
+                            复制
+                        </el-button>
+                    </template>
                 </template>
             </el-table-column>
         </el-table>
@@ -67,18 +69,29 @@ export default {
             default: function() {
                 return []
             }
+        },
+        copy: {
+            type: Boolean,
+            default: true
+        },
+        attr: {
+            type: String,
+            default: 'cases'
         }
     },
     data() {
         return {
             testSetCases: this.value,
-            permissions: []
+            permissions: [],
+            showCopy: this.copy,
+            custom: this.attr
         }
     },
     methods: {
         makeSortTable() {
             if (this.permissions.indexOf('apitest.cases_apiset') > -1) {
-                const table = document.querySelector('.el-table__body-wrapper table tbody ')
+                let selector = '.' + this.custom + ' .el-table__body-wrapper table tbody'
+                const table = document.querySelector(selector)
                 const self = this
                 Sortable.create(table, {
                     onEnd({ newIndex, oldIndex }) {
@@ -137,6 +150,9 @@ export default {
     watch: {
         value: function(newValue) {
             this.testSetCases = newValue
+        },
+        attr: function(newValue) {
+            this.custom = newValue
         }
     }
 }

@@ -9,9 +9,30 @@
                 <el-tab-pane disabled></el-tab-pane>
                 <el-tab-pane label="基本信息" name="info">
                     <div class="el-table" style="padding: 0 40px">
+                        <el-row class="row-class">
+                            <router-link
+                                tag="el-button"
+                                :to="{ name: 'UpdateTask', params: { id: taskId }, query: $route.query }"
+                                class="el-button--primary el-button--mini"
+                                style="float: right; margin-right: 50px"
+                            >
+                                更新
+                            </router-link>
+                        </el-row>
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">名称</el-col>
                             <el-col :span="22">{{ taskDetail.name }}</el-col>
+                        </el-row>
+                        <el-row :gutter="10" class="row-class test-left">
+                            <el-col :span="2">显示名称</el-col>
+                            <el-col :span="22">
+                                <template v-if="taskDetail.display">
+                                    {{ taskDetail.display }}
+                                </template>
+                                <template v-else>
+                                    -
+                                </template>
+                            </el-col>
                         </el-row>
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">创建日期</el-col>
@@ -206,11 +227,35 @@
                                 ref="multiple"
                                 :data="testSets"
                                 tooltip-effect="dark"
+                                width="55%"
                                 @selection-change="handleSelectionChange"
                                 style="width: 100%"
                             >
                                 <el-table-column type="selection" width="55"></el-table-column>
-                                <el-table-column label="测试集名称" width="120" prop="name"></el-table-column>
+                                <el-table-column label="测试集名称" width="120">
+                                    <template slot-scope="scope">
+                                        <ul class="ul-style">
+                                            <li>
+                                                {{ scope.row.name }}
+                                            </li>
+                                            <li class="text-style">
+                                                <template v-if="scope.row.display">
+                                                    <template v-if="scope.row.display.length > 30">
+                                                        <el-popover trigger="hover" placement="top-start">
+                                                            <p>{{ scope.row.display }}</p>
+                                                            <div slot="reference" class="name-wrapper">
+                                                                {{ scope.row.display }}
+                                                            </div>
+                                                        </el-popover>
+                                                    </template>
+                                                    <template v-else>
+                                                        {{ scope.row.display }}
+                                                    </template>
+                                                </template>
+                                            </li>
+                                        </ul>
+                                    </template>
+                                </el-table-column>
                                 <el-table-column label="描述信息" prop="url" show-overflow-tooltip></el-table-column>
                             </el-table>
                             <el-pagination

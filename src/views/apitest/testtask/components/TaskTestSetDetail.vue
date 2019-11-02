@@ -17,6 +17,17 @@
                             <el-col :span="22">{{ setDetail.name }}</el-col>
                         </el-row>
                         <el-row :gutter="10" class="row-class test-left">
+                            <el-col :span="2">显示名称</el-col>
+                            <el-col :span="22">
+                                <template v-if="setDetail.display">
+                                    {{ setDetail.display }}
+                                </template>
+                                <template v-else>
+                                    -
+                                </template>
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">创建日期</el-col>
                             <el-col :span="22">{{ $moment(setDetail.createTime).format('YYYY-MM-DD HH:mm:ss') }}</el-col>
                         </el-row>
@@ -161,19 +172,84 @@
                                 >
                             </template>
                         </el-table-column>
-                        <!--<el-table-column label="操作" min-width="100" >-->
-                        <!--<template slot-scope="scope">-->
-                        <!--<el-button type="text" size="mini" @click="removeAction(scope.$index, testSetCases, scope.row)">移除</el-button>-->
-                        <!--<el-button type="text" size="mini" @click="copyRow(scope.$index, scope.row)">复制</el-button>-->
-                        <!--</template>-->
-                        <!--</el-table-column>-->
+                    </el-table>
+                </el-tab-pane>
+                <el-tab-pane label="前置处理器" name="setup">
+                    <el-table row-key="id" :data="setupCases" style="padding-left: 20px; padding-right: 20px">
+                        <el-table-column label="用例名称" min-width="50" prop="name"></el-table-column>
+                        <el-table-column label="状态" min-width="50">
+                            <template slot-scope="scope">
+                                <template v-if="scope.row.relationship__status === 'Done'">
+                                    <tag-done></tag-done>
+                                </template>
+                                <template v-else-if="scope.row.relationship__status === 'Starting'">
+                                    <tag-running></tag-running>
+                                </template>
+                                <template v-else>
+                                    <tag-not-run></tag-not-run>
+                                </template>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="结果" min-width="100">
+                            <template slot-scope="scope">
+                                <template v-if="scope.row.relationship__result === 'Failed'">
+                                    <el-popover trigger="hover" placement="top-start">
+                                        <p>{{ scope.row.relationship__errorMessage }}</p>
+                                        <div slot="reference">
+                                            <tag-failed></tag-failed>
+                                        </div>
+                                    </el-popover>
+                                </template>
+                                <template v-else-if="scope.row.relationship__result === 'Succeed'">
+                                    <tag-success></tag-success>
+                                </template>
+                                <template v-else
+                                    >-</template
+                                >
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-tab-pane>
+                <el-tab-pane label="后置处理器" name="teardown">
+                    <el-table row-key="id" :data="teardownCases" style="padding-left: 20px; padding-right: 20px">
+                        <el-table-column label="用例名称" min-width="50" prop="name"></el-table-column>
+                        <el-table-column label="状态" min-width="50">
+                            <template slot-scope="scope">
+                                <template v-if="scope.row.relationship__status === 'Done'">
+                                    <tag-done></tag-done>
+                                </template>
+                                <template v-else-if="scope.row.relationship__status === 'Starting'">
+                                    <tag-running></tag-running>
+                                </template>
+                                <template v-else>
+                                    <tag-not-run></tag-not-run>
+                                </template>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="结果" min-width="100">
+                            <template slot-scope="scope">
+                                <template v-if="scope.row.relationship__result === 'Failed'">
+                                    <el-popover trigger="hover" placement="top-start">
+                                        <p>{{ scope.row.relationship__errorMessage }}</p>
+                                        <div slot="reference">
+                                            <tag-failed></tag-failed>
+                                        </div>
+                                    </el-popover>
+                                </template>
+                                <template v-else-if="scope.row.relationship__result === 'Succeed'">
+                                    <tag-success></tag-success>
+                                </template>
+                                <template v-else
+                                    >-</template
+                                >
+                            </template>
+                        </el-table-column>
                     </el-table>
                 </el-tab-pane>
             </el-tabs>
         </template>
     </div>
 </template>
-
 <script>
 export default {
     name: 'TaskTestDetail',
@@ -184,7 +260,9 @@ export default {
             projectName: this.$route.query.project_name,
             setId: this.$route.params.id,
             setDetail: {},
-            setCases: []
+            setCases: [],
+            setupCases: [],
+            teardownCases: []
         }
     },
     methods: {
@@ -199,10 +277,7 @@ export default {
                     _this.setDetail = response.data
                 })
                 .catch(error => {
-                    this.$notify.error({
-                        title: '错误',
-                        message: error.response.request.responseText
-                    })
+                    this.notify.error(error.response.request.responseText)
                 })
         },
         taskSetCases() {
@@ -213,16 +288,37 @@ export default {
                     _this.setCases = response.data
                 })
                 .catch(error => {
-                    this.$notify.error({
-                        title: '错误',
-                        message: error.response.request.responseText
-                    })
+                    this.notify.error(error.response.request.responseText)
+                })
+        },
+        taskSetSetUpCases() {
+            let _this = this
+            this.$api.api
+                .taskSetCases(_this.taskName, _this.setId, _this.projectName, 'setup')
+                .then(response => {
+                    _this.setupCases = response.data
+                })
+                .catch(error => {
+                    this.notify.error(error.response.request.responseText)
+                })
+        },
+        taskSetTearDownCases() {
+            let _this = this
+            this.$api.api
+                .taskSetCases(_this.taskName, _this.setId, _this.projectName, 'teardown')
+                .then(response => {
+                    _this.teardownCases = response.data
+                })
+                .catch(error => {
+                    this.notify.error(error.response.request.responseText)
                 })
         }
     },
     created() {
         this.taskSetDetail()
         this.taskSetCases()
+        this.taskSetSetUpCases()
+        this.taskSetTearDownCases()
     }
 }
 </script>
