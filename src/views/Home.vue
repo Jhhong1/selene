@@ -260,6 +260,8 @@ export default {
         if (to.query.project_name) {
             this.projects()
             next()
+        } else {
+            next()
         }
     }
 }
