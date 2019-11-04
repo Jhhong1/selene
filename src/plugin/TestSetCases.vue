@@ -1,7 +1,30 @@
 <template>
     <div>
         <el-table :data="testSetCases" :class="custom" row-key="orderNum" style="padding-left: 20px; padding-right: 20px">
-            <el-table-column label="用例名称" min-width="50" prop="testcase.name"> </el-table-column>
+            <el-table-column label="用例名称" min-width="50">
+                <template slot-scope="scope">
+                    <ul class="ul-style">
+                        <li>
+                            {{ scope.row.testcase.name }}
+                        </li>
+                        <li class="text-style">
+                            <template v-if="scope.row.testcase.display">
+                                <template v-if="scope.row.testcase.display.length > 30">
+                                    <el-popover trigger="hover" placement="top-start">
+                                        <p>{{ scope.row.testcase.display }}</p>
+                                        <div slot="reference" class="name-wrapper">
+                                            {{ scope.row.testcase.display }}
+                                        </div>
+                                    </el-popover>
+                                </template>
+                                <template v-else>
+                                    {{ scope.row.testcase.display }}
+                                </template>
+                            </template>
+                        </li>
+                    </ul>
+                </template>
+            </el-table-column>
             <el-table-column label="状态" min-width="50">
                 <template slot-scope="scope">
                     <template v-if="scope.row.status === 'Done'">

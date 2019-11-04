@@ -140,7 +140,30 @@
                 </el-tab-pane>
                 <el-tab-pane label="测试用例" name="cases">
                     <el-table row-key="id" :data="setCases" style="padding-left: 20px; padding-right: 20px">
-                        <el-table-column label="用例名称" min-width="50" prop="name"></el-table-column>
+                        <el-table-column label="用例名称" min-width="50">
+                            <template slot-scope="scope">
+                                <ul class="ul-style">
+                                    <li>
+                                        {{ scope.row.name }}
+                                    </li>
+                                    <li class="text-style">
+                                        <template v-if="scope.row.display">
+                                            <template v-if="scope.row.display.length > 30">
+                                                <el-popover trigger="hover" placement="top-start">
+                                                    <p>{{ scope.row.display }}</p>
+                                                    <div slot="reference" class="name-wrapper">
+                                                        {{ scope.row.display }}
+                                                    </div>
+                                                </el-popover>
+                                            </template>
+                                            <template v-else>
+                                                {{ scope.row.display }}
+                                            </template>
+                                        </template>
+                                    </li>
+                                </ul>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="状态" min-width="50">
                             <template slot-scope="scope">
                                 <template v-if="scope.row.relationship__status === 'Done'">
@@ -176,7 +199,30 @@
                 </el-tab-pane>
                 <el-tab-pane label="前置处理器" name="setup">
                     <el-table row-key="id" :data="setupCases" style="padding-left: 20px; padding-right: 20px">
-                        <el-table-column label="用例名称" min-width="50" prop="name"></el-table-column>
+                        <el-table-column label="用例名称" min-width="50">
+                            <template slot-scope="scope">
+                                <ul class="ul-style">
+                                    <li>
+                                        {{ scope.row.name }}
+                                    </li>
+                                    <li class="text-style">
+                                        <template v-if="scope.row.display">
+                                            <template v-if="scope.row.display.length > 30">
+                                                <el-popover trigger="hover" placement="top-start">
+                                                    <p>{{ scope.row.display }}</p>
+                                                    <div slot="reference" class="name-wrapper">
+                                                        {{ scope.row.display }}
+                                                    </div>
+                                                </el-popover>
+                                            </template>
+                                            <template v-else>
+                                                {{ scope.row.display }}
+                                            </template>
+                                        </template>
+                                    </li>
+                                </ul>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="状态" min-width="50">
                             <template slot-scope="scope">
                                 <template v-if="scope.row.relationship__status === 'Done'">
@@ -212,7 +258,30 @@
                 </el-tab-pane>
                 <el-tab-pane label="后置处理器" name="teardown">
                     <el-table row-key="id" :data="teardownCases" style="padding-left: 20px; padding-right: 20px">
-                        <el-table-column label="用例名称" min-width="50" prop="name"></el-table-column>
+                        <el-table-column label="用例名称" min-width="50">
+                            <template slot-scope="scope">
+                                <ul class="ul-style">
+                                    <li>
+                                        {{ scope.row.name }}
+                                    </li>
+                                    <li class="text-style">
+                                        <template v-if="scope.row.display">
+                                            <template v-if="scope.row.display.length > 30">
+                                                <el-popover trigger="hover" placement="top-start">
+                                                    <p>{{ scope.row.display }}</p>
+                                                    <div slot="reference" class="name-wrapper">
+                                                        {{ scope.row.display }}
+                                                    </div>
+                                                </el-popover>
+                                            </template>
+                                            <template v-else>
+                                                {{ scope.row.display }}
+                                            </template>
+                                        </template>
+                                    </li>
+                                </ul>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="状态" min-width="50">
                             <template slot-scope="scope">
                                 <template v-if="scope.row.relationship__status === 'Done'">
