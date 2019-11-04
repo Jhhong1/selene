@@ -148,22 +148,40 @@
                         <el-table-column label="测试集名称" min-width="50">
                             <template slot-scope="scope">
                                 <template v-if="scope.row.testset">
-                                    <router-link
-                                        tag="el-button"
-                                        :to="{
-                                            name: 'TaskTestSetDetail',
-                                            params: {
-                                                taskName: $route.params.name,
-                                                taskId: taskId,
-                                                setName: scope.row.testset.name,
-                                                id: scope.row.testset.id
-                                            },
-                                            query: $route.query
-                                        }"
-                                        class="el-button--text"
-                                    >
-                                        {{ scope.row.testset.name }}
-                                    </router-link>
+                                    <ul class="ul-style">
+                                        <li>
+                                            <router-link
+                                                :to="{
+                                                    name: 'TaskTestSetDetail',
+                                                    params: {
+                                                        taskName: $route.params.name,
+                                                        taskId: taskId,
+                                                        setName: scope.row.testset.name,
+                                                        id: scope.row.testset.id
+                                                    },
+                                                    query: $route.query
+                                                }"
+                                                class="el-link el-link--primary"
+                                            >
+                                                {{ scope.row.testset.name }}
+                                            </router-link>
+                                        </li>
+                                        <li class="text-style">
+                                            <template v-if="scope.row.testset.display">
+                                                <template v-if="scope.row.testset.display > 30">
+                                                    <el-popover trigger="hover" placement="top-start">
+                                                        <p>{{ scope.row.testset.display }}</p>
+                                                        <div slot="reference" class="name-wrapper">
+                                                            {{ scope.row.testset.display }}
+                                                        </div>
+                                                    </el-popover>
+                                                </template>
+                                                <template v-else>
+                                                    {{ scope.row.testset.display }}
+                                                </template>
+                                            </template>
+                                        </li>
+                                    </ul>
                                 </template>
                             </template>
                         </el-table-column>
