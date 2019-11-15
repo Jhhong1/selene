@@ -59,6 +59,37 @@
                                 <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">请求地址</el-col>
                                 <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">{{ configDetail.baseurl }}</el-col>
                             </el-row>
+                            <!-- <template v-if="configDetail.counter">
+                                <el-row :gutter="10" class="row-class">
+                                    <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">计数器</el-col>
+                                    <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">
+                                        <el-row>
+                                            <el-col :span="12">
+                                                <div class="grid-content bg-purple-light">键</div>
+                                            </el-col>
+                                            <el-col :span="12">
+                                                <div class="grid-content bg-purple-light">值</div>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row class="asserts-row">
+                                            <el-col :span="12">引用名</el-col>
+                                            <el-col :span="12">{{ configDetail.counter.referName }}</el-col>
+                                        </el-row>
+                                        <el-row class="asserts-row">
+                                            <el-col :span="12">初始值</el-col>
+                                            <el-col :span="12">{{ configDetail.counter.initial }}</el-col>
+                                        </el-row>
+                                        <el-row class="asserts-row">
+                                            <el-col :span="12">增量</el-col>
+                                            <el-col :span="12">{{ configDetail.counter.step }}</el-col>
+                                        </el-row>
+                                        <el-row class="asserts-row">
+                                            <el-col :span="12">最大值</el-col>
+                                            <el-col :span="12">{{ configDetail.counter.final }}</el-col>
+                                        </el-row>
+                                    </el-col>
+                                </el-row>
+                            </template> -->
                             <el-row :gutter="10" class="row-class">
                                 <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">头部信息</el-col>
                                 <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">

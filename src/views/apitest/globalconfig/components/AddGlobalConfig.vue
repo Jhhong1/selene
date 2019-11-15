@@ -92,6 +92,8 @@ export default {
                     } else {
                         callback()
                     }
+                } else {
+                    callback()
                 }
             } catch (e) {}
         }
@@ -135,7 +137,6 @@ export default {
                 if (valid) {
                     _this.configForm.project = _this.projectName
                     let payload = _this.configForm
-                    console.log(payload)
                     _this.create(JSON.stringify(payload), _this.projectName, formName)
                 } else {
                     return false
