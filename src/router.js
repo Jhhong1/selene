@@ -39,6 +39,11 @@ import UpdateTask from '@/views/apitest/testtask/components/UpdateTask'
 import TestTaskDetail from '@/views/apitest/testtask/components/TestTaskDetail'
 import TaskTestSetDetail from '@/views/apitest/testtask/components/TaskTestSetDetail'
 
+import Counter from '@/views/apitest/counter/Counter'
+import CounterList from '@/views/apitest/counter/components/CounterList'
+import AddCounter from '@/views/apitest/counter/components/AddCounter'
+import UpdateCounter from '@/views/apitest/counter/components/UpdateCounter'
+
 import Report from '@/views/apitest/report/Report'
 import ReportList from '@/views/apitest/report/components/ReportList'
 
@@ -257,6 +262,43 @@ export default new Router({
                                             component: GlobalConfigDetail,
                                             meta: {
                                                 title: '配置详情',
+                                                requireAuth: true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    path: 'counter',
+                                    component: Counter,
+                                    meta: {
+                                        title: '计数器',
+                                        requireAuth: true
+                                    },
+                                    children: [
+                                        {
+                                            path: '',
+                                            name: 'CounterList',
+                                            component: CounterList,
+                                            meta: {
+                                                title: '计数器列表',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'addCounter',
+                                            name: 'AddCounter',
+                                            component: AddCounter,
+                                            meta: {
+                                                title: '添加计数器',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'updateCounter/:id',
+                                            name: 'UpdateCounter',
+                                            component: UpdateCounter,
+                                            meta: {
+                                                title: '更新计数器',
                                                 requireAuth: true
                                             }
                                         }

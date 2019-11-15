@@ -34,7 +34,7 @@ export const resetPassword = (resetcode, params) => {
 
 // 更改密码
 export const changePassword = (username, params) => {
-    return axios.put('/v1/change/' + username + '/', params)
+    return axios.put(`/v1/change/${username}/`, params)
 }
 
 // 添加测试用例
@@ -55,17 +55,17 @@ export const testCaseList = (page = 1, pagesize = 10, projectName = '') => {
 
 // 删除测试用例
 export const deleteCase = caseId => {
-    return axios.delete('/v1/apitest/apiCases/' + caseId + '/')
+    return axios.delete(`/v1/apitest/apiCases/${caseId}/`)
 }
 
 // 查看用例详情
 export const getCaseDetail = caseId => {
-    return axios.get('/v1/apitest/apiCases/' + caseId + '/')
+    return axios.get(`/v1/apitest/apiCases/${caseId}/`)
 }
 
 // 更新用例
 export const updateCase = (caseId, params) => {
-    return axios.put('/v1/apitest/apiCases/' + caseId + '/', params)
+    return axios.put(`/v1/apitest/apiCases/${caseId}/`, params)
 }
 
 // 执行测试用例
@@ -89,12 +89,12 @@ export const apiProjectList = () => {
 
 // 删除测试项目
 export const deleteApiProject = projectId => {
-    return axios.delete('/v1/apitest/apiProjects/' + projectId + '/')
+    return axios.delete(`/v1/apitest/apiProjects/${projectId}/`)
 }
 
 // 测试项目详情
 export const apiProjectDetail = projectId => {
-    return axios.get('/v1/apitest/apiProjects/' + projectId + '/')
+    return axios.get(`/v1/apitest/apiProjects/${projectId}/`)
 }
 
 // 测试集列表
@@ -118,11 +118,11 @@ export const createApiTestSet = (data, projectName = '') => {
 }
 // 删除测试集
 export const deleteApiTestSet = id => {
-    return axios.delete('/v1/apitest/apiSet/' + id + '/')
+    return axios.delete(`/v1/apitest/apiSet/${id}/`)
 }
 // 测试集详情
 export const ApiTestSetDetail = (id, project) => {
-    return axios.get('/v1/apitest/apiSet/' + id + '/', {
+    return axios.get(`/v1/apitest/apiSet/${id}/`, {
         params: {
             project: project
         }
@@ -130,7 +130,7 @@ export const ApiTestSetDetail = (id, project) => {
 }
 // 更新测试集
 export const updateTestSet = (id, data, projectName = '') => {
-    return axios.put('/v1/apitest/apiSet/' + id + '/', data, {
+    return axios.put(`/v1/apitest/apiSet/${id}/`, data, {
         params: {
             project: projectName
         }
@@ -158,7 +158,7 @@ export const removeCaseFromSet = (data, projectName = '') => {
 }
 // 获取与测试集关联的测试用例列表
 export const TestSetCases = (testSetId, projectName = '', handler = '') => {
-    return axios.get('/v1/apitest/testset_case/' + testSetId + '/', {
+    return axios.get(`/v1/apitest/testset_case/${testSetId}/`, {
         params: {
             project: projectName,
             handler: handler
@@ -210,7 +210,7 @@ export const updateTask = (taskId, data, projectName = '') => {
 
 // 删除测试任务
 export const deleteTestTask = taskId => {
-    return axios.delete('/v1/apitest/apiTask/' + taskId + '/')
+    return axios.delete(`/v1/apitest/apiTask/${taskId}/`)
 }
 // 关联测试集到测试任务
 export const testSetToTask = (data, projectName = '') => {
@@ -222,7 +222,7 @@ export const testSetToTask = (data, projectName = '') => {
 }
 // 获取与测试任务关联的测试集列表
 export const taskTestSet = (taskId, projectName = '') => {
-    return axios.get('/v1/apitest/task_testSet/' + taskId + '/', {
+    return axios.get(`/v1/apitest/task_testSet/${taskId}/`, {
         params: {
             project: projectName
         }
@@ -238,7 +238,7 @@ export const removeTestSetFromTask = (data, projectName = '') => {
 }
 // 测试任务中测试集详情
 export const taskTestSetDetail = (id, task = '', project = '') => {
-    return axios.get('/v1/apitest/task_set_detail/' + id + '/', {
+    return axios.get(`/v1/apitest/task_set_detail/${id}/`, {
         params: {
             task: task,
             project: project
@@ -276,7 +276,7 @@ export const createConfig = (data, projectName = '') => {
 }
 // 获取配置详情
 export const getConfigDetail = (configId, projectName = '') => {
-    return axios.get('/v1/apitest/config/' + configId + '/', {
+    return axios.get(`/v1/apitest/config/${configId}/`, {
         params: {
             project: projectName
         }
@@ -284,7 +284,7 @@ export const getConfigDetail = (configId, projectName = '') => {
 }
 // 更新配置
 export const updateConfig = (configId, data, projectName = '') => {
-    return axios.put('/v1/apitest/config/' + configId + '/', data, {
+    return axios.put(`/v1/apitest/config/${configId}/`, data, {
         params: {
             project: projectName
         }
@@ -292,7 +292,7 @@ export const updateConfig = (configId, data, projectName = '') => {
 }
 // 删除配置
 export const deleteConfig = (configId, projectName = '') => {
-    return axios.delete('/v1/apitest/config/' + configId + '/', {
+    return axios.delete(`/v1/apitest/config/${configId}/`, {
         params: {
             project: projectName
         }
@@ -316,7 +316,63 @@ export const configToSet = (data, projectName = '') => {
 }
 // 获取测试集引用的配置
 export const getSetConfig = (setId, projectName = '') => {
-    return axios.get('/v1/apitest/config_to_set/' + setId + '/', {
+    return axios.get(`/v1/apitest/config_to_set/${setId}/`, {
+        params: {
+            project: projectName
+        }
+    })
+}
+// 获取计数器列表
+export const getCounters = (projectName = '') => {
+    return axios.get('/v1/apitest/counter/', {
+        params: {
+            project: projectName
+        }
+    })
+}
+// 添加计数器
+export const addCounter = (data, projectName = '') => {
+    return axios.post('/v1/apitest/counter/', data, {
+        params: {
+            project: projectName
+        }
+    })
+}
+// 获取计数器的详情
+export const getCounterDetail = (counterId, projectName = '') => {
+    return axios.get(`/v1/apitest/counter/${counterId}/`, {
+        params: {
+            project: projectName
+        }
+    })
+}
+// 更新计数器
+export const updateCounter = (counterId, data, projectName = '') => {
+    return axios.put(`/v1/apitest/counter/${counterId}/`, data, {
+        params: {
+            project: projectName
+        }
+    })
+}
+// 删除计数器
+export const deleteCounter = (counterId, projectName = '') => {
+    return axios.delete(`/v1/apitest/counter/${counterId}/`, {
+        params: {
+            project: projectName
+        }
+    })
+}
+// 关联计数器到测试任务
+export const linkCounter = (data, projectName = '') => {
+    return axios.post('/v1/apitest/task_counter/', data, {
+        params: {
+            project: projectName
+        }
+    })
+}
+// 获取测试任务下的计数器
+export const getTaskCounter = (taskId, projectName = '') => {
+    return axios.get(`/v1/apitest/task_counter/${taskId}/`, {
         params: {
             project: projectName
         }
@@ -324,7 +380,7 @@ export const getSetConfig = (setId, projectName = '') => {
 }
 // 测试报告
 export const resultStatics = (taskId, projectName = '') => {
-    return axios.get('/v1/apitest/result_statistics/' + taskId + '/', {
+    return axios.get(`/v1/apitest/result_statistics/${taskId}/`, {
         params: {
             project: projectName
         }

@@ -8,17 +8,19 @@
             <el-tabs v-model="activeName" style="background-color: white">
                 <el-tab-pane disabled></el-tab-pane>
                 <el-tab-pane label="基本信息" name="info">
-                    <div class="el-table" style="padding: 0 40px">
-                        <el-row class="row-class">
-                            <router-link
-                                tag="el-button"
-                                :to="{ name: 'UpdateTask', params: { id: taskId }, query: $route.query }"
-                                class="el-button--primary el-button--mini"
-                                style="float: right; margin-right: 50px"
-                            >
+                    <el-dropdown size="mini" split-button type="primary" @command="infoHandleCommand" style="float: right; margin-right: 50px">
+                        操作
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.change_apitasks') === -1">
                                 更新
-                            </router-link>
-                        </el-row>
+                            </el-dropdown-item>
+                            <!--<el-dropdown-item command="createCase">创建测试集</el-dropdown-item>-->
+                            <el-dropdown-item command="link" :disabled="permissions.indexOf('apitest.change_apitasks') === -1">
+                                关联计数器
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <div class="el-table" style="padding: 0 40px">
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">名称</el-col>
                             <el-col :span="22">{{ taskDetail.name }}</el-col>
@@ -126,7 +128,46 @@
                                 <el-col :span="22">-</el-col>
                             </template>
                         </el-row>
+                        <el-row :gutter="10" class="row-class test-left">
+                            <el-col :span="2">计数器</el-col>
+                            <el-col :span="22">
+                                <template v-if="Object.keys(counterRefer).length">
+                                    {{ counterRefer.name }}
+                                </template>
+                                <template v-else>
+                                    -
+                                </template>
+                            </el-col>
+                        </el-row>
                     </div>
+                    <!-- 关联计数器 -->
+                    <el-dialog
+                        title="关联计数器"
+                        :visible.sync="showCounterdialog"
+                        :close-on-click-modal="false"
+                        :before-close="counterBeforeClose"
+                        class="dialog-header table-class dialog-class el-table_empty-block"
+                        style="position: fixed"
+                        @open="getCounter"
+                    >
+                        <template>
+                            <el-row>
+                                <el-col :span="2">
+                                    <span style="height: 40px;line-height: 40px">计数器</span>
+                                </el-col>
+                                <el-col :span="22">
+                                    <el-select v-model="selectValue" filterable clearable placeholder="请选择" class="el-col-24">
+                                        <el-option label="无" value=""></el-option>
+                                        <el-option v-for="item in counters" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                                    </el-select>
+                                </el-col>
+                            </el-row>
+                            <div class="footer">
+                                <el-button size="mini" @click="counterBeforeClose">取消</el-button>
+                                <el-button type="primary" size="mini" @click="confirmChoice">确定</el-button>
+                            </div>
+                        </template>
+                    </el-dialog>
                 </el-tab-pane>
                 <el-tab-pane label="测试集" name="cases">
                     <el-dropdown size="mini" split-button type="primary" @command="handleCommand" style="float: right; margin-right: 50px">
@@ -351,10 +392,65 @@ export default {
             },
             formLabelWidth: '45px',
             load: null,
-            permissions: []
+            permissions: [],
+            counterRefer: {},
+            selectValue: '',
+            counters: {},
+            showCounterdialog: false
         }
     },
     methods: {
+        infoHandleCommand(command) {
+            if (command === 'update') {
+                this.$router.push({ name: 'UpdateTask', params: { id: this.taskId }, query: this.$route.query })
+            } else if (command === 'link') {
+                this.showCounterdialog = true
+            }
+        },
+        getTaskCounter() {
+            this.$api.api
+                .getTaskCounter(this.taskId, this.projectName)
+                .then(response => {
+                    this.counterRefer = response.data
+                    this.selectValue = response.data.id
+                })
+                .catch(error => {
+                    this.notify.error(error.response.data)
+                })
+        },
+        getCounter() {
+            this.$api.api
+                .getCounters(this.projectName)
+                .then(response => {
+                    this.counters = response.data
+                    this.selectValue = this.counterRefer.id
+                })
+                .catch(error => {
+                    this.notify.error(error.response.data)
+                })
+        },
+        counterBeforeClose() {
+            this.showCounterdialog = false
+        },
+        confirmChoice() {
+            let payload = {
+                task: this.taskId,
+                counter: this.selectValue
+            }
+            this.counterToTask(JSON.stringify(payload), this.projectName)
+        },
+        counterToTask(payload, projectName) {
+            this.$api.api
+                .linkCounter(payload, projectName)
+                .then(() => {
+                    this.notify.success('关联计数器成功')
+                    this.showCounterdialog = false
+                    this.getTaskCounter()
+                })
+                .catch(error => {
+                    this.notify.error(error.response.data)
+                })
+        },
         choiceCancel() {
             this.dialogFormVisible = false
             this.$refs.multiple.clearSelection()
@@ -555,6 +651,7 @@ export default {
         this.getTaskDetail()
         this.getTaskTestSets()
         this.getPermissions()
+        this.getTaskCounter()
     },
     mounted() {
         if (this.load) {
