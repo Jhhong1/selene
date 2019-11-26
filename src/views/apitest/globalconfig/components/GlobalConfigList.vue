@@ -104,7 +104,8 @@ export default {
             pageSize: 10,
             currentPage: 1,
             loading: true,
-            permissions: []
+            permissions: [],
+            t: null
         }
     },
     methods: {
@@ -172,11 +173,11 @@ export default {
                 })
                 .catch(() => {})
         },
-        timer() {
-            return setTimeout(() => {
-                this.getConfigList()
-            }, 2000)
-        },
+        // timer() {
+        //     return setTimeout(() => {
+        //         this.getConfigList()
+        //     }, 2000)
+        // },
         handleCommand(command) {
             const _this = this
             if (command.type === 'del') {
@@ -199,12 +200,13 @@ export default {
     },
     watch: {
         dataTable() {
-            this.timer()
+            // this.timer()
+            this.notify.debounce(this.t, this.getConfigList)
         }
     },
     mounted() {},
     destroyed() {
-        clearTimeout(this.timer())
+        clearTimeout(this.t)
     }
 }
 </script>

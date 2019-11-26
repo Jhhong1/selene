@@ -13,8 +13,10 @@
                     </template>
                 </el-col>
                 <el-col :span="4">
-                    <el-input size="small" placeholder="请输入项目名称" v-model="search" class="el-input_suffix">
-                        <i slot="suffix" class="el-input__icon el-icon-search"></i>
+                    <el-input size="small" placeholder="请输入项目名称" v-model="search">
+                        <template slot="append">
+                            <i class="el-icon-search el-input_suffix" @click="searchProject"></i>
+                        </template>
                     </el-input>
                 </el-col>
             </el-row>
@@ -31,6 +33,16 @@
                             >
                                 {{ project.name }}
                             </router-link>
+                            <div style="float: right;">
+                                <el-dropdown @command="handleCommand">
+                                    <span>
+                                        <i class="el-icon-more-outline rotating"></i>
+                                    </span>
+                                    <el-dropdown-menu slot="dropdown">
+                                        <el-dropdown-item :command="{ type: 'delete', id: project.id, ind: index }">删除</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
+                            </div>
                         </div>
                         <div>
                             <el-row>
@@ -74,8 +86,10 @@ export default {
     data() {
         return {
             search: '',
+            name: '',
             projects: [],
-            permissions: []
+            permissions: [],
+            t: null
         }
     },
     methods: {
@@ -84,7 +98,7 @@ export default {
         },
         getProjectList() {
             this.$api.api
-                .apiProjectList()
+                .apiProjectList(this.name)
                 .then(response => {
                     this.projects = response.data.results
                     this.$store.commit('STORE_PROJECT', this.projects)
@@ -93,18 +107,51 @@ export default {
                     this.notify.error(error.response.data)
                 })
         },
-        timer() {
-            return setTimeout(() => {
-                this.getProjectList()
-            }, 2000)
-        },
         getPermissions() {
             this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
+        },
+        deleteProject(id) {
+            this.$api.api
+                .deleteApiProject(id)
+                .then(() => {
+                    this.notify.success('删除项目成功')
+                })
+                .catch(error => {
+                    this.notify.error(error.response)
+                })
+        },
+        handleCommand(command) {
+            if (command.type === 'delete') {
+                const h = this.$createElement
+                this.$msgbox({
+                    title: '提示',
+                    message: h('p', null, [h('span', null, '确定删除该项目吗？')]),
+                    showCancelButton: true,
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    beforeClose: (action, instance, done) => {
+                        if (action === 'confirm') {
+                            this.deleteProject(command.id)
+                            done()
+                        } else {
+                            done()
+                        }
+                    }
+                })
+                    .then(() => {
+                        this.projects.splice(command.ind, 1)
+                    })
+                    .catch(() => {})
+            }
+        },
+        searchProject() {
+            this.name = this.search
+            this.getProjectList()
         }
     },
     watch: {
         projects() {
-            this.timer()
+            this.notify.debounce(this.t, this.getProjectList)
         }
     },
     created() {
@@ -113,7 +160,7 @@ export default {
     },
     mounted() {},
     destroyed() {
-        clearTimeout(this.timer())
+        clearTimeout(this.t)
     }
 }
 </script>
@@ -133,12 +180,8 @@ export default {
     width: calc((100% - 48px) / 4);
     margin: 6px;
 }
-.el-input_suffix >>> .el-input__suffix {
-    right: 0;
-    height: 32px;
-    width: 25px;
+.el-input_suffix:hover {
     cursor: pointer;
-    background-color: #e5e9f2;
 }
 .is-plain:focus,
 .is-plain:hover {

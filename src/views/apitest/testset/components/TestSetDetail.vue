@@ -737,10 +737,6 @@ export default {
 .is-link >>> .is-link {
     color: #409eff !important;
 }
-.test-left {
-    text-align: left;
-    font-size: 14px;
-}
 .is-plain:focus,
 .is-plain:hover {
     color: #606266;

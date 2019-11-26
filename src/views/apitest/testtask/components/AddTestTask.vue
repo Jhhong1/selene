@@ -35,8 +35,8 @@ export default {
                     if (!passregex.test(value)) {
                         callback(new Error('名称必须以小写字母开头，包含小写字母、数字、下划线、中横线'))
                     } else {
-                        if (value.length < 6 || value.length > 20) {
-                            callback(new Error('名称长度不得小于6位，大于20位'))
+                        if (value.length < 1 || value.length > 20) {
+                            callback(new Error('名称长度不得小于1位，大于20位'))
                         } else {
                             callback()
                         }

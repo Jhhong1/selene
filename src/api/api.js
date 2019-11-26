@@ -83,8 +83,12 @@ export const createApiProject = params => {
 }
 
 // 测试项目列表
-export const apiProjectList = () => {
-    return axios.get('/v1/apitest/apiProjects/')
+export const apiProjectList = (by_name = '') => {
+    return axios.get('/v1/apitest/apiProjects/', {
+        params: {
+            by_name: by_name
+        }
+    })
 }
 
 // 删除测试项目

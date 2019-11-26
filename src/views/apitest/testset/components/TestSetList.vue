@@ -137,7 +137,8 @@ export default {
             currentPage: 1,
             setList: [],
             projectName: this.$route.query.project_name,
-            permissions: []
+            permissions: [],
+            t: null
         }
     },
     methods: {
@@ -236,11 +237,6 @@ export default {
                 this.execute(command.row)
             }
         },
-        timer() {
-            return setTimeout(() => {
-                this.getSets()
-            }, 2000)
-        },
         getPermissions() {
             this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         }
@@ -251,12 +247,12 @@ export default {
     },
     watch: {
         setList() {
-            this.timer()
+            this.notify.debounce(this.t, this.getSets)
         }
     },
     mounted() {},
     destroyed() {
-        clearTimeout(this.timer())
+        clearTimeout(this.t)
     }
 }
 </script>

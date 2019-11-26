@@ -674,9 +674,6 @@ export default {
 .is-link >>> .is-link {
     color: #409eff !important;
 }
-.test-left {
-    text-align: left;
-}
 .dialog-header >>> .el-dialog__header {
     padding: 20px 20px 0 !important;
     height: 20px;

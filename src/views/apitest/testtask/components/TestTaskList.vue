@@ -155,7 +155,8 @@ export default {
                 tags: ''
             },
             taskId: null,
-            permissions: []
+            permissions: [],
+            t: null
         }
     },
     methods: {
@@ -178,9 +179,21 @@ export default {
                     this.notify.error(error)
                 })
         },
+        getTaskCounter(id) {
+            this.$api.api.getTaskCounter(id, this.projectName).then(response => {
+                console.log(response.data)
+                return response.data
+            })
+        },
         choices(id) {
             this.taskId = id
-            this.dialogVisible = true
+            let counter = this.getTaskCounter(id)
+            // let arry = Object.keys(counter)
+            if (JSON.stringify(counter) === '{}') {
+                console.log('aaaaaa')
+            } else {
+                this.dialogVisible = true
+            }
         },
         deleteTask(taskId) {
             this.$api.api
@@ -225,11 +238,6 @@ export default {
                 this.$router.push({ name: 'UpdateTask', params: { id: command.row }, query: this.$route.query })
             }
         },
-        timer() {
-            return setTimeout(() => {
-                this.getTaskList()
-            }, 2000)
-        },
         clearSelect() {
             this.taskId = null
             this.$refs['labels'].resetFields()
@@ -267,12 +275,12 @@ export default {
     },
     watch: {
         taskList() {
-            this.timer()
+            this.notify.debounce(this.t, this.getTaskList)
         }
     },
     mounted() {},
     destroyed() {
-        clearTimeout(this.timer())
+        clearTimeout(this.t)
     }
 }
 </script>

@@ -15,3 +15,11 @@ export function error(msg) {
         type: 'error'
     })
 }
+
+export function debounce(t, func, delay = 3000) {
+    let that = this
+    clearTimeout(that.t)
+    that.t = setTimeout(() => {
+        func()
+    }, delay)
+}

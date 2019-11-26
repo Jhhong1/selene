@@ -27,16 +27,16 @@
                     <el-card>
                         <div>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">名称</el-col>
-                                <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">{{ configDetail.name }}</el-col>
-                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">创建时间</el-col>
-                                <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">
+                                <el-col :span="1" class="test-left">名称</el-col>
+                                <el-col :span="11" class="test-right">{{ configDetail.name }}</el-col>
+                                <el-col :span="1" class="test-left">创建时间</el-col>
+                                <el-col :span="11" class="test-right">
                                     {{ $moment(configDetail.createTime).format('YYYY-MM-DD HH:mm:ss') }}
                                 </el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">显示名称</el-col>
-                                <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">
+                                <el-col :span="1" class="test-left">显示名称</el-col>
+                                <el-col :span="11" class="test-right">
                                     <template v-if="configDetail.display">
                                         {{ configDetail.display }}
                                     </template>
@@ -44,8 +44,8 @@
                                         -
                                     </template>
                                 </el-col>
-                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">更新时间</el-col>
-                                <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11" class="test-right">
+                                <el-col :span="1" class="test-left">更新时间</el-col>
+                                <el-col :span="11" class="test-right">
                                     {{ $moment(configDetail.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
                                 </el-col>
                             </el-row>
@@ -56,13 +56,13 @@
                     <el-card>
                         <div>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">请求地址</el-col>
-                                <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">{{ configDetail.baseurl }}</el-col>
+                                <el-col :span="1" class="test-left">请求地址</el-col>
+                                <el-col :span="23" class="test-right">{{ configDetail.baseurl }}</el-col>
                             </el-row>
                             <!-- <template v-if="configDetail.counter">
                                 <el-row :gutter="10" class="row-class">
-                                    <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">计数器</el-col>
-                                    <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">
+                                    <el-col :span="1" class="test-left">计数器</el-col>
+                                    <el-col :span="23" class="test-right">
                                         <el-row>
                                             <el-col :span="12">
                                                 <div class="grid-content bg-purple-light">键</div>
@@ -91,20 +91,20 @@
                                 </el-row>
                             </template> -->
                             <el-row :gutter="10" class="row-class">
-                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">头部信息</el-col>
-                                <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">
+                                <el-col :span="1" class="test-left">头部信息</el-col>
+                                <el-col :span="23" class="test-right">
                                     <j-input v-model="configDetail.headers" :edit="false"></j-input>
                                 </el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">请求代理</el-col>
-                                <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">
+                                <el-col :span="1" class="test-left">请求代理</el-col>
+                                <el-col :span="23" class="test-right">
                                     <j-input v-model="configDetail.proxy" :edit="false"></j-input>
                                 </el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">认证方式</el-col>
-                                <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">
+                                <el-col :span="1" class="test-left">认证方式</el-col>
+                                <el-col :span="23" class="test-right">
                                     <el-row>
                                         <el-col class="bg-purple-light" :span="4">类型</el-col>
                                         <el-col class="bg-purple-light" :span="10">用户名</el-col>
@@ -128,16 +128,16 @@
                                 </el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">变量</el-col>
-                                <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">
+                                <el-col :span="1" class="test-left">变量</el-col>
+                                <el-col :span="23" class="test-right">
                                     <j-input v-model="configDetail.variables" :edit="false"></j-input>
                                 </el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left" style="height: 40px;line-height: 40px">
+                                <el-col :span="1" class="test-left" style="height: 40px;line-height: 40px">
                                     设为全局变量
                                 </el-col>
-                                <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">
+                                <el-col :span="23" class="test-right">
                                     <el-tooltip :content="'' + configDetail.globalConfig" placement="right-start" class="el--swith">
                                         <el-switch
                                             v-model="configDetail.globalConfig"
@@ -255,9 +255,5 @@ export default {
 }
 .clearfix:after {
     clear: both;
-}
-.test-left {
-    border: 1px solid white;
-    text-align: right;
 }
 </style>
