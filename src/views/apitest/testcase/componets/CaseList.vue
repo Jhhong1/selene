@@ -138,7 +138,8 @@ export default {
             pageSize: 10,
             currentPage: 1,
             projectName: this.$route.query.project_name,
-            permissions: []
+            permissions: [],
+            t: null
         }
     },
     methods: {
@@ -212,11 +213,6 @@ export default {
             this.pageSize = val
             this.getCases()
         },
-        timer() {
-            return setTimeout(() => {
-                this.getCases()
-            }, 2000)
-        },
         getPermissions() {
             this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         }
@@ -227,12 +223,12 @@ export default {
     },
     watch: {
         dataTable() {
-            this.timer()
+            this.notify.debounce(this.t, this.getCases)
         }
     },
     mounted() {},
     destroyed() {
-        clearTimeout(this.timer())
+        clearTimeout(this.t)
     }
 }
 </script>
