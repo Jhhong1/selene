@@ -383,10 +383,11 @@ export const getTaskCounter = (taskId, projectName = '') => {
     })
 }
 // 测试报告
-export const resultStatics = (taskId, projectName = '') => {
+export const resultStatics = (taskId, type = '', projectName = '') => {
     return axios.get(`/v1/apitest/result_statistics/${taskId}/`, {
         params: {
-            project: projectName
+            project: projectName,
+            type: type
         }
     })
 }
