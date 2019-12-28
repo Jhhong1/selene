@@ -58,6 +58,17 @@ import UpdateGroup from '@/views/permissions/group/components/UpdateGroup'
 import User from '@/views/permissions/users/Users'
 import UserList from '@/views/permissions/users/components/UserList'
 
+import PeriodicTask from '@/views/periodictask/PeriodicTask'
+
+import TimeRule from '@/views/periodictask/timerule/Rule'
+import RuleList from '@/views/periodictask/timerule/components/RuleList'
+import AddRule from '@/views/periodictask/timerule/components/AddRule'
+import UpdateRule from '@/views/periodictask/timerule/components/UpdateRule'
+
+import Crontabs from '@/views/periodictask/crontabs/Crontabs'
+import CrontabList from '@/views/periodictask/crontabs/components/CrontabList'
+import AddCrontab from '@/views/periodictask/crontabs/components/AddCrontab'
+
 Vue.use(Router)
 
 export default new Router({
@@ -90,7 +101,9 @@ export default new Router({
         },
         {
             path: '/resetPassword/',
-            props: route => ({ query: route.query.reset_code }),
+            props: route => ({
+                query: route.query.reset_code
+            }),
             name: 'ResetPassword',
             component: ResetPassword,
             meta: {
@@ -215,7 +228,7 @@ export default new Router({
                             path: 'apitest',
                             // name: 'ApiTest',
                             component: ApiTest,
-                            icon: 'el-icon-menu',
+                            icon: 'el-icon-s-operation',
                             meta: {
                                 title: '接口测试',
                                 requireAuth: true
@@ -464,6 +477,82 @@ export default new Router({
                                             name: 'ReportList',
                                             component: ReportList,
                                             meta: {
+                                                requireAuth: true
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            path: 'periodictask',
+                            component: PeriodicTask,
+                            icon: 'el-icon-message-solid',
+                            meta: {
+                                title: '定时任务',
+                                requireAuth: true
+                            },
+                            children: [
+                                {
+                                    path: 'rule',
+                                    component: TimeRule,
+                                    meta: {
+                                        title: '定时规则',
+                                        requireAuth: true
+                                    },
+                                    children: [
+                                        {
+                                            path: '',
+                                            name: 'RuleList',
+                                            component: RuleList,
+                                            meta: {
+                                                title: '规则列表',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'addrule',
+                                            name: 'AddRule',
+                                            component: AddRule,
+                                            meta: {
+                                                title: '添加定时规则',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'update/:id',
+                                            name: 'UpdateRule',
+                                            component: UpdateRule,
+                                            meta: {
+                                                title: '更新定时规则',
+                                                requireAuth: true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    path: 'crontab',
+                                    component: Crontabs,
+                                    meta: {
+                                        title: '定时任务',
+                                        requireAuth: true
+                                    },
+                                    children: [
+                                        {
+                                            path: '',
+                                            name: 'CrontabList',
+                                            component: CrontabList,
+                                            meta: {
+                                                title: '定时任务列表',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'addcron',
+                                            name: 'AddCrontab',
+                                            component: AddCrontab,
+                                            meta: {
+                                                title: '添加定时任务',
                                                 requireAuth: true
                                             }
                                         }

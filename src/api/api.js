@@ -435,3 +435,50 @@ export const deleteUser = id => {
 export const boundPermission = payload => {
     return axios.post('/v1/boundPermission/', payload)
 }
+
+// 获取定时规则列表
+export const getCrontabRuleList = (page = 1, pageSize = 10, projectName = '') => {
+    return axios.get('/v1/apitest/crontab_rule/', {
+        params: {
+            project: projectName,
+            page: page,
+            page_size: pageSize
+        }
+    })
+}
+
+// 创建定时规则
+export const createCrontabRule = (payload, projectName = '') => {
+    return axios.post('/v1/apitest/crontab_rule/', payload, {
+        params: {
+            project: projectName
+        }
+    })
+}
+
+// 获取定时规则详情
+export const getCrontabRuleDetail = (ruleId, projectName = '') => {
+    return axios.get(`/v1/apitest/crontab_rule/${ruleId}/`, {
+        params: {
+            project: projectName
+        }
+    })
+}
+
+// 更新定时规则
+export const updateCrontabRule = (ruleId, payload, projectName = '') => {
+    return axios.put(`/v1/apitest/crontab_rule/${ruleId}/`, payload, {
+        params: {
+            project: projectName
+        }
+    })
+}
+
+// 删除定时规则
+export const deleteCrontabRule = (ruleId, projectName = '') => {
+    return axios.delete(`/v1/apitest/crontab_rule/${ruleId}/`, {
+        params: {
+            project: projectName
+        }
+    })
+}
