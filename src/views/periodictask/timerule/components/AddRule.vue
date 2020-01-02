@@ -95,7 +95,7 @@ export default {
                     this.$router.push({ name: 'RuleList', query: this.$route.query })
                 })
                 .catch(error => {
-                    this.notify.error(error.response.request.responseText)
+                    this.notify.error(error.response.data)
                 })
         }
     }

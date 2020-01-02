@@ -68,6 +68,7 @@ import UpdateRule from '@/views/periodictask/timerule/components/UpdateRule'
 import Crontabs from '@/views/periodictask/crontabs/Crontabs'
 import CrontabList from '@/views/periodictask/crontabs/components/CrontabList'
 import AddCrontab from '@/views/periodictask/crontabs/components/AddCrontab'
+import UpdateCrontab from '@/views/periodictask/crontabs/components/UpdateCrontab'
 
 Vue.use(Router)
 
@@ -553,6 +554,15 @@ export default new Router({
                                             component: AddCrontab,
                                             meta: {
                                                 title: '添加定时任务',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'update/:id',
+                                            name: 'UpdateCrontab',
+                                            component: UpdateCrontab,
+                                            meta: {
+                                                title: '更新定时任务',
                                                 requireAuth: true
                                             }
                                         }
