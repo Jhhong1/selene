@@ -1,10 +1,13 @@
 <template>
     <div>
-        <!-- <template v-if="permissions.indexOf('apitest.add_apitasks') > -1"> -->
-        <router-link tag="el-button" class="el-button--primary el-button--mini p-button" :to="{ name: 'AddRule', query: $route.query }">
-            添加定时规则
-        </router-link>
-        <!-- </template> -->
+        <template v-if="permissions.indexOf('apitest.add_crontabscheduleextend') > -1">
+            <router-link tag="el-button" class="el-button--primary el-button--mini p-button" :to="{ name: 'AddRule', query: $route.query }">
+                添加定时规则
+            </router-link>
+        </template>
+        <template v-else>
+            <el-button class="el-button--primary el-button--mini p-button" disabled>添加定时规则</el-button>
+        </template>
         <el-table :data="rules" class="table-class td">
             <el-table-column label="名称" min-width="150">
                 <template slot-scope="scope">
@@ -50,8 +53,15 @@
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :command="{ type: 'update', row: scope.row.id }">更新</el-dropdown-item>
-                            <el-dropdown-item :command="{ type: 'del', index: scope.$index, row: scope.row.id }">
+                            <el-dropdown-item
+                                :command="{ type: 'update', row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.change_crontabscheduleextend') === -1"
+                                >更新</el-dropdown-item
+                            >
+                            <el-dropdown-item
+                                :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.delete_crontabscheduleextend') === -1"
+                            >
                                 删除
                             </el-dropdown-item>
                         </el-dropdown-menu>
@@ -82,7 +92,8 @@ export default {
             count: null,
             pageSizes: [10, 20, 50],
             pageSize: 10,
-            currentPage: 1
+            currentPage: 1,
+            permissions: []
         }
     },
     methods: {
@@ -143,9 +154,13 @@ export default {
         handleSizeChange(val) {
             this.pageSize = val
             this.ruleList()
+        },
+        getPermissions() {
+            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         }
     },
     created() {
+        this.getPermissions()
         this.ruleList()
     }
 }
