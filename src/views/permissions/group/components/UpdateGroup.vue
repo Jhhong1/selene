@@ -28,6 +28,14 @@
                         <el-option label="查看" value="view_config"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="计数器" :label-width="formLabelWidth" prop="counter">
+                    <el-select v-model="group.counter" multiple class="method-class" size="mini">
+                        <el-option label="添加" value="add_counter"></el-option>
+                        <el-option label="更新" value="change_counter"></el-option>
+                        <el-option label="删除" value="delete_counter"></el-option>
+                        <el-option label="查看" value="view_counter"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="测试用例" :label-width="formLabelWidth" prop="cases">
                     <el-select v-model="group.apicases" multiple class="method-class" size="mini">
                         <el-option label="添加" value="add_apicases"></el-option>
@@ -68,6 +76,22 @@
                         <el-option label="更新" value="change_apiprojects"></el-option>
                         <el-option label="删除" value="delete_apiprojects"></el-option>
                         <el-option label="查看" value="view_apiprojects"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="定时规则" :label-width="formLabelWidth" prop="crontabscheduleextend">
+                    <el-select v-model="group.crontabscheduleextend" multiple class="method-class" size="mini">
+                        <el-option label="添加" value="add_crontabscheduleextend"></el-option>
+                        <el-option label="更新" value="change_crontabscheduleextend"></el-option>
+                        <el-option label="删除" value="delete_crontabscheduleextend"></el-option>
+                        <el-option label="查看" value="view_crontabscheduleextend"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="定时任务" :label-width="formLabelWidth" prop="periodictaskextend">
+                    <el-select v-model="group.periodictaskextend" multiple class="method-class" size="mini">
+                        <el-option label="添加" value="add_periodictaskextend"></el-option>
+                        <el-option label="更新" value="change_periodictaskextend"></el-option>
+                        <el-option label="删除" value="delete_periodictaskextend"></el-option>
+                        <el-option label="查看" value="view_periodictaskextend"></el-option>
                     </el-select>
                 </el-form-item>
             </el-card>

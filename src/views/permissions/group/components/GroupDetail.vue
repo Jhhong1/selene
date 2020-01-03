@@ -43,7 +43,10 @@
                                         !group.hasOwnProperty('apicases') &&
                                         !group.hasOwnProperty('apiset') &&
                                         !group.hasOwnProperty('apitasks') &&
-                                        !group.hasOwnProperty('apiprojects')
+                                        !group.hasOwnProperty('apiprojects') &&
+                                        !group.hasOwnProperty('counter') &&
+                                        !group.hasOwnProperty('crontabscheduleextend') &&
+                                        !group.hasOwnProperty('periodictaskextend')
                                 "
                             >
                                 <div style="text-align: center;">暂无数据</div>
@@ -62,6 +65,29 @@
                                                         更新
                                                     </template>
                                                     <template v-else-if="permission === 'delete_config'">
+                                                        删除
+                                                    </template>
+                                                    <template v-else>
+                                                        查看
+                                                    </template>
+                                                </span>
+                                            </div>
+                                        </el-col>
+                                    </el-row>
+                                </template>
+                                <template v-if="group.hasOwnProperty('counter')">
+                                    <el-row :gutter="10" class="row-class">
+                                        <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">计数器:</el-col>
+                                        <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">
+                                            <div>
+                                                <span v-for="(permission, ind) in group.counter" :key="ind">
+                                                    <template v-if="permission === 'add_counter'">
+                                                        添加
+                                                    </template>
+                                                    <template v-else-if="permission === 'change_counter'">
+                                                        更新
+                                                    </template>
+                                                    <template v-else-if="permission === 'delete_counter'">
                                                         删除
                                                     </template>
                                                     <template v-else>
@@ -183,6 +209,52 @@
                                                         更新
                                                     </template>
                                                     <template v-else-if="permission === 'delete_apiprojects'">
+                                                        删除
+                                                    </template>
+                                                    <template v-else>
+                                                        查看
+                                                    </template>
+                                                </span>
+                                            </div>
+                                        </el-col>
+                                    </el-row>
+                                </template>
+                                <template v-if="group.hasOwnProperty('crontabscheduleextend')">
+                                    <el-row :gutter="10" class="row-class">
+                                        <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">定时规则:</el-col>
+                                        <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">
+                                            <div>
+                                                <span v-for="(permission, ind) in group.crontabscheduleextend" :key="ind">
+                                                    <template v-if="permission === 'add_crontabscheduleextend'">
+                                                        添加
+                                                    </template>
+                                                    <template v-else-if="permission === 'change_crontabscheduleextend'">
+                                                        更新
+                                                    </template>
+                                                    <template v-else-if="permission === 'delete_crontabscheduleextend'">
+                                                        删除
+                                                    </template>
+                                                    <template v-else>
+                                                        查看
+                                                    </template>
+                                                </span>
+                                            </div>
+                                        </el-col>
+                                    </el-row>
+                                </template>
+                                <template v-if="group.hasOwnProperty('periodictaskextend')">
+                                    <el-row :gutter="10" class="row-class">
+                                        <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1" class="test-left">定时任务:</el-col>
+                                        <el-col :xs="16" :sm="18" :md="20" :lg="19" :xl="23" class="test-right">
+                                            <div>
+                                                <span v-for="(permission, ind) in group.periodictaskextend" :key="ind">
+                                                    <template v-if="permission === 'add_periodictaskextend'">
+                                                        添加
+                                                    </template>
+                                                    <template v-else-if="permission === 'change_periodictaskextend'">
+                                                        更新
+                                                    </template>
+                                                    <template v-else-if="permission === 'delete_periodictaskextend'">
                                                         删除
                                                     </template>
                                                     <template v-else>
