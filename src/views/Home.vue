@@ -1,8 +1,8 @@
 <template>
     <div class="home">
         <el-container>
-            <template v-if="$route.path.indexOf('apitest') > 0">
-                <el-aside style="width: 200px">
+            <template v-if="$route.path.indexOf('apitest') > 0 || $route.path.indexOf('periodictask') > 0">
+                <el-aside style="width: 200px;" class="left-aside">
                     <el-menu :default-active="activeNav" router class="sidebar">
                         <el-submenu v-for="(menu, mindex) in navigate" :index="menu.path" :key="mindex">
                             <template slot="title">
@@ -12,10 +12,10 @@
                             <el-menu-item
                                 v-for="(item, ind) in menu.children"
                                 :key="ind"
-                                :index="$route.matched[2].path + '/' + item.path + '?project_name=' + value"
+                                :index="$route.matched[1].path + '/' + menu.path + '/' + item.path + '?project_name=' + value"
                                 @click="highLightNav"
                             >
-                                <!-- {{ $route.matched[2].path + '/' + item.path + '?project_name=' + value }} -->
+                                <!-- {{ $route.matched[1].path + '/' + menu.path + '/' + item.path + '?project_name=' + value }} -->
                                 {{ item.meta.title }}
                             </el-menu-item>
                         </el-submenu>
@@ -23,7 +23,7 @@
                 </el-aside>
             </template>
             <template v-else-if="$route.path.indexOf('permission') > 0">
-                <el-aside style="width: 200px">
+                <el-aside style="width: 200px;" class="left-aside">
                     <el-menu :default-active="activeNav" router class="sidebar">
                         <el-menu-item v-for="(menu, mindex) in navigate" :index="$route.matched[1].path + '/' + menu.path" :key="mindex">
                             <template slot="title">
@@ -195,7 +195,7 @@ export default {
             this.reload()
         },
         highLightNav() {
-            if (this.$route.matched.length > 3 && this.$route.path.indexOf('apitest') > 0) {
+            if (this.$route.matched.length > 3 && (this.$route.path.indexOf('apitest') > 0 || this.$route.path.indexOf('periodictask') > 0)) {
                 this.activeNav = this.$route.matched[3].path + '?project_name=' + this.value
             } else if (this.$route.matched.length > 2 && this.$route.path.indexOf('permission') > 0) {
                 this.activeNav = this.$route.matched[2].path
@@ -207,7 +207,7 @@ export default {
             let navList = []
             let navs1 = null
             let routeList = this.$router.options.routes
-            if (this.$route.path.indexOf('apitest') > 0) {
+            if (this.$route.path.indexOf('project') > 0) {
                 for (let i = 0, len = routeList.length; i < len; i++) {
                     if (routeList[i].hasOwnProperty('children')) {
                         navs1 = routeList[i].children
@@ -321,11 +321,21 @@ export default {
     height: 60px;
     width: 160px;
 }
+.left-aside {
+    overflow: hidden;
+    /* min-height: 800px; */
+    /* height: 100%; */
+    position: relative;
+}
 .sidebar {
+    width: 200px;
     min-height: 800px;
     height: 100%;
     z-index: 1000;
     padding-bottom: 10px;
     margin-bottom: -10px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    position: absolute;
 }
 </style>
