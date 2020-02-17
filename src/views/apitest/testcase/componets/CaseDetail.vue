@@ -32,94 +32,94 @@
                     <el-card>
                         <div>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :span="1" class="test-left">名称</el-col>
+                                <el-col :span="2" class="test-left">名称</el-col>
                                 <template v-if="cases.name">
-                                    <el-col :span="11" class="test-right">{{ cases.name }}</el-col>
+                                    <el-col :span="10" class="test-right">{{ cases.name }}</el-col>
                                 </template>
                                 <template v-else>
                                     <el-col :span="11" class="test-right">-</el-col>
                                 </template>
-                                <el-col :span="1" class="test-left">显示名称</el-col>
+                                <el-col :span="2" class="test-left">显示名称</el-col>
                                 <template v-if="cases.display">
-                                    <el-col :span="11" class="test-right">{{ cases.display }}</el-col>
+                                    <el-col :span="10" class="test-right">{{ cases.display }}</el-col>
                                 </template>
                                 <template v-else>
-                                    <el-col :span="11" class="test-right">-</el-col>
+                                    <el-col :span="10" class="test-right">-</el-col>
                                 </template>
                             </el-row>
                             <template v-if="cases.caserelationship">
                                 <el-row :gutter="10" class="row-class">
-                                    <el-col :span="1" class="test-left">状态</el-col>
+                                    <el-col :span="2" class="test-left">状态</el-col>
                                     <template v-if="cases.caserelationship.status === 'Starting'">
-                                        <el-col :span="11" class="test-right">
+                                        <el-col :span="10" class="test-right">
                                             <tag-running></tag-running>
                                         </el-col>
                                     </template>
                                     <template v-else-if="cases.caserelationship.status === 'Done'">
-                                        <el-col :span="11" class="test-right">
+                                        <el-col :span="10" class="test-right">
                                             <tag-done></tag-done>
                                         </el-col>
                                     </template>
                                     <template v-else>
-                                        <el-col :span="11" class="test-right">
+                                        <el-col :span="10" class="test-right">
                                             <tag-not-run></tag-not-run>
                                         </el-col>
                                     </template>
-                                    <el-col :span="1" class="test-left">更新时间</el-col>
+                                    <el-col :span="2" class="test-left">更新时间</el-col>
                                     <template v-if="cases.updateTime">
-                                        <el-col :span="11" class="test-right">{{ cases.updateTime }}</el-col>
+                                        <el-col :span="10" class="test-right">{{ cases.updateTime }}</el-col>
                                     </template>
                                     <template v-else>
-                                        <el-col :span="11" class="test-right">-</el-col>
+                                        <el-col :span="10" class="test-right">-</el-col>
                                     </template>
                                 </el-row>
                                 <el-row :gutter="10" class="row-class">
-                                    <el-col :span="1" class="test-left">执行结果</el-col>
+                                    <el-col :span="2" class="test-left">执行结果</el-col>
                                     <template v-if="cases.caserelationship.result === 'Succeed'">
-                                        <el-col :span="11" class="test-right">
+                                        <el-col :span="10" class="test-right">
                                             <tag-success></tag-success>
                                         </el-col>
                                     </template>
                                     <template v-else-if="cases.caserelationship.result === 'Failed'">
-                                        <el-col :span="11" class="test-right">
+                                        <el-col :span="10" class="test-right">
                                             <tag-failed></tag-failed>
                                         </el-col>
                                     </template>
                                     <template v-else>
-                                        <el-col :span="11" class="test-right">-</el-col>
+                                        <el-col :span="10" class="test-right">-</el-col>
                                     </template>
-                                    <el-col :span="1" class="test-left">创建时间</el-col>
+                                    <el-col :span="2" class="test-left">创建时间</el-col>
                                     <template v-if="cases.createTime">
-                                        <el-col :span="11" class="test-right">{{ cases.createTime }}</el-col>
+                                        <el-col :span="10" class="test-right">{{ cases.createTime }}</el-col>
                                     </template>
                                     <template v-else>
-                                        <el-col :span="11" class="test-right">-</el-col>
+                                        <el-col :span="10" class="test-right">-</el-col>
                                     </template>
                                 </el-row>
                                 <el-row :gutter="10" class="row-class">
-                                    <el-col :span="1" class="test-left">结束时间</el-col>
+                                    <el-col :span="2" class="test-left">结束时间</el-col>
                                     <template v-if="cases.caserelationship.endRunTime">
-                                        <el-col :span="11" class="test-right">
+                                        <el-col :span="10" class="test-right">
                                             {{ cases.endRunTime }}
                                         </el-col>
                                     </template>
                                     <template v-else>
-                                        <el-col :span="11" class="test-right">-</el-col>
+                                        <el-col :span="10" class="test-right">-</el-col>
                                     </template>
-                                    <el-col :span="1" class="test-left">开始时间</el-col>
+                                    <el-col :span="2" class="test-left">开始时间</el-col>
                                     <template v-if="cases.caserelationship.startRunTime">
-                                        <el-col :span="11" class="test-right">
+                                        <el-col :span="10" class="test-right">
                                             {{ cases.startRunTime }}
                                         </el-col>
                                     </template>
                                     <template v-else>
-                                        <el-col :span="11" class="test-right">-</el-col>
+                                        <el-col :span="10" class="test-right">-</el-col>
                                     </template>
                                 </el-row>
                                 <el-row :gutter="10" class="row-class">
-                                    <el-col :span="1" class="test-left">失败原因</el-col>
+                                    <el-col :span="2" class="test-left">失败原因</el-col>
                                     <template v-if="cases.caserelationship.errorMessage">
-                                        <el-col :span="11" class="test-right">
+                                        <el-col :span="10" class="test-right">
                                             <el-tooltip placement="top-start">
                                                 <div slot="content">{{ cases.caserelationship.errorMessage }}</div>
                                                 <el-button type="text" size="mini" plain class="el-button__text is-plain">{{
@@ -129,44 +129,44 @@
                                         </el-col>
                                     </template>
                                     <template v-else>
-                                        <el-col :span="11" class="test-right">-</el-col>
+                                        <el-col :span="10" class="test-right">-</el-col>
                                     </template>
                                 </el-row>
                             </template>
                             <template v-else>
                                 <el-row :gutter="10" class="row-class">
-                                    <el-col :span="1" class="test-left">状态</el-col>
-                                    <el-col :span="11" class="test-right">
+                                    <el-col :span="2" class="test-left">状态</el-col>
+                                    <el-col :span="10" class="test-right">
                                         <tag-not-run></tag-not-run>
                                     </el-col>
-                                    <el-col :span="1" class="test-left">更新时间</el-col>
+                                    <el-col :span="2" class="test-left">更新时间</el-col>
                                     <template v-if="cases.updateTime">
-                                        <el-col :span="11" class="test-right">{{ cases.updateTime }}</el-col>
+                                        <el-col :span="10" class="test-right">{{ cases.updateTime }}</el-col>
                                     </template>
                                     <template v-else>
-                                        <el-col :span="11" class="test-right">-</el-col>
+                                        <el-col :span="10" class="test-right">-</el-col>
                                     </template>
                                 </el-row>
                                 <el-row :gutter="10" class="row-class">
-                                    <el-col :span="1" class="test-left">执行结果</el-col>
-                                    <el-col :span="11" class="test-right">-</el-col>
-                                    <el-col :span="1" class="test-left">创建时间</el-col>
+                                    <el-col :span="2" class="test-left">执行结果</el-col>
+                                    <el-col :span="10" class="test-right">-</el-col>
+                                    <el-col :span="2" class="test-left">创建时间</el-col>
                                     <template v-if="cases.createTime">
-                                        <el-col :span="11" class="test-right">{{ cases.createTime }}</el-col>
+                                        <el-col :span="10" class="test-right">{{ cases.createTime }}</el-col>
                                     </template>
                                     <template v-else>
-                                        <el-col :span="11" class="test-right">-</el-col>
+                                        <el-col :span="10" class="test-right">-</el-col>
                                     </template>
                                 </el-row>
                                 <el-row :gutter="10" class="row-class">
-                                    <el-col :span="1" class="test-left">结束时间</el-col>
-                                    <el-col :span="11" class="test-right">-</el-col>
-                                    <el-col :span="1" class="test-left">开始时间</el-col>
-                                    <el-col :span="11" class="test-right">-</el-col>
+                                    <el-col :span="2" class="test-left">结束时间</el-col>
+                                    <el-col :span="10" class="test-right">-</el-col>
+                                    <el-col :span="2" class="test-left">开始时间</el-col>
+                                    <el-col :span="10" class="test-right">-</el-col>
                                 </el-row>
                                 <el-row :gutter="10" class="row-class">
-                                    <el-col :span="1" class="test-left">失败原因</el-col>
-                                    <el-col :span="11" class="test-right">-</el-col>
+                                    <el-col :span="2" class="test-left">失败原因</el-col>
+                                    <el-col :span="10" class="test-right">-</el-col>
                                 </el-row>
                             </template>
                         </div>
@@ -176,22 +176,22 @@
                     <el-card>
                         <div>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :span="1" class="test-left">请求地址</el-col>
-                                <el-col :span="23" class="test-right">{{ cases.url }}</el-col>
+                                <el-col :span="2" class="test-left">请求地址</el-col>
+                                <el-col :span="22" class="test-right">{{ cases.url }}</el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :span="1" class="test-left">请求方法</el-col>
-                                <el-col :span="23" class="test-right">{{ cases.method }}</el-col>
+                                <el-col :span="2" class="test-left">请求方法</el-col>
+                                <el-col :span="22" class="test-right">{{ cases.method }}</el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :span="1" class="test-left">变量</el-col>
-                                <el-col :span="23" class="test-right">
+                                <el-col :span="2" class="test-left">变量</el-col>
+                                <el-col :span="22" class="test-right">
                                     <j-input v-model="cases.variables" :edit="false"></j-input>
                                 </el-col>
                             </el-row>
-                            <el-row :gutter="10" class="row-class">
-                                <el-col :span="1" class="test-left">认证方式</el-col>
-                                <el-col :span="23" class="test-right">
+                            <!-- <el-row :gutter="10" class="row-class">
+                                <el-col :span="2" class="test-left">认证方式</el-col>
+                                <el-col :span="22" class="test-right">
                                     <el-row>
                                         <el-col class="bg-purple-light" :span="4">类型</el-col>
                                         <el-col class="bg-purple-light" :span="10">用户名</el-col>
@@ -213,59 +213,59 @@
                                         </template>
                                     </el-row>
                                 </el-col>
-                            </el-row>
+                            </el-row> -->
                             <el-row :gutter="10" class="row-class">
-                                <el-col :span="1" class="test-left">头部信息</el-col>
-                                <el-col :span="23" class="test-right">
+                                <el-col :span="2" class="test-left">头部信息</el-col>
+                                <el-col :span="22" class="test-right">
                                     <j-input v-model="cases.headers" :edit="false"></j-input>
                                 </el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :span="1" class="test-left">请求内容</el-col>
-                                <el-col :span="23" class="test-right">
+                                <el-col :span="2" class="test-left">请求内容</el-col>
+                                <el-col :span="22" class="test-right">
                                     <j-editor v-model="cases.body" :edit="false"></j-editor>
                                 </el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :span="1" class="test-left">结果断言</el-col>
-                                <el-col :span="23" class="test-right">
+                                <el-col :span="2" class="test-left">结果断言</el-col>
+                                <el-col :span="22" class="test-right">
                                     <j-assert v-model="cases.asserts" :show-btn="false" class="bg-change"></j-assert>
                                 </el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :span="1" class="test-left">提取参数</el-col>
-                                <el-col :span="23" class="test-right">
+                                <el-col :span="2" class="test-left">提取参数</el-col>
+                                <el-col :span="22" class="test-right">
                                     <j-extract v-model="cases.extracts" :edit="false" class="bg-change"></j-extract>
                                 </el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :span="1" class="test-left">超时时间</el-col>
+                                <el-col :span="2" class="test-left">超时时间</el-col>
                                 <template v-if="cases.waitingTime">
-                                    <el-col :span="23"> {{ cases.waitingTime }} s </el-col>
+                                    <el-col :span="22"> {{ cases.waitingTime }} s </el-col>
                                 </template>
                                 <template v-else>
-                                    <el-col :span="23">-</el-col>
+                                    <el-col :span="22">-</el-col>
                                 </template>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :span="1" class="test-left">重试次数</el-col>
+                                <el-col :span="2" class="test-left">重试次数</el-col>
                                 <template v-if="cases.cycle">
-                                    <el-col :span="23"> {{ cases.cycle }} </el-col>
+                                    <el-col :span="22"> {{ cases.cycle }} </el-col>
                                 </template>
                                 <template v-else>
-                                    <el-col :span="23">-</el-col>
+                                    <el-col :span="22">-</el-col>
                                 </template>
                             </el-row>
-                            <el-row :gutter="10" class="row-class">
-                                <el-col :span="1" class="test-left" style="height: 40px;line-height: 40px">
+                            <!-- <el-row :gutter="10" class="row-class">
+                                <el-col :span="2" class="test-left" style="height: 40px;line-height: 40px">
                                     失败后是否继续
                                 </el-col>
-                                <el-col :span="23" class="test-right">
+                                <el-col :span="22" class="test-right">
                                     <el-tooltip :content="'' + cases.continues" placement="right-start" class="el--swith">
                                         <el-switch v-model="cases.continues" disabled></el-switch>
                                     </el-tooltip>
                                 </el-col>
-                            </el-row>
+                            </el-row> -->
                         </div>
                     </el-card>
                 </el-collapse-item>

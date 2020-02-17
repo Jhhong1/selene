@@ -26,7 +26,7 @@
             <el-form-item label="变量" :label-width="formLabelWidth" prop="variables">
                 <j-input v-model="addCase.variables"></j-input>
             </el-form-item>
-            <el-form-item label="认证方式" :label-width="formLabelWidth" prop="authMethod">
+            <!-- <el-form-item label="认证方式" :label-width="formLabelWidth" prop="authMethod">
                 <el-row>
                     <el-col class="bg-purple-light" :span="3">类型</el-col>
                     <el-col class="bg-purple-light" :span="10">用户名</el-col>
@@ -45,7 +45,7 @@
                         </el-col>
                     </template>
                 </el-row>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="头部信息" :label-width="formLabelWidth" prop="headers">
                 <j-input v-model="addCase.headers"></j-input>
             </el-form-item>
@@ -59,16 +59,16 @@
                 <j-extract v-model="addCase.extracts"></j-extract>
             </el-form-item>
             <el-form-item label="超时时间" :label-width="formLabelWidth" prop="waitingTime">
-                <el-input v-model="addCase.waitingTime" size="mini"></el-input>
+                <el-input v-model.number="addCase.waitingTime" type="number" min="0" size="mini"></el-input>
             </el-form-item>
             <el-form-item label="重试次数" :label-width="formLabelWidth" prop="cycle">
-                <el-input v-model="addCase.cycle" size="mini"></el-input>
+                <el-input v-model.number="addCase.cycle" type="number" min="0" size="mini"></el-input>
             </el-form-item>
-            <el-form-item label="失败后是否继续" :label-width="formLabelWidth" prop="continues">
+            <!-- <el-form-item label="失败后是否继续" :label-width="formLabelWidth" prop="continues">
                 <el-tooltip :content="'' + addCase.continues" placement="right-start" class="el--swith">
                     <el-switch v-model="addCase.continues" active-color="#13ce66" inactive-color="#dedfe0" @change="changeValue"></el-switch>
                 </el-tooltip>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item size="mini">
                 <el-button type="info" plain @click="countermand('addCase')">取消</el-button>
                 <el-button type="primary" plain @click="submit('addCase')">确定</el-button>
@@ -122,7 +122,9 @@ export default {
             addCase: {},
             rules: {
                 url: [{ validator: validateUrl, required: true, trigger: 'blur' }],
-                method: [{ validator: validateMethod, required: true, trigger: 'blur' }]
+                method: [{ validator: validateMethod, required: true, trigger: 'blur' }],
+                cycle: [{ type: 'number', min: 0, message: '请输入大于等于0的整数', trigger: 'change' }],
+                waitingTime: [{ type: 'number', min: 0, message: '请输入大于等于0的整数', trigger: 'change' }]
             }
         }
     },

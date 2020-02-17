@@ -210,3 +210,8 @@
     color: darkgray;
     font-size: 6px;
 }
+
+.c-text {
+    text-align: left;
+    padding-left: 10px;
+}

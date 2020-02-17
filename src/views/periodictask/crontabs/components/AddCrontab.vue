@@ -11,13 +11,32 @@
             <el-form-item label="显示名称" :label-width="formLabelWidth" prop="display">
                 <el-input v-model="crontab.display" size="mini" maxlength="100"></el-input>
             </el-form-item>
-            <el-form-item label="任务" :label-width="formLabelWidth" prop="task">
-                <el-select v-model="crontab.task" placeholder="请选择" class="method-class" size="mini">
+            <el-form-item label="任务" :label-width="formLabelWidth" prop="testtask">
+                <el-select v-model="crontab.testtask" placeholder="请选择" class="method-class" size="mini">
                     <el-option v-for="(task, ind) in tasks" :key="ind" :label="task.name + '(' + task.display + ')'" :value="task.id"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="规则" :label-width="formLabelWidth" prop="rule">
-                <el-input v-model="crontab.rule" size="mini" placeholder="请参考crontab规则,例如: 0 18 * * *"></el-input>
+            <el-form-item label="标签" :label-width="formLabelWidth" prop="tags">
+                <el-select v-model="crontab.tags" placeholder="请选择" size="mini" class="method-class">
+                    <el-option label="bat" value="bat"></el-option>
+                    <el-option label="smoke" value="smoke"></el-option>
+                    <el-option label="regression" value="regression"></el-option>
+                    <el-option label="container" value="container"></el-option>
+                    <el-option label="maintenance" value="maintenance"></el-option>
+                    <el-option label="alarm" value="alarm"></el-option>
+                    <el-option label="scene" value="scene"></el-option>
+                    <el-option label="devops" value="devops"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="规则" :label-width="formLabelWidth" prop="crontab">
+                <el-select v-model="crontab.crontab" class="method-class" size="mini" filterable>
+                    <el-option
+                        v-for="(content, ind) in rulesList"
+                        :key="ind"
+                        :label="content.name + '(' + content.display + ')'"
+                        :value="content.id"
+                    ></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item size="mini">
                 <el-button type="info" plain size="mini" @click="cancel('crontabForm')">取消</el-button>
@@ -55,7 +74,8 @@ export default {
             crontab: {},
             formLabelWidth: '120px',
             projectName: this.$route.query.project_name,
-            tasks: []
+            tasks: [],
+            rulesList: []
         }
     },
     methods: {
@@ -66,11 +86,25 @@ export default {
         submit(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    return
+                    let project = this.projectName
+                    this.crontab.project = project
+                    let payload = JSON.stringify(this.crontab)
+                    this.addPeriodictask(payload, project)
                 } else {
                     return false
                 }
             })
+        },
+        addPeriodictask(payload, projectName) {
+            this.$api.api
+                .createPeriodictask(payload, projectName)
+                .then(() => {
+                    this.notify.success('创建定时任务成功')
+                    this.$router.push({ name: 'CrontabList', query: this.$route.query })
+                })
+                .catch(error => {
+                    this.notify.error(error.response.request.responseText)
+                })
         },
         getTask() {
             this.$api.api
@@ -79,12 +113,23 @@ export default {
                     this.tasks = response.data.results
                 })
                 .catch(error => {
-                    this.notify.error(error.response.request.responseText)
+                    this.notify.error(error.response.data)
+                })
+        },
+        ruleList() {
+            this.$api.api
+                .getCrontabRuleList(1, 1000, this.projectName)
+                .then(response => {
+                    this.rulesList = response.data.results
+                })
+                .catch(error => {
+                    this.notify.error(error.response.data)
                 })
         }
     },
     created() {
         this.getTask()
+        this.ruleList()
     }
 }
 </script>

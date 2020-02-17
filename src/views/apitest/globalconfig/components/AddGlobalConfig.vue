@@ -14,10 +14,10 @@
             <el-form-item label="请求地址" :label-width="formLabelWidth" prop="baseurl">
                 <el-input v-model="configForm.baseurl" size="mini"></el-input>
             </el-form-item>
-            <el-form-item label="请求代理" :label-width="formLabelWidth" prop="proxy">
-                <j-input v-model="configForm.proxy" :select="true"></j-input>
+            <el-form-item label="请求代理" :label-width="formLabelWidth" prop="proxies">
+                <j-proxy v-model="configForm.proxy"></j-proxy>
             </el-form-item>
-            <el-form-item label="认证方式" :label-width="formLabelWidth" prop="authMethod">
+            <!-- <el-form-item label="认证方式" :label-width="formLabelWidth" prop="authMethod">
                 <el-row>
                     <el-col class="bg-purple-light" :span="3">类型</el-col>
                     <el-col class="bg-purple-light" :span="10">用户名</el-col>
@@ -34,7 +34,7 @@
                         <el-input size="mini" v-model="configForm.auth.password"></el-input>
                     </el-col>
                 </el-row>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="头部信息" :label-width="formLabelWidth" prop="headers">
                 <j-input v-model="configForm.headers" size="mini"></j-input>
             </el-form-item>
@@ -100,7 +100,7 @@ export default {
         return {
             projectName: this.$route.query.project_name,
             configForm: {
-                proxy: {},
+                proxy: [],
                 authMethod: 'BasicAuth',
                 auth: {},
                 headers: {},

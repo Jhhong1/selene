@@ -482,3 +482,50 @@ export const deleteCrontabRule = (ruleId, projectName = '') => {
         }
     })
 }
+
+// 定时任务列表
+export const periodictaskList = (page = 1, pageSize = 10, projectName = '') => {
+    return axios.get('/v1/apitest/crontab_task/', {
+        params: {
+            project: projectName,
+            page: page,
+            page_size: pageSize
+        }
+    })
+}
+
+// 创建定时任务
+export const createPeriodictask = (payload, projectName = '') => {
+    return axios.post('/v1/apitest/crontab_task/', payload, {
+        params: {
+            project: projectName
+        }
+    })
+}
+
+// 更新定时任务
+export const updatePeriodictask = (id, payload, projectName = '') => {
+    return axios.put(`/v1/apitest/crontab_task/${id}/`, payload, {
+        params: {
+            project: projectName
+        }
+    })
+}
+
+// 获取定时任务详情
+export const PeriodictaskDetail = (id, projectName = '') => {
+    return axios.get(`/v1/apitest/crontab_task/${id}/`, {
+        params: {
+            project: projectName
+        }
+    })
+}
+
+// 删除定时任务
+export const deletePeriodictask = (id, projectName = '') => {
+    return axios.delete(`/v1/apitest/crontab_task/${id}/`, {
+        params: {
+            project: projectName
+        }
+    })
+}
