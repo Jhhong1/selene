@@ -15,12 +15,12 @@
                 <el-input v-model="configForm.baseurl" maxlength="255" size="mini"></el-input>
             </el-form-item>
             <el-form-item label="请求代理" :label-width="formLabelWidth" prop="proxy">
-                <j-input v-model="configForm.proxy" :select="true"></j-input>
+                <j-proxy v-model="configForm.proxy"></j-proxy>
             </el-form-item>
             <el-form-item label="头部信息" :label-width="formLabelWidth" prop="variables">
                 <j-input v-model="configForm.headers"></j-input>
             </el-form-item>
-            <el-form-item label="认证方式" :label-width="formLabelWidth" prop="authMethod">
+            <!-- <el-form-item label="认证方式" :label-width="formLabelWidth" prop="authMethod">
                 <el-row>
                     <el-col class="bg-purple-light" :span="3">类型</el-col>
                     <el-col class="bg-purple-light" :span="10">用户名</el-col>
@@ -37,7 +37,7 @@
                         </el-col>
                     </template>
                 </el-row>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="变量" :label-width="formLabelWidth" prop="headers">
                 <j-input v-model="configForm.variables"></j-input>
             </el-form-item>

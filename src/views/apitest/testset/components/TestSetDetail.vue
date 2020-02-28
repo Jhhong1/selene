@@ -734,6 +734,20 @@ export default {
 </script>
 
 <style scoped>
+.dialog-header >>> .el-dialog__header {
+    padding: 20px 20px 0 !important;
+    height: 20px;
+    text-align: left;
+    line-height: 20px;
+}
+.table-class >>> table {
+    height: 40px;
+    line-height: 40px;
+}
+.dialog-class >>> .el-dialog {
+    /*height: 600px;*/
+    overflow: scroll;
+}
 .is-link >>> .is-link {
     color: #409eff !important;
 }

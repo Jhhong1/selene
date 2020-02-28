@@ -31,6 +31,7 @@ import Extracts from '@/plugin/Extracts'
 import SetCase from '@/plugin/TestSetCases'
 import ProjectPermission from '@/plugin/ProjectPermissions'
 import LinkCases from '@/plugin/LinkCases'
+import ProxyCom from '@/plugin/ProxyCom'
 
 Vue.config.productionTip = false
 Vue.prototype.$moment = moment
@@ -54,6 +55,7 @@ Vue.component('j-extract', Extracts)
 Vue.component('set-case', SetCase)
 Vue.component('j-project', ProjectPermission)
 Vue.component('j-link', LinkCases)
+Vue.component('j-proxy', ProxyCom)
 
 Vue.prototype.notify = notify
 
