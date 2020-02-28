@@ -688,14 +688,6 @@ export default {
     /*height: 600px;*/
     overflow: scroll;
 }
-.footer {
-    height: 40px;
-    line-height: 40px;
-    margin-top: 40px;
-    position: relative;
-    float: right;
-    bottom: 20px;
-}
 .pagination-class {
     margin-top: 50px;
     float: left;
