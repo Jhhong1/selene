@@ -64,7 +64,10 @@ export default {
             rules: {
                 username: [{ validator: checkUsername, trigger: 'blur' }],
                 password: [{ validator: checkPass, trigger: 'blur' }]
-            }
+            },
+            client_id: '',
+            client_secret: '',
+            grant_type: ''
         }
     },
     methods: {
@@ -83,7 +86,10 @@ export default {
             this.$api.api
                 .login({
                     username: that.ruleForm.username,
-                    password: that.ruleForm.password
+                    password: that.ruleForm.password,
+                    client_id: that.client_id,
+                    client_secret: that.client_secret,
+                    grant_type: that.grant_type
                 })
                 .then(response => {
                     let info = response.data
@@ -97,7 +103,17 @@ export default {
                     const errmsg = error.response.data
                     that.notify.error(errmsg)
                 })
+        },
+        getSecret() {
+            this.$api.api.secret().then(response => {
+                this.client_id = response.data.client_id
+                this.client_secret = response.data.client_secret
+                this.grant_type = response.data.grant_type
+            })
         }
+    },
+    created() {
+        this.getSecret()
     }
 }
 </script>
