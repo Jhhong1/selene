@@ -8,6 +8,11 @@ if (process.env.NODE_ENV === 'production') {
     axios.defaults.baseURL = 'http://127.0.0.1:8081'
 }
 
+// 获取secret id
+export const secret = () => {
+    return axios.get('/v1/secret/')
+}
+
 // 登录
 export const login = params => {
     return axios.post('/v1/login/', params)
