@@ -1,6 +1,20 @@
 <template>
     <div>
         <el-table :data="testSetCases" :class="custom" row-key="orderNum" style="padding-left: 20px; padding-right: 20px">
+            <el-table-column type="expand">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.response">
+                        <div>
+                            <el-row :gutter="10" class="row-class">
+                                <el-col :span="2" class="test-left">请求结果</el-col>
+                                <el-col :span="22" class="test-right">
+                                    <j-editor v-model="scope.row.response" :edit="false"></j-editor>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </template>
+                </template>
+            </el-table-column>
             <el-table-column label="用例名称" min-width="50">
                 <template slot-scope="scope">
                     <ul class="ul-style">
@@ -51,9 +65,9 @@
                     <template v-else-if="scope.row.result === 'Succeed'">
                         <tag-success></tag-success>
                     </template>
-                    <template v-else
-                        >-</template
-                    >
+                    <template v-else>
+                        -
+                    </template>
                 </template>
             </el-table-column>
             <el-table-column label="操作" min-width="100">
@@ -164,6 +178,32 @@ export default {
         },
         getPermissions() {
             this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
+        },
+        parseJson(content) {
+            if (typeof content == 'string') {
+                try {
+                    let obj = JSON.parse(content)
+                    if (typeof obj == 'object' && obj) {
+                        return obj
+                    } else {
+                        return content
+                    }
+                } catch (e) {
+                    return content
+                }
+            }
+        },
+        parseResponse(contents) {
+            for (let index in contents) {
+                let content = contents[index]
+                let response = content.response
+                if (response) {
+                    response = JSON.parse(response)
+                    response.text = this.parseJson(response.text)
+                    contents[index].response = response
+                }
+            }
+            return contents
         }
     },
     mounted() {
@@ -172,7 +212,7 @@ export default {
     },
     watch: {
         value: function(newValue) {
-            this.testSetCases = newValue
+            this.testSetCases = this.parseResponse(newValue)
         },
         attr: function(newValue) {
             this.custom = newValue

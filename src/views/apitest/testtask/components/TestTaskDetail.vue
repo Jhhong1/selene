@@ -291,7 +291,7 @@
                                 style="width: 100%"
                             >
                                 <el-table-column type="selection" width="55"></el-table-column>
-                                <el-table-column label="测试集名称" width="120">
+                                <el-table-column label="测试集名称" width="150">
                                     <template slot-scope="scope">
                                         <ul class="ul-style">
                                             <li>
