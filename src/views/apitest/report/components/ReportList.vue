@@ -31,6 +31,11 @@
             </el-col>
         </div>
         <el-table class="table-class td" :data="sets">
+            <el-table-column type="expand">
+                <template slot-scope="scope">
+                    {{ scope.row.errorMessage }}
+                </template>
+            </el-table-column>
             <el-table-column label="名称" min-width="100">
                 <template slot-scope="scope">
                     <ul class="ul-style">
@@ -86,12 +91,6 @@
                     <template v-else>
                         -
                     </template>
-                </template>
-            </el-table-column>
-            <el-table-column label="失败原因" min-width="100" prop="errorMessage"></el-table-column>
-            <el-table-column type="expand">
-                <template slot-scope="scope">
-                    {{ scope.row.errorMessage }}
                 </template>
             </el-table-column>
         </el-table>

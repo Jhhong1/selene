@@ -269,6 +269,30 @@
                         </div>
                     </el-card>
                 </el-collapse-item>
+                <template v-if="cases.caserelationship">
+                    <el-collapse-item title="请求结果" name="3" class="clearfix">
+                        <el-card>
+                            <div>
+                                <el-row :gutter="10" class="row-class">
+                                    <el-col :span="2" class="test-left">响应码</el-col>
+                                    <el-col :span="22">{{ response.status_code }}</el-col>
+                                </el-row>
+                                <el-row :gutter="10" class="row-class">
+                                    <el-col :span="2" class="test-left">头部信息</el-col>
+                                    <el-col :span="22" class="test-right">
+                                        <j-editor v-model="response.headers" :edit="false"></j-editor>
+                                    </el-col>
+                                </el-row>
+                                <el-row :gutter="10" class="row-class">
+                                    <el-col :span="2" class="test-left">响应文本</el-col>
+                                    <el-col :span="22" class="test-right">
+                                        <j-editor v-model="response.text" :edit="false"></j-editor>
+                                    </el-col>
+                                </el-row>
+                            </div>
+                        </el-card>
+                    </el-collapse-item>
+                </template>
             </el-collapse>
         </div>
     </div>
@@ -279,15 +303,30 @@ export default {
     name: 'CaseDetail',
     data() {
         return {
-            activeNames: ['1', '2'],
+            activeNames: ['1', '2', '3'],
             cases: {},
             loading: false,
             caseId: this.$route.params.id,
             projectName: this.$route.query.project_name,
-            permissions: []
+            permissions: [],
+            response: {}
         }
     },
     methods: {
+        parseJson(content) {
+            if (typeof content == 'string') {
+                try {
+                    let obj = JSON.parse(content)
+                    if (typeof obj == 'object' && obj) {
+                        return obj
+                    } else {
+                        return content
+                    }
+                } catch (e) {
+                    return content
+                }
+            }
+        },
         CaseDetail() {
             let self = this
             this.loading = true
@@ -304,10 +343,13 @@ export default {
                     self.cases.endRunTime = self.cases.caserelationship
                         ? self.$moment(self.cases.caserelationship.endRunTime).format('YYYY-MM-DD HH:mm:ss')
                         : null
+                    self.response = self.cases.caserelationship ? JSON.parse(self.cases.caserelationship.response) : null
+                    if (self.response) {
+                        self.response.text = self.parseJson(self.response.text)
+                    }
                     this.loading = false
                 })
                 .catch(error => {
-                    console.log(error)
                     this.notify.error(error)
                 })
         },

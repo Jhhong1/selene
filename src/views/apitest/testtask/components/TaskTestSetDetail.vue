@@ -139,7 +139,21 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="测试用例" name="cases">
-                    <el-table row-key="id" :data="setCases" style="padding-left: 20px; padding-right: 20px">
+                    <el-table :data="setCases" style="padding-left: 20px; padding-right: 20px">
+                        <el-table-column type="expand">
+                            <template slot-scope="scope">
+                                <template v-if="scope.row.relationship__response">
+                                    <div>
+                                        <el-row :gutter="10" class="row-class">
+                                            <el-col :span="2" class="test-left">请求结果</el-col>
+                                            <el-col :span="22" class="test-right">
+                                                <j-editor v-model="scope.row.relationship__response" :edit="false"></j-editor>
+                                            </el-col>
+                                        </el-row>
+                                    </div>
+                                </template>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="用例名称" min-width="50">
                             <template slot-scope="scope">
                                 <ul class="ul-style">
@@ -198,7 +212,21 @@
                     </el-table>
                 </el-tab-pane>
                 <el-tab-pane label="前置处理器" name="setup">
-                    <el-table row-key="id" :data="setupCases" style="padding-left: 20px; padding-right: 20px">
+                    <el-table :data="setupCases" style="padding-left: 20px; padding-right: 20px">
+                        <el-table-column type="expand">
+                            <template slot-scope="scope">
+                                <template v-if="scope.row.relationship__response">
+                                    <div>
+                                        <el-row :gutter="10" class="row-class">
+                                            <el-col :span="2" class="test-left">请求结果</el-col>
+                                            <el-col :span="22" class="test-right">
+                                                <j-editor v-model="scope.row.relationship__response" :edit="false"></j-editor>
+                                            </el-col>
+                                        </el-row>
+                                    </div>
+                                </template>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="用例名称" min-width="50">
                             <template slot-scope="scope">
                                 <ul class="ul-style">
@@ -257,7 +285,21 @@
                     </el-table>
                 </el-tab-pane>
                 <el-tab-pane label="后置处理器" name="teardown">
-                    <el-table row-key="id" :data="teardownCases" style="padding-left: 20px; padding-right: 20px">
+                    <el-table :data="teardownCases" style="padding-left: 20px; padding-right: 20px">
+                        <el-table-column type="expand">
+                            <template slot-scope="scope">
+                                <template v-if="scope.row.relationship__response">
+                                    <div>
+                                        <el-row :gutter="10" class="row-class">
+                                            <el-col :span="2" class="test-left">请求结果</el-col>
+                                            <el-col :span="22" class="test-right">
+                                                <j-editor v-model="scope.row.relationship__response" :edit="false"></j-editor>
+                                            </el-col>
+                                        </el-row>
+                                    </div>
+                                </template>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="用例名称" min-width="50">
                             <template slot-scope="scope">
                                 <ul class="ul-style">
@@ -349,12 +391,38 @@ export default {
                     this.notify.error(error.response.request.responseText)
                 })
         },
+        parseJson(content) {
+            if (typeof content == 'string') {
+                try {
+                    let obj = JSON.parse(content)
+                    if (typeof obj == 'object' && obj) {
+                        return obj
+                    } else {
+                        return content
+                    }
+                } catch (e) {
+                    return content
+                }
+            }
+        },
+        parseResponse(contents) {
+            for (let index in contents) {
+                let content = contents[index]
+                let response = content.relationship__response
+                if (response) {
+                    response = JSON.parse(response)
+                    response.text = this.parseJson(response.text)
+                    contents[index].relationship__response = response
+                }
+            }
+            return contents
+        },
         taskSetCases() {
             let _this = this
             this.$api.api
                 .taskSetCases(_this.taskName, _this.setId, _this.projectName)
                 .then(response => {
-                    _this.setCases = response.data
+                    _this.setCases = _this.parseResponse(response.data)
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)
@@ -365,7 +433,7 @@ export default {
             this.$api.api
                 .taskSetCases(_this.taskName, _this.setId, _this.projectName, 'setup')
                 .then(response => {
-                    _this.setupCases = response.data
+                    _this.setupCases = _this.parseResponse(response.data)
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)
@@ -376,7 +444,7 @@ export default {
             this.$api.api
                 .taskSetCases(_this.taskName, _this.setId, _this.projectName, 'teardown')
                 .then(response => {
-                    _this.teardownCases = response.data
+                    _this.teardownCases = _this.parseResponse(response.data)
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)
