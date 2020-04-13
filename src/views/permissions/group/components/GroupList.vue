@@ -55,6 +55,7 @@ export default {
                 .deleteGroup(groupId)
                 .then(() => {
                     this.notify.success('删除权限组成功')
+                    this.getGroups()
                 })
                 .catch(error => {
                     this.notify.error(error)

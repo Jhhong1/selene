@@ -20,80 +20,60 @@
                 <div slot="header" class="text-class">
                     <span>权限</span>
                 </div>
-                <el-form-item label="配置" :label-width="formLabelWidth" prop="config">
-                    <el-select v-model="group.config" multiple class="method-class" size="mini">
-                        <el-option label="添加" value="add_config"></el-option>
-                        <el-option label="更新" value="change_config"></el-option>
-                        <el-option label="删除" value="delete_config"></el-option>
-                        <el-option label="查看" value="view_config"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="计数器" :label-width="formLabelWidth" prop="counter">
-                    <el-select v-model="group.counter" multiple class="method-class" size="mini">
-                        <el-option label="添加" value="add_counter"></el-option>
-                        <el-option label="更新" value="change_counter"></el-option>
-                        <el-option label="删除" value="delete_counter"></el-option>
-                        <el-option label="查看" value="view_counter"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="测试用例" :label-width="formLabelWidth" prop="cases">
-                    <el-select v-model="group.apicases" multiple class="method-class" size="mini">
-                        <el-option label="添加" value="add_apicases"></el-option>
-                        <el-option label="更新" value="change_apicases"></el-option>
-                        <el-option label="删除" value="delete_apicases"></el-option>
-                        <el-option label="查看" value="view_apicases"></el-option>
-                        <el-option label="执行" value="execute_apicases"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="测试集" :label-width="formLabelWidth" prop="testset">
-                    <el-select v-model="group.apiset" multiple class="method-class" size="mini">
-                        <el-option label="添加" value="add_apiset"></el-option>
-                        <el-option label="更新" value="change_apiset"></el-option>
-                        <el-option label="删除" value="delete_apiset"></el-option>
-                        <el-option label="查看" value="view_apiset"></el-option>
-                        <el-option label="执行" value="execute_apiset"></el-option>
-                        <el-option label="移除用例" value="remove_apiset"></el-option>
-                        <el-option label="复制用例" value="copy_apiset"></el-option>
-                        <el-option label="配置引用" value="config_apiset"></el-option>
-                        <el-option label="关联用例" value="cases_apiset"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="测试任务" :label-width="formLabelWidth" prop="apitasks">
-                    <el-select v-model="group.apitasks" multiple class="method-class" size="mini">
-                        <el-option label="添加" value="add_apitasks"></el-option>
-                        <el-option label="更新" value="change_apitasks"></el-option>
-                        <el-option label="删除" value="delete_apitasks"></el-option>
-                        <el-option label="查看" value="view_apitasks"></el-option>
-                        <el-option label="执行" value="execute_apitasks"></el-option>
-                        <el-option label="关联测试集" value="associate_apitasks"></el-option>
-                        <el-option label="移除测试集" value="remove_apitasks"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="项目" :label-width="formLabelWidth" prop="projects" class="el-form-item_content">
-                    <!-- <j-project v-model="group.projects"></j-project> -->
-                    <el-select v-model="group.apiprojects" multiple class="method-class" size="mini">
-                        <el-option label="添加" value="add_apiprojects"></el-option>
-                        <el-option label="更新" value="change_apiprojects"></el-option>
-                        <el-option label="删除" value="delete_apiprojects"></el-option>
-                        <el-option label="查看" value="view_apiprojects"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="定时规则" :label-width="formLabelWidth" prop="crontabscheduleextend">
-                    <el-select v-model="group.crontabscheduleextend" multiple class="method-class" size="mini">
-                        <el-option label="添加" value="add_crontabscheduleextend"></el-option>
-                        <el-option label="更新" value="change_crontabscheduleextend"></el-option>
-                        <el-option label="删除" value="delete_crontabscheduleextend"></el-option>
-                        <el-option label="查看" value="view_crontabscheduleextend"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="定时任务" :label-width="formLabelWidth" prop="periodictaskextend">
-                    <el-select v-model="group.periodictaskextend" multiple class="method-class" size="mini">
-                        <el-option label="添加" value="add_periodictaskextend"></el-option>
-                        <el-option label="更新" value="change_periodictaskextend"></el-option>
-                        <el-option label="删除" value="delete_periodictaskextend"></el-option>
-                        <el-option label="查看" value="view_periodictaskextend"></el-option>
-                    </el-select>
-                </el-form-item>
+                <template v-for="(permission, ind) in pData">
+                    <el-form-item :key="ind" :label="permission.name" :label-width="formLabelWidth">
+                        <template v-if="permission.model == 'apicases'">
+                            <el-select v-model="group.apicases" multiple class="method-class" size="mini">
+                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
+                            </el-select>
+                        </template>
+                        <template v-else-if="permission.model == 'apiprojects'">
+                            <el-select v-model="group.apiprojects" multiple class="method-class" size="mini">
+                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
+                            </el-select>
+                        </template>
+                        <template v-else-if="permission.model == 'apiset'">
+                            <el-select v-model="group.apiset" multiple class="method-class" size="mini">
+                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
+                            </el-select>
+                        </template>
+                        <template v-else-if="permission.model == 'apitasks'">
+                            <el-select v-model="group.apitasks" multiple class="method-class" size="mini">
+                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
+                            </el-select>
+                        </template>
+                        <template v-else-if="permission.model == 'config'">
+                            <el-select v-model="group.config" multiple class="method-class" size="mini">
+                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
+                            </el-select>
+                        </template>
+                        <template v-else-if="permission.model == 'counter'">
+                            <el-select v-model="group.counter" multiple class="method-class" size="mini">
+                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
+                            </el-select>
+                        </template>
+                        <template v-else-if="permission.model == 'crontabscheduleextend'">
+                            <el-select v-model="group.crontabscheduleextend" multiple class="method-class" size="mini">
+                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
+                            </el-select>
+                        </template>
+                        <template v-else-if="permission.model == 'periodictaskextend'">
+                            <el-select v-model="group.periodictaskextend" multiple class="method-class" size="mini">
+                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
+                            </el-select>
+                        </template>
+                        <template v-else-if="permission.model == 'groupextend'">
+                            <el-select v-model="group.groupextend" multiple class="method-class" size="mini">
+                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
+                            </el-select>
+                        </template>
+                        <template v-else-if="permission.model == 'userprofile'">
+                            <el-select v-model="group.userprofile" multiple class="method-class" size="mini">
+                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
+                            </el-select>
+                        </template>
+                    </el-form-item>
+                </template>
             </el-card>
             <el-form-item size="mini" style="margin: 50px 0">
                 <el-button type="info" plain size="mini" @click="cancle">取消</el-button>
