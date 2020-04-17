@@ -1,6 +1,6 @@
 <template>
     <div>
-        <template v-if="permissions.indexOf('apitest.add_apitasks') > -1">
+        <template v-if="permissions.indexOf('apitest.create_apitasks') > -1">
             <router-link tag="el-button" class="el-button--primary el-button--mini p-button" :to="{ name: 'AddTestTask', query: $route.query }">
                 添加测试任务
             </router-link>
@@ -85,7 +85,12 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item :command="{ type: 'view', name: scope.row.name, row: scope.row.id }">查看</el-dropdown-item>
-                            <el-dropdown-item :command="{ type: 'update', row: scope.row.id }">更新</el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'update', row: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.update_apitasks') === -1"
+                            >
+                                更新
+                            </el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'exec', row: scope.row.id }"
                                 :disabled="permissions.indexOf('apitest.execute_apitasks') === -1"
@@ -94,7 +99,7 @@
                             </el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.add_apitasks') === -1"
+                                :disabled="permissions.indexOf('apitest.delete_apitasks') === -1"
                             >
                                 删除
                             </el-dropdown-item>

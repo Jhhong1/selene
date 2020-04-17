@@ -14,7 +14,7 @@
                             <el-dropdown size="mini" split-button type="primary" @command="handleCommand">
                                 操作
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.change_config') === -1">
+                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.update_config') === -1">
                                         更新
                                     </el-dropdown-item>
                                     <el-dropdown-item command="del" :disabled="permissions.indexOf('apitest.delete_config') === -1">

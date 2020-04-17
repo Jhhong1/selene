@@ -1,6 +1,6 @@
 <template>
     <div>
-        <template v-if="permissions.indexOf('apitest.add_config') > -1">
+        <template v-if="permissions.indexOf('apitest.create_config') > -1">
             <router-link tag="el-button" :to="{ name: 'AddGlobalConfig', query: $route.query }" class="el-button--primary el-button--mini p-button">
                 添加配置
             </router-link>
@@ -56,14 +56,14 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item
                                 :command="{ type: 'setGlobal', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.change_config') === -1"
+                                :disabled="permissions.indexOf('apitest.update_config') === -1"
                             >
                                 设为全局变量
                             </el-dropdown-item>
                             <el-dropdown-item :command="{ type: 'view', row: scope.row.id }">查看</el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'update', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.change_config') === -1"
+                                :disabled="permissions.indexOf('apitest.update_config') === -1"
                             >
                                 更新
                             </el-dropdown-item>

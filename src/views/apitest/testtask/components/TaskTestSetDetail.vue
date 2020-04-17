@@ -350,9 +350,9 @@
                                 <template v-else-if="scope.row.relationship__result === 'Succeed'">
                                     <tag-success></tag-success>
                                 </template>
-                                <template v-else
-                                    >-</template
-                                >
+                                <template v-else>
+                                    -
+                                </template>
                             </template>
                         </el-table-column>
                     </el-table>

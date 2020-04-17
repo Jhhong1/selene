@@ -23,7 +23,13 @@
                 <template v-for="(permission, index) in permissions">
                     <template v-if="group_permissions.hasOwnProperty(permission.model)">
                         <el-form-item :label="permission.name" :label-width="formLabelWidth" :key="index">
-                            <el-select v-model="group_permissions[permission.model]" multiple class="method-class" size="mini">
+                            <el-select
+                                v-model="group_permissions[permission.model]"
+                                multiple
+                                class="method-class"
+                                size="mini"
+                                @change="test(permission.model, group_permissions[permission.model])"
+                            >
                                 <el-option v-for="(p, indx) in permission.permission_set" :key="indx" :label="p.name" :value="p.id"></el-option>
                             </el-select>
                         </el-form-item>
@@ -57,6 +63,10 @@ export default {
         }
     },
     methods: {
+        test(model, val) {
+            this.group_permissions.model = val
+            console.log(this.group_permissions)
+        },
         extractPermission(content) {
             const _this = this
             for (let index = 0; index < content.length; index++) {

@@ -11,11 +11,11 @@
                     <el-dropdown size="mini" split-button type="primary" @command="infoHandleCommand" style="float: right; margin-right: 50px">
                         操作
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.change_apitasks') === -1">
+                            <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.update_apitasks') === -1">
                                 更新
                             </el-dropdown-item>
                             <!--<el-dropdown-item command="createCase">创建测试集</el-dropdown-item>-->
-                            <el-dropdown-item command="link" :disabled="permissions.indexOf('apitest.change_apitasks') === -1">
+                            <el-dropdown-item command="link" :disabled="permissions.indexOf('apitest.associate_counter') === -1">
                                 关联计数器
                             </el-dropdown-item>
                         </el-dropdown-menu>
@@ -173,7 +173,7 @@
                     <el-dropdown size="mini" split-button type="primary" @command="handleCommand" style="float: right; margin-right: 50px">
                         操作
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="linked" :disabled="permissions.indexOf('apitest.associate_apitasks') === -1">
+                            <el-dropdown-item command="linked" :disabled="permissions.indexOf('apitest.associate_set') === -1">
                                 关联测试集
                             </el-dropdown-item>
                             <!--<el-dropdown-item command="createCase">创建测试集</el-dropdown-item>-->
@@ -263,7 +263,7 @@
                                     type="text"
                                     size="mini"
                                     @click="removeAction(scope.$index, taskSets, scope.row.testset.id)"
-                                    :disabled="permissions.indexOf('apitest.remove_apitasks') === -1"
+                                    :disabled="permissions.indexOf('apitest.remove_set') === -1"
                                 >
                                     移除
                                 </el-button>

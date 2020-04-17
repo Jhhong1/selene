@@ -1,6 +1,6 @@
 <template>
     <div>
-        <template v-if="permissions.indexOf('apitest.add_apiset') > -1">
+        <template v-if="permissions.indexOf('apitest.create_apiset') > -1">
             <router-link tag="el-button" class="el-button--primary el-button--mini p-button" :to="{ name: 'AddApiTestSet', query: $route.query }">
                 添加测试集
             </router-link>
@@ -91,7 +91,7 @@
                             <el-dropdown-item :command="{ type: 'view', row: scope.row.id }">查看</el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'update', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.change_apiset') === -1"
+                                :disabled="permissions.indexOf('apitest.update_apiset') === -1"
                             >
                                 更新
                             </el-dropdown-item>

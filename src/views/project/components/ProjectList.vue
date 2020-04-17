@@ -3,7 +3,7 @@
         <div>
             <el-row style="margin-right: 6px">
                 <el-col :span="20" style="text-align: right">
-                    <template v-if="permissions.indexOf('apitest.add_apiprojects') > -1">
+                    <template v-if="permissions.indexOf('apitest.create_apiprojects') > -1">
                         <el-button type="primary" size="small" @click="addProject">创建项目</el-button>
                     </template>
                     <template v-else>
@@ -39,7 +39,12 @@
                                         <i class="el-icon-more-outline rotating"></i>
                                     </span>
                                     <el-dropdown-menu slot="dropdown">
-                                        <el-dropdown-item :command="{ type: 'delete', id: project.id, ind: index }">删除</el-dropdown-item>
+                                        <el-dropdown-item
+                                            :command="{ type: 'delete', id: project.id, ind: index }"
+                                            :disabled="permissions.indexOf('apitest.delete_apiprojects') == -1"
+                                        >
+                                            删除
+                                        </el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
                             </div>

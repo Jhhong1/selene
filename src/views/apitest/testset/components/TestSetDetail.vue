@@ -19,10 +19,10 @@
                             >
                                 操作
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="refer" :disabled="permissions.indexOf('apitest.config_apiset') === -1">
+                                    <el-dropdown-item command="refer" :disabled="permissions.indexOf('apitest.associate_config') === -1">
                                         配置引用
                                     </el-dropdown-item>
-                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.change_apiset') === -1">
+                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.update_apiset') === -1">
                                         更新
                                     </el-dropdown-item>
                                     <el-dropdown-item command="delete" :disabled="permissions.indexOf('apitest.delete_apiset') === -1">
@@ -227,7 +227,7 @@
                                 <el-dropdown-item command="exec" :disabled="permissions.indexOf('apitest.execute_apiset') === -1">
                                     执行
                                 </el-dropdown-item>
-                                <el-dropdown-item command="linked" :disabled="permissions.indexOf('apitest.cases_apiset') === -1">
+                                <el-dropdown-item command="linked" :disabled="permissions.indexOf('apitest.associate_cases') === -1">
                                     关联测试用例
                                 </el-dropdown-item>
                                 <!-- <el-dropdown-item command="createCase">创建测试用例</el-dropdown-item> -->
@@ -253,7 +253,7 @@
                         <el-dropdown size="mini" split-button type="primary" @command="handleSetUp" style="float: right; margin-right: 50px">
                             操作
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="setup" :disabled="permissions.indexOf('apitest.cases_apiset') === -1">
+                                <el-dropdown-item command="setup" :disabled="permissions.indexOf('apitest.associate_cases') === -1">
                                     关联测试用例
                                 </el-dropdown-item>
                             </el-dropdown-menu>
@@ -278,7 +278,7 @@
                         <el-dropdown size="mini" split-button type="primary" @command="handleTearDown" style="float: right; margin-right: 50px">
                             操作
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="teardown" :disabled="permissions.indexOf('apitest.cases_apiset') === -1">
+                                <el-dropdown-item command="teardown" :disabled="permissions.indexOf('apitest.associate_cases') === -1">
                                     关联测试用例
                                 </el-dropdown-item>
                             </el-dropdown-menu>

@@ -1,12 +1,12 @@
 <template>
     <div>
-        <template v-if="permissions.indexOf('apitest.add_counter') > -1">
+        <template v-if="permissions.indexOf('apitest.create_counter') > -1">
             <router-link tag="el-button" :to="{ name: 'AddCounter', query: $route.query }" class="el-button--primary el-button--mini p-button">
                 添加计数器
             </router-link>
         </template>
         <template v-else>
-            <el-button class="el-button--primary el-button--mini p-button" disabled>添加配置</el-button>
+            <el-button class="el-button--primary el-button--mini p-button" disabled>添加计数器</el-button>
         </template>
         <el-table class="table-class td" :data="counters">
             <el-table-column label="名称" min-width="100">
@@ -45,7 +45,7 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item
                                 :command="{ type: 'update', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.change_counter') === -1"
+                                :disabled="permissions.indexOf('apitest.update_counter') === -1"
                             >
                                 更新
                             </el-dropdown-item>

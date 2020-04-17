@@ -16,7 +16,7 @@
                             <el-dropdown size="mini" split-button type="primary" @command="handleCommand">
                                 操作
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.change_apicases') === -1">
+                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.update_apicases') === -1">
                                         更新
                                     </el-dropdown-item>
                                     <el-dropdown-item command="execute" :disabled="permissions.indexOf('apitest.execute_apicases') === -1">

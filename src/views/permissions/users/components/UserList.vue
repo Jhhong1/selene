@@ -6,7 +6,7 @@
             <el-table-column label="操作" min-width="50">
                 <template slot-scope="scope">
                     <el-dropdown @command="handleCommand">
-                        <span>
+                        <span class="cursor-style">
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
@@ -181,5 +181,8 @@ export default {
     height: 20px;
     text-align: left;
     line-height: 20px;
+}
+.cursor-style {
+    cursor: pointer;
 }
 </style>
