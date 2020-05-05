@@ -20,27 +20,12 @@
                 <div slot="header" class="text-class">
                     <span>权限</span>
                 </div>
-                <template v-for="(permission, index) in permissions">
-                    <template v-if="group_permissions.hasOwnProperty(permission.model)">
-                        <el-form-item :label="permission.name" :label-width="formLabelWidth" :key="index">
-                            <el-select
-                                v-model="group_permissions[permission.model]"
-                                multiple
-                                class="method-class"
-                                size="mini"
-                                @change="test(permission.model, group_permissions[permission.model])"
-                            >
-                                <el-option v-for="(p, indx) in permission.permission_set" :key="indx" :label="p.name" :value="p.id"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </template>
-                    <template v-else>
-                        <el-form-item :label="permission.name" :label-width="formLabelWidth" :key="index">
-                            <el-select v-model="group_permissions[permission.model]" multiple class="method-class" size="mini">
-                                <el-option v-for="(p, indx) in permission.permission_set" :key="indx" :label="p.name" :value="p.id"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </template>
+                <template v-for="permission in permissions">
+                    <el-form-item :label="permission.name" :label-width="formLabelWidth" :key="permission.model">
+                        <el-select v-model="group_permissions[permission.model]" multiple style="display: block;" size="mini" @change="dataChange">
+                            <el-option v-for="(p, indx) in permission.permission_set" :key="indx" :label="p.name" :value="p.id"></el-option>
+                        </el-select>
+                    </el-form-item>
                 </template>
             </el-card>
             <el-form-item size="mini" style="margin: 50px 0">
@@ -63,20 +48,22 @@ export default {
         }
     },
     methods: {
-        test(model, val) {
-            this.group_permissions.model = val
-            console.log(this.group_permissions)
+        dataChange() {
+            this.$forceUpdate()
         },
         extractPermission(content) {
             const _this = this
             for (let index = 0; index < content.length; index++) {
                 const element = content[index]
-                const mod = element.model
-                _this.group_permissions[mod] = []
-                const permission = element.permissions
-                for (let ind = 0; ind < permission.length; ind++) {
-                    const p = permission[ind]
-                    _this.group_permissions[mod].push(p.id)
+                if (element.hasOwnProperty('model') && element.hasOwnProperty('permissions')) {
+                    const mod = element.model
+                    const permission = element.permissions
+                    const tmp_list = []
+                    for (let ind = 0; ind < permission.length; ind++) {
+                        const p = permission[ind]
+                        tmp_list.push(p.id)
+                    }
+                    _this.group_permissions[mod] = tmp_list
                 }
             }
         },
@@ -85,7 +72,8 @@ export default {
                 .getGroupDetail(this.id)
                 .then(response => {
                     this.group = response.data
-                    this.extractPermission(response.data.permissions)
+                    const tmp_data = Object.assign({}, this.group)
+                    this.extractPermission(tmp_data.permissions)
                 })
                 .catch(error => {
                     this.notify.error(error)

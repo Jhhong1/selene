@@ -22,56 +22,9 @@
                 </div>
                 <template v-for="(permission, ind) in pData">
                     <el-form-item :key="ind" :label="permission.name" :label-width="formLabelWidth">
-                        <template v-if="permission.model == 'apicases'">
-                            <el-select v-model="group.apicases" multiple class="method-class" size="mini">
-                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
-                            </el-select>
-                        </template>
-                        <template v-else-if="permission.model == 'apiprojects'">
-                            <el-select v-model="group.apiprojects" multiple class="method-class" size="mini">
-                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
-                            </el-select>
-                        </template>
-                        <template v-else-if="permission.model == 'apiset'">
-                            <el-select v-model="group.apiset" multiple class="method-class" size="mini">
-                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
-                            </el-select>
-                        </template>
-                        <template v-else-if="permission.model == 'apitasks'">
-                            <el-select v-model="group.apitasks" multiple class="method-class" size="mini">
-                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
-                            </el-select>
-                        </template>
-                        <template v-else-if="permission.model == 'config'">
-                            <el-select v-model="group.config" multiple class="method-class" size="mini">
-                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
-                            </el-select>
-                        </template>
-                        <template v-else-if="permission.model == 'counter'">
-                            <el-select v-model="group.counter" multiple class="method-class" size="mini">
-                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
-                            </el-select>
-                        </template>
-                        <template v-else-if="permission.model == 'crontabscheduleextend'">
-                            <el-select v-model="group.crontabscheduleextend" multiple class="method-class" size="mini">
-                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
-                            </el-select>
-                        </template>
-                        <template v-else-if="permission.model == 'periodictaskextend'">
-                            <el-select v-model="group.periodictaskextend" multiple class="method-class" size="mini">
-                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
-                            </el-select>
-                        </template>
-                        <template v-else-if="permission.model == 'groupextend'">
-                            <el-select v-model="group.groupextend" multiple class="method-class" size="mini">
-                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
-                            </el-select>
-                        </template>
-                        <template v-else-if="permission.model == 'userprofile'">
-                            <el-select v-model="group.userprofile" multiple class="method-class" size="mini">
-                                <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
-                            </el-select>
-                        </template>
+                        <el-select v-model="permissions[permission.model]" multiple class="method-class" size="mini">
+                            <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
+                        </el-select>
                     </el-form-item>
                 </template>
             </el-card>
@@ -100,7 +53,7 @@ export default {
         }
         return {
             pData: [],
-            permissions: [],
+            permissions: {},
             formLabelWidth: '120px',
             group: {},
             rules: {
@@ -127,6 +80,7 @@ export default {
         confirm() {
             this.$refs['group'].validate(valid => {
                 if (valid) {
+                    this.group.permissions = this.permissions
                     this.addGroup(JSON.stringify(this.group))
                 } else {
                     return false
