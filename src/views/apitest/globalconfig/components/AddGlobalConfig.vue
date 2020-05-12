@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'GlobalConfigList', query: $route.query }" class="is-link">配置</el-breadcrumb-item>
             <el-breadcrumb-item>添加配置</el-breadcrumb-item>
@@ -42,7 +42,7 @@
                 <j-input v-model="configForm.variables" size="mini"></j-input>
             </el-form-item>
             <el-form-item label="设为全局变量" :label-width="formLabelWidth" prop="globalConfig">
-                <el-tooltip :content="configForm.globalConfig" placement="right-start" class="el--swith">
+                <el-tooltip :content="configForm.globalConfig" placement="right-start" class="el--swith" style="display: block;line-height: 40px;">
                     <el-switch
                         v-model="configForm.globalConfig"
                         active-color="#13ce66"
@@ -148,6 +148,9 @@ export default {
 </script>
 
 <style scoped>
+.el-bread >>> .el-breadcrumb {
+    line-height: 40px !important;
+}
 .is-link >>> .is-link {
     color: #409eff !important;
 }

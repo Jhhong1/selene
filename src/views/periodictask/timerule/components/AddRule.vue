@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'RuleList', query: $route.query }" class="is-link">定时规则</el-breadcrumb-item>
             <el-breadcrumb-item>添加定时规则</el-breadcrumb-item>
@@ -27,7 +27,7 @@
                 <el-input v-model="rule.month_of_year" size="mini" placeholder="*代表任何时间, 例如: 1,6"></el-input>
             </el-form-item>
             <el-form-item label="时区" :label-width="formLabelWidth" prop="timezone">
-                <el-select v-model="rule.timezone" class="method-class" size="mini">
+                <el-select v-model="rule.timezone" style="display: block" size="mini">
                     <el-option label="Asia/Shanghai" value="Asia/Shanghai"></el-option>
                 </el-select>
             </el-form-item>
@@ -102,6 +102,9 @@ export default {
 }
 </script>
 <style scoped>
+.el-bread >>> .el-breadcrumb {
+    line-height: 40px !important;
+}
 .is-link >>> .is-link {
     color: #409eff !important;
 }

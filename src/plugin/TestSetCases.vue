@@ -76,7 +76,7 @@
                         type="text"
                         size="mini"
                         @click="removeAction(scope.$index, testSetCases, scope.row)"
-                        :disabled="permissions.indexOf('apitest.remove_apiset') === -1"
+                        :disabled="permissions.indexOf('apitest.remove_case') === -1"
                     >
                         移除
                     </el-button>
@@ -85,7 +85,7 @@
                             type="text"
                             size="mini"
                             @click="copyRow(scope.$index, scope.row)"
-                            :disabled="permissions.indexOf('apitest.copy_apiset') === -1"
+                            :disabled="permissions.indexOf('apitest.copy_case') === -1"
                         >
                             复制
                         </el-button>
@@ -126,7 +126,7 @@ export default {
     },
     methods: {
         makeSortTable() {
-            if (this.permissions.indexOf('apitest.cases_apiset') > -1) {
+            if (this.permissions.indexOf('apitest.associate_cases') > -1) {
                 let selector = '.' + this.custom + ' .el-table__body-wrapper table tbody'
                 const table = document.querySelector(selector)
                 const self = this

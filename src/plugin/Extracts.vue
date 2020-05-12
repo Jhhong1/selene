@@ -74,14 +74,14 @@
                 <template v-else>
                     <el-col :span="2" class="c-text">-</el-col>
                 </template>
-                <el-col :span="1" style="text-align: right">
+                <el-col :span="1" style="text-align: right" class="icon-size">
                     <template v-if="show">
-                        <el-button icon="el-icon-minus" circle class="icon-size" @click="remove(items)"></el-button>
+                        <el-button icon="el-icon-minus" circle @click="remove(items)"></el-button>
                     </template>
                 </el-col>
-                <el-col :span="1" style="padding-left: 10px">
+                <el-col :span="1" style="padding-left: 10px" class="icon-size">
                     <template v-if="show">
-                        <el-button icon="el-icon-edit-outline" circle class="icon-size" @click="update(items, index)"></el-button>
+                        <el-button icon="el-icon-edit-outline" circle @click="update(items, index)"></el-button>
                     </template>
                 </el-col>
             </el-row>
@@ -92,7 +92,7 @@
             </el-row>
         </template>
         <el-row v-if="show">
-            <el-col :span="24" class="col-class"
+            <el-col :span="24" class="col-class ch-button"
                 ><el-button type="text" @click="add" class="add-class el-col-24" icon="el-icon-circle-plus-outline">添加</el-button></el-col
             >
         </el-row>
@@ -104,24 +104,12 @@
             :before-close="handleClose"
             class="dialog-header"
         >
-            <el-form :model="extractForm" ref="extractForm" :hide-required-asterisk="true">
-                <el-form-item
-                    label="变量名"
-                    prop="name"
-                    :label-width="labelWidth"
-                    class="el-form__item"
-                    :rules="[{ required: true, message: '必填' }]"
-                >
+            <el-form :model="extractForm" ref="extractForm" :hide-required-asterisk="true" class="select_class el-form__item">
+                <el-form-item label="变量名" prop="name" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
                     <el-input v-model="extractForm.name"></el-input>
                 </el-form-item>
-                <el-form-item
-                    label="取值对象"
-                    prop="select"
-                    :label-width="labelWidth"
-                    class="el-form__item"
-                    :rules="[{ required: true, message: '必填' }]"
-                >
-                    <el-select v-model="extractForm.select" placeholder="请选择" class="select_class">
+                <el-form-item label="取值对象" prop="select" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
+                    <el-select v-model="extractForm.select" placeholder="请选择">
                         <el-option label="响应文本" value="text"></el-option>
                         <el-option label="响应头" value="response_header"></el-option>
                         <el-option label="请求历史" value="request_history"></el-option>
@@ -129,53 +117,29 @@
                     </el-select>
                 </el-form-item>
                 <template v-if="extractForm.select == 'request_history'">
-                    <el-form-item
-                        label="索引值"
-                        prop="index"
-                        :label-width="labelWidth"
-                        class="el-form__item"
-                        :rules="[{ required: true, message: '必填' }]"
-                    >
+                    <el-form-item label="索引值" prop="index" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
                         <el-input v-model="extractForm.index" type="number" min="0"></el-input>
                     </el-form-item>
                 </template>
-                <el-form-item
-                    label="提取方式"
-                    prop="match_type"
-                    :label-width="labelWidth"
-                    class="el-form__item"
-                    :rules="[{ required: true, message: '必填' }]"
-                >
-                    <el-select v-model="extractForm.match_type" placeholder="请选择" class="select_class">
+                <el-form-item label="提取方式" prop="match_type" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
+                    <el-select v-model="extractForm.match_type" placeholder="请选择">
                         <el-option label="json路径" value="json"></el-option>
                         <el-option label="正则表达式" value="regular"></el-option>
                     </el-select>
                 </el-form-item>
                 <template v-if="extractForm.match_type === 'json'">
-                    <el-form-item
-                        label="表达式"
-                        prop="expression"
-                        :label-width="labelWidth"
-                        class="el-form__item"
-                        :rules="[{ required: true, message: '必填' }]"
-                    >
+                    <el-form-item label="表达式" prop="expression" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
                         <el-input v-model="extractForm.expression" placeholder="请输入json路径,格式为: $.data\[[\w.-]\]+"></el-input>
                     </el-form-item>
                 </template>
                 <template v-if="extractForm.match_type === 'regular'">
-                    <el-form-item
-                        label="表达式"
-                        prop="expression"
-                        :label-width="labelWidth"
-                        class="el-form__item"
-                        :rules="[{ required: true, message: '必填' }]"
-                    >
+                    <el-form-item label="表达式" prop="expression" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
                         <el-input v-model="extractForm.expression"></el-input>
                     </el-form-item>
-                    <el-form-item label="匹配组" prop="group" :label-width="labelWidth" class="el-form__item">
+                    <el-form-item label="匹配组" prop="group" :label-width="labelWidth">
                         <el-input v-model="extractForm.group" type="number" min="0"></el-input>
                     </el-form-item>
-                    <el-form-item label="匹配数字" prop="match_no" :label-width="labelWidth" class="el-form__item">
+                    <el-form-item label="匹配数字" prop="match_no" :label-width="labelWidth">
                         <el-input v-model="extractForm.match_no" type="number" min="0"></el-input>
                     </el-form-item>
                 </template>
@@ -284,11 +248,17 @@ export default {
     text-align: left;
     line-height: 20px;
 }
-.icon-size {
-    padding: 0;
-    margin-left: -3%;
+.ch-button >>> .el-button {
+    padding: 0 !important;
 }
-.el-form__item {
-    margin-bottom: 18px;
+.select_class >>> .el-select {
+    display: block !important;
+}
+.el-form__item >>> .el-form-item {
+    margin-bottom: 18px !important;
+}
+.icon-size >>> .is-circle {
+    padding: 0 !important;
+    margin-left: -3%;
 }
 </style>

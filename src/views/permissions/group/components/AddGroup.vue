@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'GroupList' }" class="is-link">权限组</el-breadcrumb-item>
             <el-breadcrumb-item>添加权限组</el-breadcrumb-item>
@@ -22,7 +22,7 @@
                 </div>
                 <template v-for="(permission, ind) in pData">
                     <el-form-item :key="ind" :label="permission.name" :label-width="formLabelWidth">
-                        <el-select v-model="permissions[permission.model]" multiple class="method-class" size="mini">
+                        <el-select v-model="permissions[permission.model]" multiple class="method-class" style="display: block;" size="mini">
                             <el-option v-for="(op, index) in permission.permission_set" :key="index" :label="op.name" :value="op.id"></el-option>
                         </el-select>
                     </el-form-item>
@@ -106,6 +106,9 @@ export default {
 </script>
 
 <style scoped>
+.el-bread >>> .el-breadcrumb {
+    line-height: 40px !important;
+}
 .is-link >>> .is-link {
     color: #409eff !important;
 }

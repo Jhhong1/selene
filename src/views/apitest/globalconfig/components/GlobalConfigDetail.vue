@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'GlobalConfigList', query: $route.query }" class="is-link">配置</el-breadcrumb-item>
             <el-breadcrumb-item>详情</el-breadcrumb-item>
@@ -113,7 +113,12 @@
                                     设为全局变量
                                 </el-col>
                                 <el-col :span="22" class="test-right">
-                                    <el-tooltip :content="'' + configDetail.globalConfig" placement="right-start" class="el--swith">
+                                    <el-tooltip
+                                        :content="'' + configDetail.globalConfig"
+                                        placement="right-start"
+                                        class="el--swith"
+                                        style="display: block;line-height: 40px;"
+                                    >
                                         <el-switch
                                             v-model="configDetail.globalConfig"
                                             disabled
@@ -208,6 +213,9 @@ export default {
 </script>
 
 <style scoped>
+.el-bread >>> .el-breadcrumb {
+    line-height: 40px !important;
+}
 .is-link >>> .is-link {
     color: #409eff !important;
 }
