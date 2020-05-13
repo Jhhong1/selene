@@ -58,12 +58,12 @@
                                 <el-col :span="8">描述信息</el-col>
                                 <template v-if="project.description">
                                     <el-col :span="16" style="text-align: left">
-                                        <el-tooltip placement="top-start">
-                                            <div slot="content">{{ project.description }}</div>
-                                            <el-button type="text" size="mini" plain class="el-button__text is-plain">
+                                        <el-popover trigger="hover" placement="top-start">
+                                            <p>{{ project.description }}</p>
+                                            <div slot="reference" class="name-wrapper">
                                                 {{ project.description }}
-                                            </el-button>
-                                        </el-tooltip>
+                                            </div>
+                                        </el-popover>
                                     </el-col>
                                 </template>
                                 <template v-else>
@@ -187,10 +187,5 @@ export default {
 }
 .el-input_suffix:hover {
     cursor: pointer;
-}
-.is-plain:focus,
-.is-plain:hover {
-    color: #606266;
-    border-color: white;
 }
 </style>

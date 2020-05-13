@@ -24,12 +24,12 @@
         <el-dialog title="权限管理" :visible.sync="dialogFormVisible" class="el-dialog_body el-dialog_footer dialog-header">
             <el-form :model="form" status-icon ref="form">
                 <el-form-item label="项目" :label-width="formLabelWidth" prop="projects">
-                    <el-select v-model="projects" multiple class="method-class">
+                    <el-select v-model="projects" multiple style="display: block;">
                         <el-option v-for="(p, ind) in projectList" :key="ind" :label="p.name" :value="p.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="权限组" :label-width="formLabelWidth" prop="group">
-                    <el-select v-model="group" clearable class="method-class">
+                    <el-select v-model="group" clearable style="display: block;">
                         <el-option v-for="(gp, ind) in groups" :key="ind" :label="gp.name" :value="gp.id"></el-option>
                     </el-select>
                 </el-form-item>
