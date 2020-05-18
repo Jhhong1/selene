@@ -122,7 +122,7 @@
         <el-dialog title="执行" :close-on-click-modal="false" :visible.sync="dialogVisible" :before-close="clearSelect" class="dialog-header">
             <el-form :model="labels" ref="labels">
                 <el-form-item label="标签" :label-width="formLabelWidth" prop="tags">
-                    <el-select v-model="labels.tags" placeholder="请选择标签" class="select_class">
+                    <el-select v-model="labels.tags" placeholder="请选择标签" style="display: block;">
                         <el-option label="无" value></el-option>
                         <el-option label="all" value="all"></el-option>
                         <el-option label="bat" value="bat"></el-option>
