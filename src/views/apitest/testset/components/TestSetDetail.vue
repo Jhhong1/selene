@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'ApiTestSetList', query: $route.query }" class="is-link">测试集</el-breadcrumb-item>
             <el-breadcrumb-item>详情</el-breadcrumb-item>
@@ -19,10 +19,10 @@
                             >
                                 操作
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="refer" :disabled="permissions.indexOf('apitest.config_apiset') === -1">
+                                    <el-dropdown-item command="refer" :disabled="permissions.indexOf('apitest.associate_config') === -1">
                                         配置引用
                                     </el-dropdown-item>
-                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.change_apiset') === -1">
+                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.update_apiset') === -1">
                                         更新
                                     </el-dropdown-item>
                                     <el-dropdown-item command="delete" :disabled="permissions.indexOf('apitest.delete_apiset') === -1">
@@ -57,14 +57,19 @@
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">描述信息</el-col>
                             <template v-if="setDetail.description">
-                                <el-col :span="22">
-                                    <el-tooltip placement="top-start">
-                                        <div slot="content">{{ setDetail.description }}</div>
-                                        <el-button type="text" size="mini" plain class="el-button__text is-plain">{{
-                                            setDetail.description
-                                        }}</el-button>
-                                    </el-tooltip>
-                                </el-col>
+                                <template v-if="setDetail.description.length > 30">
+                                    <el-col :span="22">
+                                        <el-popover trigger="hover" placement="top-start">
+                                            <p>{{ setDetail.description }}</p>
+                                            <div slot="reference" class="name-wrapper">
+                                                {{ setDetail.description }}
+                                            </div>
+                                        </el-popover>
+                                    </el-col>
+                                </template>
+                                <template v-else>
+                                    {{ setDetail.description }}
+                                </template>
                             </template>
                             <template v-else>
                                 <el-col :span="22">-</el-col>
@@ -144,12 +149,12 @@
                                 <el-col :span="2">失败原因</el-col>
                                 <template v-if="setDetail.testsetrelationship.errorMessage">
                                     <el-col :span="22">
-                                        <el-tooltip placement="top-start">
-                                            <div slot="content">{{ setDetail.testsetrelationship.errorMessage }}</div>
-                                            <el-button type="text" size="mini" plain class="el-button__text is-plain">{{
-                                                setDetail.testsetrelationship.errorMessage
-                                            }}</el-button>
-                                        </el-tooltip>
+                                        <el-popover trigger="hover" placement="top-start">
+                                            <p>{{ setDetail.testsetrelationship.errorMessage }}</p>
+                                            <div slot="reference" class="name-wrapper">
+                                                {{ setDetail.testsetrelationship.errorMessage }}
+                                            </div>
+                                        </el-popover>
                                     </el-col>
                                 </template>
                                 <template v-else>
@@ -227,19 +232,19 @@
                                 <el-dropdown-item command="exec" :disabled="permissions.indexOf('apitest.execute_apiset') === -1">
                                     执行
                                 </el-dropdown-item>
-                                <el-dropdown-item command="linked" :disabled="permissions.indexOf('apitest.cases_apiset') === -1">
+                                <el-dropdown-item command="linked" :disabled="permissions.indexOf('apitest.associate_cases') === -1">
                                     关联测试用例
                                 </el-dropdown-item>
                                 <!-- <el-dropdown-item command="createCase">创建测试用例</el-dropdown-item> -->
                             </el-dropdown-menu>
                         </el-dropdown>
                     </el-row>
-                    <set-case :value="testSetCases" @copy="copyRow" @changeOrder="changeRow" @removeRow="removeRow"></set-case>
+                    <set-case :value="testSetCases" :copy="false" @copy="copyRow" @changeOrder="changeRow" @removeRow="removeRow"></set-case>
                     <!--关联测试用例-->
                     <j-link
                         :value="testcases"
                         :show="dialogFormVisible"
-                        :selected="testSetCases"
+                        :selected="[]"
                         :no="count"
                         @visible="listenVisible"
                         @pageSize="listenPageSize"
@@ -253,7 +258,7 @@
                         <el-dropdown size="mini" split-button type="primary" @command="handleSetUp" style="float: right; margin-right: 50px">
                             操作
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="setup" :disabled="permissions.indexOf('apitest.cases_apiset') === -1">
+                                <el-dropdown-item command="setup" :disabled="permissions.indexOf('apitest.associate_cases') === -1">
                                     关联测试用例
                                 </el-dropdown-item>
                             </el-dropdown-menu>
@@ -264,7 +269,7 @@
                     <j-link
                         :value="testcases"
                         :show="setupFormVisible"
-                        :selected="setupCases"
+                        :selected="[]"
                         :no="count"
                         @visible="listenSetUpVisible"
                         @pageSize="listenSetUpPageSize"
@@ -278,7 +283,7 @@
                         <el-dropdown size="mini" split-button type="primary" @command="handleTearDown" style="float: right; margin-right: 50px">
                             操作
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="teardown" :disabled="permissions.indexOf('apitest.cases_apiset') === -1">
+                                <el-dropdown-item command="teardown" :disabled="permissions.indexOf('apitest.associate_cases') === -1">
                                     关联测试用例
                                 </el-dropdown-item>
                             </el-dropdown-menu>
@@ -294,7 +299,7 @@
                     <j-link
                         :value="testcases"
                         :show="teardownFormVisible"
-                        :selected="teardownCases"
+                        :selected="[]"
                         :no="count"
                         @visible="listenTearDownVisible"
                         @pageSize="listenTearDownPageSize"
@@ -734,6 +739,9 @@ export default {
 </script>
 
 <style scoped>
+.el-bread >>> .el-breadcrumb {
+    line-height: 40px !important;
+}
 .dialog-header >>> .el-dialog__header {
     padding: 20px 20px 0 !important;
     height: 20px;
@@ -750,11 +758,6 @@ export default {
 }
 .is-link >>> .is-link {
     color: #409eff !important;
-}
-.is-plain:focus,
-.is-plain:hover {
-    color: #606266;
-    border-color: white;
 }
 </style>
 <style></style>

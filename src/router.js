@@ -574,5 +574,9 @@ export default new Router({
                 }
             ]
         }
-    ]
+    ],
+    /* eslint-disable */
+    scrollBehavior(to, from, savedPosition) {
+        return { x: 0, y: 0 }
+    }
 })

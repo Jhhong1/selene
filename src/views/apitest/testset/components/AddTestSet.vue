@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'ApiTestSetList', query: $route.query }" class="is-link">测试集</el-breadcrumb-item>
             <el-breadcrumb-item>添加测试集</el-breadcrumb-item>
@@ -12,7 +12,7 @@
                 <el-input v-model="setForm.display" maxlength="20"></el-input>
             </el-form-item>
             <el-form-item label="标签" :label-width="formLabelWidth" prop="labels">
-                <el-select v-model="setForm.tags" multiple placeholder="请选择" class="method-class">
+                <el-select v-model="setForm.tags" multiple placeholder="请选择" style="display: block;">
                     <el-option label="bat" value="bat"></el-option>
                     <el-option label="smoke" value="smoke"></el-option>
                     <el-option label="regression" value="regression"></el-option>
@@ -86,10 +86,11 @@ export default {
         createTestSet(formName, payload, project) {
             this.$api.api
                 .createApiTestSet(payload, project)
-                .then(() => {
+                .then(response => {
+                    let setId = response.data.id
                     this.notify.success('添加测试集成功')
                     this.$refs[formName].resetFields()
-                    this.$router.push({ name: 'ApiTestSetList', query: this.$route.query })
+                    this.$router.push({ name: 'ApiTestSetDetail', params: { id: setId }, query: this.$route.query })
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)
@@ -100,6 +101,9 @@ export default {
 </script>
 
 <style scoped>
+.el-bread >>> .el-breadcrumb {
+    line-height: 40px !important;
+}
 .is-link >>> .is-link {
     color: #409eff !important;
 }

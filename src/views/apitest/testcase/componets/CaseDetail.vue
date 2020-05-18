@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'ApiCaseList', query: $route.query }" class="is-link">接口测试用例</el-breadcrumb-item>
             <el-breadcrumb-item>详情</el-breadcrumb-item>
@@ -16,7 +16,7 @@
                             <el-dropdown size="mini" split-button type="primary" @command="handleCommand">
                                 操作
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.change_apicases') === -1">
+                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.update_apicases') === -1">
                                         更新
                                     </el-dropdown-item>
                                     <el-dropdown-item command="execute" :disabled="permissions.indexOf('apitest.execute_apicases') === -1">
@@ -116,7 +116,7 @@
                                         <el-col :span="10" class="test-right">-</el-col>
                                     </template>
                                 </el-row>
-                                <el-row :gutter="10" class="row-class">
+                                <!-- <el-row :gutter="10" class="row-class">
                                     <el-col :span="2" class="test-left">失败原因</el-col>
                                     <template v-if="cases.caserelationship.errorMessage">
                                         <el-col :span="10" class="test-right">
@@ -131,7 +131,7 @@
                                     <template v-else>
                                         <el-col :span="10" class="test-right">-</el-col>
                                     </template>
-                                </el-row>
+                                </el-row> -->
                             </template>
                             <template v-else>
                                 <el-row :gutter="10" class="row-class">
@@ -280,13 +280,17 @@
                                 <el-row :gutter="10" class="row-class">
                                     <el-col :span="2" class="test-left">头部信息</el-col>
                                     <el-col :span="22" class="test-right">
-                                        <j-editor v-model="response.headers" :edit="false"></j-editor>
+                                        <template v-if="response.headers">
+                                            <j-editor v-model="response.headers" :edit="false"></j-editor>
+                                        </template>
                                     </el-col>
                                 </el-row>
                                 <el-row :gutter="10" class="row-class">
                                     <el-col :span="2" class="test-left">响应文本</el-col>
                                     <el-col :span="22" class="test-right">
-                                        <j-editor v-model="response.text" :edit="false"></j-editor>
+                                        <template v-if="response.text">
+                                            <j-editor v-model="response.text" :edit="false"></j-editor>
+                                        </template>
                                     </el-col>
                                 </el-row>
                             </div>
@@ -418,6 +422,9 @@ export default {
 </script>
 
 <style scoped>
+.el-bread >>> .el-breadcrumb {
+    line-height: 40px !important;
+}
 .is-link >>> .is-link {
     color: #409eff !important;
 }

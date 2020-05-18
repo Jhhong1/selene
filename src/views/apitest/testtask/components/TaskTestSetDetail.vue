@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'TestTaskList', query: $route.query }" class="is-link">测试任务</el-breadcrumb-item>
             <el-breadcrumb-item>
@@ -38,14 +38,19 @@
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">描述信息</el-col>
                             <template v-if="setDetail.description">
-                                <el-col :span="22">
-                                    <el-tooltip placement="top-start">
-                                        <div slot="content">{{ setDetail.description }}</div>
-                                        <el-button type="text" size="mini" plain class="el-button__text is-plain">{{
-                                            setDetail.description
-                                        }}</el-button>
-                                    </el-tooltip>
-                                </el-col>
+                                <template v-if="setDetail.description.length > 30">
+                                    <el-col :span="22">
+                                        <el-popover trigger="hover" placement="top-start">
+                                            <p>{{ setDetail.description }}</p>
+                                            <div slot="reference" class="name-wrapper">
+                                                {{ setDetail.description }}
+                                            </div>
+                                        </el-popover>
+                                    </el-col>
+                                </template>
+                                <template v-else>
+                                    {{ setDetail.description }}
+                                </template>
                             </template>
                             <template v-else>
                                 <el-col :span="22">-</el-col>
@@ -123,12 +128,12 @@
                                 <el-col :span="2">失败原因</el-col>
                                 <template v-if="setDetail.relationship.errorMessage">
                                     <el-col :span="22">
-                                        <el-tooltip placement="top-start">
-                                            <div slot="content">{{ setDetail.relationship.errorMessage }}</div>
-                                            <el-button type="text" size="mini" plain class="el-button__text is-plain">
+                                        <el-popover trigger="hover" placement="top-start">
+                                            <p>{{ setDetail.relationship.errorMessage }}</p>
+                                            <div slot="reference" class="name-wrapper">
                                                 {{ setDetail.relationship.errorMessage }}
-                                            </el-button>
-                                        </el-tooltip>
+                                            </div>
+                                        </el-popover>
                                     </el-col>
                                 </template>
                                 <template v-else>
@@ -350,9 +355,9 @@
                                 <template v-else-if="scope.row.relationship__result === 'Succeed'">
                                     <tag-success></tag-success>
                                 </template>
-                                <template v-else
-                                    >-</template
-                                >
+                                <template v-else>
+                                    -
+                                </template>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -461,6 +466,9 @@ export default {
 </script>
 
 <style scoped>
+.el-bread >>> .el-breadcrumb {
+    line-height: 40px !important;
+}
 .is-link >>> .is-link {
     color: #409eff !important;
 }

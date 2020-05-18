@@ -50,7 +50,19 @@
                     <el-col :span="3" class="c-text">-</el-col>
                 </template>
                 <template v-if="items.expression">
-                    <el-col :span="5" class="c-text">{{ items.expression }}</el-col>
+                    <el-col :span="5" class="c-text">
+                        <template v-if="items.expression.length > 20">
+                            <el-popover trigger="hover" placement="top-start">
+                                <p>{{ items.expression }}</p>
+                                <div slot="reference" class="name-wrapper">
+                                    {{ items.expression }}
+                                </div>
+                            </el-popover>
+                        </template>
+                        <template v-else>
+                            {{ items.expression }}
+                        </template>
+                    </el-col>
                 </template>
                 <template v-else>
                     <el-col :span="5" class="c-text">-</el-col>
@@ -69,14 +81,14 @@
                 </template>
                 <template v-if="show">
                     <el-col :span="4" class="c-text">{{ items.expected_value }}</el-col>
-                    <el-col :span="1" style="text-align: right">
+                    <el-col :span="1" style="text-align: right" class="icon-size">
                         <template v-if="show">
-                            <el-button icon="el-icon-minus" circle class="icon-size" @click="remove(items)"></el-button>
+                            <el-button icon="el-icon-minus" circle @click="remove(items)"></el-button>
                         </template>
                     </el-col>
-                    <el-col :span="1" style="padding-left: 10px">
+                    <el-col :span="1" style="padding-left: 10px" class="icon-size">
                         <template v-if="show">
-                            <el-button icon="el-icon-edit-outline" circle class="icon-size" @click="update(items, index)"></el-button>
+                            <el-button icon="el-icon-edit-outline" circle @click="update(items, index)"></el-button>
                         </template>
                     </el-col>
                 </template>
@@ -92,21 +104,15 @@
         </template>
         <template v-if="show">
             <el-row>
-                <el-col :span="24" class="col-class">
+                <el-col :span="24" class="col-class ch-button">
                     <el-button type="text" class="add-class el-col-24" icon="el-icon-circle-plus-outline" @click="add">添加</el-button>
                 </el-col>
             </el-row>
         </template>
         <el-dialog title="新增断言" :visible.sync="dialogFormVisible" :close-on-click-modal="false" class="dialog-header" :before-close="handleClose">
-            <el-form :model="form" ref="form" :hide-required-asterisk="true">
-                <el-form-item
-                    prop="select"
-                    label="断言对象"
-                    :label-width="labelWidth"
-                    class="el-form__item"
-                    :rules="[{ required: true, message: '必填' }]"
-                >
-                    <el-select v-model="form.select" placeholder="请选择" class="select_class">
+            <el-form :model="form" ref="form" :hide-required-asterisk="true" class="select_class el-form__item">
+                <el-form-item prop="select" label="断言对象" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
+                    <el-select v-model="form.select" placeholder="请选择">
                         <el-option label="响应码" value="code"></el-option>
                         <el-option label="响应文本" value="text"></el-option>
                         <el-option label="响应头" value="response_header"></el-option>
@@ -114,14 +120,8 @@
                     </el-select>
                 </el-form-item>
                 <template v-if="form.select === 'code'">
-                    <el-form-item
-                        label="对比操作"
-                        prop="comparator"
-                        :label-width="labelWidth"
-                        class="el-form__item"
-                        :rules="[{ required: true, message: '必填' }]"
-                    >
-                        <el-select v-model="form.comparator" placeholder="请选择" class="select_class">
+                    <el-form-item label="对比操作" prop="comparator" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
+                        <el-select v-model="form.comparator" placeholder="请选择">
                             <el-option label="等于" value="equal"></el-option>
                             <el-option label="大于" value="gt"></el-option>
                             <el-option label="小于" value="lt"></el-option>
@@ -130,14 +130,8 @@
                     </el-form-item>
                 </template>
                 <template v-else-if="form.select === 'text' || form.select === 'response_header'">
-                    <el-form-item
-                        label="对比操作"
-                        prop="comparator"
-                        :label-width="labelWidth"
-                        class="el-form__item"
-                        :rules="[{ required: true, message: '必填' }]"
-                    >
-                        <el-select v-model="form.comparator" placeholder="请选择" class="select_class">
+                    <el-form-item label="对比操作" prop="comparator" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
+                        <el-select v-model="form.comparator" placeholder="请选择">
                             <el-option label="包含" value="contains"></el-option>
                             <el-option label="匹配" value="equal"></el-option>
                         </el-select>
@@ -147,10 +141,9 @@
                             label="匹配方式"
                             prop="match_type"
                             :label-width="labelWidth"
-                            class="el-form__item"
                             :rules="[{ required: true, message: '必填', trigger: 'blur' }]"
                         >
-                            <el-select v-model="form.match_type" placeholder="请选择" class="select_class">
+                            <el-select v-model="form.match_type" placeholder="请选择">
                                 <el-option label="json path" value="json"></el-option>
                                 <el-option label="正则表达式" value="regular"></el-option>
                             </el-select>
@@ -160,7 +153,6 @@
                                 label="json路径"
                                 prop="expression"
                                 :label-width="labelWidth"
-                                class="el-form__item"
                                 :rules="[{ required: true, message: '必填', trigger: 'blur' }]"
                             >
                                 <el-input v-model="form.expression" placeholder="请输入json路径,格式为: $.data\[[\w.-]\]+"></el-input>
@@ -171,27 +163,20 @@
                                 label="正则表达式"
                                 prop="expression"
                                 :label-width="labelWidth"
-                                class="el-form__item"
                                 :rules="[{ required: true, message: '必填', trigger: 'blur' }]"
                             >
                                 <el-input v-model="form.expression" placeholder="请输入正则表达式"></el-input>
                             </el-form-item>
-                            <el-form-item label="匹配组" prop="group" :label-width="labelWidth" class="el-form__item">
+                            <el-form-item label="匹配组" prop="group" :label-width="labelWidth">
                                 <el-input v-model="form.group" placeholder="请输入匹配的组号, 最小数字为0" type="number" min="0"></el-input>
                             </el-form-item>
-                            <el-form-item label="匹配数字" prop="match_no" :label-width="labelWidth" class="el-form__item">
+                            <el-form-item label="匹配数字" prop="match_no" :label-width="labelWidth">
                                 <el-input v-model="form.match_no" placeholder="请输入匹配的数字, 最小数字为0" type="number" min="0"></el-input>
                             </el-form-item>
                         </template>
                     </template>
                 </template>
-                <el-form-item
-                    label="预期值"
-                    prop="expected_value"
-                    :label-width="labelWidth"
-                    class="el-form__item"
-                    :rules="[{ required: true, message: '必填' }]"
-                >
+                <el-form-item label="预期值" prop="expected_value" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
                     <el-input v-model="form.expected_value"></el-input>
                 </el-form-item>
             </el-form>
@@ -294,8 +279,17 @@ export default {
 .el-form__item {
     margin-bottom: 18px;
 }
-.icon-size {
-    padding: 0;
+.ch-button >>> .el-button {
+    padding: 0 !important;
+}
+.select_class >>> .el-select {
+    display: block !important;
+}
+.el-form__item >>> .el-form-item {
+    margin-bottom: 18px !important;
+}
+.icon-size >>> .is-circle {
+    padding: 0 !important;
     margin-left: -3%;
 }
 </style>

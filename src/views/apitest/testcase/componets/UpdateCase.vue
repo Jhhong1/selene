@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'ApiCaseList', query: $route.query }" class="is-link">接口测试用例</el-breadcrumb-item>
             <el-breadcrumb-item>更新</el-breadcrumb-item>
@@ -117,6 +117,7 @@ export default {
             } catch (e) {}
         }
         return {
+            caseId: this.$route.params.id,
             formLabelWidth: '120px',
             responseData: [],
             addCase: {},
@@ -133,9 +134,8 @@ export default {
             this.addCase.continues = val
         },
         caseDetail() {
-            let caseId = this.$route.params.id
             this.$api.api
-                .getCaseDetail(caseId)
+                .getCaseDetail(this.caseId)
                 .then(response => {
                     this.addCase = response.data
                 })
@@ -145,16 +145,14 @@ export default {
         },
         countermand(formName) {
             this.$refs[formName].resetFields()
-            this.$router.push({ name: 'ApiCaseList', query: this.$route.query })
-            // this.$router.go(-1)
+            this.$router.push({ name: 'ApiCaseDetail', params: { id: this.caseId }, query: this.$route.query })
         },
         updateCase(params) {
-            let caseId = this.$route.params.id
             this.$api.api
-                .updateCase(caseId, params)
+                .updateCase(this.caseId, params)
                 .then(() => {
                     this.notify.success('更新用例成功')
-                    this.$router.push({ name: 'ApiCaseDetail', params: { id: caseId }, query: this.$route.query })
+                    this.$router.push({ name: 'ApiCaseDetail', params: { id: this.caseId }, query: this.$route.query })
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)
@@ -183,6 +181,9 @@ export default {
 </script>
 
 <style scoped>
+.el-bread >>> .el-breadcrumb {
+    line-height: 40px !important;
+}
 .is-link >>> .is-link {
     color: #409eff !important;
 }

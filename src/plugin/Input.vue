@@ -24,8 +24,8 @@
                     <el-col :span="11">
                         <el-input v-model="param.value" @change="changeValue(param, index)" size="mini"></el-input>
                     </el-col>
-                    <el-col :span="1">
-                        <el-button icon="el-icon-minus" circle class="icon-size" @click="remove(param)"></el-button>
+                    <el-col :span="1" class="icon-size">
+                        <el-button icon="el-icon-minus" circle @click="remove(param)"></el-button>
                     </el-col>
                 </el-row>
             </template>
@@ -37,7 +37,7 @@
                 </el-row>
             </template>
             <el-row class="row-class">
-                <el-col :span="24" class="col-class"
+                <el-col :span="24" class="col-class ch-button"
                     ><el-button type="text" @click="add" class="add-class el-col-24" icon="el-icon-circle-plus-outline">添加</el-button></el-col
                 >
             </el-row>
@@ -200,5 +200,11 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.ch-button >>> .el-button {
+    padding: 0 !important;
+}
+.icon-size >>> .is-circle {
+    padding: 0 !important;
 }
 </style>

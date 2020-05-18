@@ -3,7 +3,7 @@
         <div>
             <el-row style="margin-right: 6px">
                 <el-col :span="20" style="text-align: right">
-                    <template v-if="permissions.indexOf('apitest.add_apiprojects') > -1">
+                    <template v-if="permissions.indexOf('apitest.create_apiprojects') > -1">
                         <el-button type="primary" size="small" @click="addProject">创建项目</el-button>
                     </template>
                     <template v-else>
@@ -39,7 +39,12 @@
                                         <i class="el-icon-more-outline rotating"></i>
                                     </span>
                                     <el-dropdown-menu slot="dropdown">
-                                        <el-dropdown-item :command="{ type: 'delete', id: project.id, ind: index }">删除</el-dropdown-item>
+                                        <el-dropdown-item
+                                            :command="{ type: 'delete', id: project.id, ind: index }"
+                                            :disabled="permissions.indexOf('apitest.delete_apiprojects') == -1"
+                                        >
+                                            删除
+                                        </el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
                             </div>
@@ -53,12 +58,12 @@
                                 <el-col :span="8">描述信息</el-col>
                                 <template v-if="project.description">
                                     <el-col :span="16" style="text-align: left">
-                                        <el-tooltip placement="top-start">
-                                            <div slot="content">{{ project.description }}</div>
-                                            <el-button type="text" size="mini" plain class="el-button__text is-plain">
+                                        <el-popover trigger="hover" placement="top-start">
+                                            <p>{{ project.description }}</p>
+                                            <div slot="reference" class="name-wrapper">
                                                 {{ project.description }}
-                                            </el-button>
-                                        </el-tooltip>
+                                            </div>
+                                        </el-popover>
                                     </el-col>
                                 </template>
                                 <template v-else>
@@ -182,10 +187,5 @@ export default {
 }
 .el-input_suffix:hover {
     cursor: pointer;
-}
-.is-plain:focus,
-.is-plain:hover {
-    color: #606266;
-    border-color: white;
 }
 </style>

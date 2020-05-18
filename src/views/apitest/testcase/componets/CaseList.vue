@@ -1,6 +1,6 @@
 <template>
     <div>
-        <template v-if="permissions.indexOf('apitest.add_apicases') > -1">
+        <template v-if="permissions.indexOf('apitest.create_apicases') > -1">
             <router-link tag="el-button" :to="{ name: 'AddApiCase', query: $route.query }" class="el-button--primary el-button--mini p-button">
                 添加测试用例
             </router-link>
@@ -92,7 +92,7 @@
                             <el-dropdown-item :command="{ type: 'view', row: scope.row.id }">查看</el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'update', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.change_apicases') === -1"
+                                :disabled="permissions.indexOf('apitest.update_apicases') === -1"
                             >
                                 更新
                             </el-dropdown-item>

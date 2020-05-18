@@ -1,6 +1,6 @@
 <template>
     <div>
-        <template v-if="permissions.indexOf('apitest.add_periodictaskextend') > -1">
+        <template v-if="permissions.indexOf('apitest.create_periodictask') > -1">
             <router-link tag="el-button" class="el-button--primary el-button--mini p-button" :to="{ name: 'AddCrontab', query: $route.query }">
                 添加定时任务
             </router-link>
@@ -58,12 +58,13 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item
                                 :command="{ type: 'update', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.change_periodictaskextend') === -1"
-                                >更新</el-dropdown-item
+                                :disabled="permissions.indexOf('apitest.update_periodictask') === -1"
                             >
+                                更新
+                            </el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.delete_periodictaskextend') === -1"
+                                :disabled="permissions.indexOf('apitest.delete_periodictask') === -1"
                             >
                                 删除
                             </el-dropdown-item>

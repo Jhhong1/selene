@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'TestTaskList', query: $route.query }" class="is-link">测试任务</el-breadcrumb-item>
             <el-breadcrumb-item>{{ $route.params.name }}</el-breadcrumb-item>
@@ -11,12 +11,14 @@
                     <el-dropdown size="mini" split-button type="primary" @command="infoHandleCommand" style="float: right; margin-right: 50px">
                         操作
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.change_apitasks') === -1">
+                            <el-dropdown-item command="link" :disabled="permissions.indexOf('apitest.associate_counter') === -1">
+                                关联计数器
+                            </el-dropdown-item>
+                            <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.update_apitasks') === -1">
                                 更新
                             </el-dropdown-item>
-                            <!--<el-dropdown-item command="createCase">创建测试集</el-dropdown-item>-->
-                            <el-dropdown-item command="link" :disabled="permissions.indexOf('apitest.change_apitasks') === -1">
-                                关联计数器
+                            <el-dropdown-item command="delete" :disabled="permissions.indexOf('apitest.delete_apitasks') === -1">
+                                删除
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -47,14 +49,19 @@
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">描述信息</el-col>
                             <template v-if="taskDetail.description">
-                                <el-col :span="22">
-                                    <el-tooltip placement="top-start">
-                                        <div slot="content">{{ taskDetail.description }}</div>
-                                        <el-button type="text" size="mini" plain class="el-button__text is-plain">
-                                            {{ taskDetail.description }}
-                                        </el-button>
-                                    </el-tooltip>
-                                </el-col>
+                                <template v-if="taskDetail.description.length > 30">
+                                    <el-col :span="22">
+                                        <el-popover trigger="hover" placement="top-start">
+                                            <p>{{ taskDetail.description }}</p>
+                                            <div slot="reference" class="name-wrapper">
+                                                {{ taskDetail.description }}
+                                            </div>
+                                        </el-popover>
+                                    </el-col>
+                                </template>
+                                <template v-else>
+                                    {{ taskDetail.description }}
+                                </template>
                             </template>
                             <template v-else>
                                 <el-col :span="22">-</el-col>
@@ -116,12 +123,12 @@
                             <el-col :span="2">失败原因</el-col>
                             <template v-if="taskDetail.errorMessage">
                                 <el-col :span="22">
-                                    <el-tooltip placement="top-start">
-                                        <div slot="content">{{ taskDetail.errorMessage }}</div>
-                                        <el-button type="text" size="mini" plain class="el-button__text is-plain">
+                                    <el-popover trigger="hover" placement="top-start">
+                                        <p>{{ taskDetail.errorMessage }}</p>
+                                        <div slot="reference" class="name-wrapper">
                                             {{ taskDetail.errorMessage }}
-                                        </el-button>
-                                    </el-tooltip>
+                                        </div>
+                                    </el-popover>
                                 </el-col>
                             </template>
                             <template v-else>
@@ -173,15 +180,12 @@
                     <el-dropdown size="mini" split-button type="primary" @command="handleCommand" style="float: right; margin-right: 50px">
                         操作
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="linked" :disabled="permissions.indexOf('apitest.associate_apitasks') === -1">
+                            <el-dropdown-item command="linked" :disabled="permissions.indexOf('apitest.associate_set') === -1">
                                 关联测试集
                             </el-dropdown-item>
                             <!--<el-dropdown-item command="createCase">创建测试集</el-dropdown-item>-->
                             <el-dropdown-item command="exec" :disabled="permissions.indexOf('apitest.execute_apitasks') === -1">
                                 执行
-                            </el-dropdown-item>
-                            <el-dropdown-item command="delete" :disabled="permissions.indexOf('apitest.delete_apitasks') === -1">
-                                删除
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -263,7 +267,7 @@
                                     type="text"
                                     size="mini"
                                     @click="removeAction(scope.$index, taskSets, scope.row.testset.id)"
-                                    :disabled="permissions.indexOf('apitest.remove_apitasks') === -1"
+                                    :disabled="permissions.indexOf('apitest.remove_set') === -1"
                                 >
                                     移除
                                 </el-button>
@@ -405,6 +409,25 @@ export default {
                 this.$router.push({ name: 'UpdateTask', params: { id: this.taskId }, query: this.$route.query })
             } else if (command === 'link') {
                 this.showCounterdialog = true
+            } else if (command === 'delete') {
+                const h = this.$createElement
+                this.$msgbox({
+                    title: '提示',
+                    message: h('p', null, [h('span', null, '确定删除该测试任务吗？')]),
+                    showCancelButton: true,
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    beforeClose: (action, instance, done) => {
+                        if (action === 'confirm') {
+                            this.remove(this.taskId)
+                            done()
+                        } else {
+                            done()
+                        }
+                    }
+                })
+                    .then(() => {})
+                    .catch(() => {})
             }
         },
         getTaskCounter() {
@@ -515,26 +538,6 @@ export default {
         handleCommand(command) {
             if (command === 'linked') {
                 this.linked()
-            } else if (command === 'delete') {
-                const h = this.$createElement
-                this.$msgbox({
-                    title: '提示',
-                    message: h('p', null, [h('span', null, '确定删除该测试任务吗？')]),
-                    showCancelButton: true,
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    beforeClose: (action, instance, done) => {
-                        if (action === 'confirm') {
-                            this.remove(this.taskId)
-                            done()
-                        } else {
-                            done()
-                        }
-                    }
-                })
-                    .then(() => {})
-                    .catch(() => {})
-            } else if (command === 'createCase') {
             } else if (command === 'exec') {
                 this.execute()
             }
@@ -671,6 +674,9 @@ export default {
 </script>
 
 <style scoped>
+.el-bread >>> .el-breadcrumb {
+    line-height: 40px !important;
+}
 .is-link >>> .is-link {
     color: #409eff !important;
 }
@@ -692,10 +698,5 @@ export default {
     margin-top: 50px;
     float: left;
     margin-bottom: 20px;
-}
-.is-plain:focus,
-.is-plain:hover {
-    color: #606266;
-    border-color: white;
 }
 </style>

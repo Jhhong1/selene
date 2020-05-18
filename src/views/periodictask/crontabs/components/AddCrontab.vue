@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'CrontabList', query: $route.query }" class="is-link">定时任务</el-breadcrumb-item>
             <el-breadcrumb-item>添加定时任务</el-breadcrumb-item>
@@ -12,12 +12,12 @@
                 <el-input v-model="crontab.display" size="mini" maxlength="100"></el-input>
             </el-form-item>
             <el-form-item label="任务" :label-width="formLabelWidth" prop="testtask">
-                <el-select v-model="crontab.testtask" placeholder="请选择" class="method-class" size="mini">
+                <el-select v-model="crontab.testtask" placeholder="请选择" style="display: block;" size="mini">
                     <el-option v-for="(task, ind) in tasks" :key="ind" :label="task.name + '(' + task.display + ')'" :value="task.id"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="标签" :label-width="formLabelWidth" prop="tags">
-                <el-select v-model="crontab.tags" placeholder="请选择" size="mini" class="method-class">
+                <el-select v-model="crontab.tags" placeholder="请选择" size="mini" style="display: block;">
                     <el-option label="bat" value="bat"></el-option>
                     <el-option label="smoke" value="smoke"></el-option>
                     <el-option label="regression" value="regression"></el-option>
@@ -29,7 +29,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="规则" :label-width="formLabelWidth" prop="crontab">
-                <el-select v-model="crontab.crontab" class="method-class" size="mini" filterable>
+                <el-select v-model="crontab.crontab" size="mini" filterable style="display: block;">
                     <el-option
                         v-for="(content, ind) in rulesList"
                         :key="ind"
@@ -134,6 +134,9 @@ export default {
 }
 </script>
 <style scoped>
+.el-bread >>> .el-breadcrumb {
+    line-height: 40px !important;
+}
 .is-link >>> .is-link {
     color: #409eff !important;
 }

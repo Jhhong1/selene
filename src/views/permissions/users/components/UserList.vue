@@ -6,7 +6,7 @@
             <el-table-column label="操作" min-width="50">
                 <template slot-scope="scope">
                     <el-dropdown @command="handleCommand">
-                        <span>
+                        <span class="cursor-style">
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
@@ -24,12 +24,12 @@
         <el-dialog title="权限管理" :visible.sync="dialogFormVisible" class="el-dialog_body el-dialog_footer dialog-header">
             <el-form :model="form" status-icon ref="form">
                 <el-form-item label="项目" :label-width="formLabelWidth" prop="projects">
-                    <el-select v-model="projects" multiple class="method-class">
+                    <el-select v-model="projects" multiple style="display: block;">
                         <el-option v-for="(p, ind) in projectList" :key="ind" :label="p.name" :value="p.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="权限组" :label-width="formLabelWidth" prop="group">
-                    <el-select v-model="group" clearable class="method-class">
+                    <el-select v-model="group" clearable style="display: block;">
                         <el-option v-for="(gp, ind) in groups" :key="ind" :label="gp.name" :value="gp.id"></el-option>
                     </el-select>
                 </el-form-item>
@@ -181,5 +181,8 @@ export default {
     height: 20px;
     text-align: left;
     line-height: 20px;
+}
+.cursor-style {
+    cursor: pointer;
 }
 </style>

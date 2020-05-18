@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'GlobalConfigList', query: $route.query }" class="is-link">配置</el-breadcrumb-item>
             <el-breadcrumb-item>更新</el-breadcrumb-item>
@@ -42,7 +42,12 @@
                 <j-input v-model="configForm.variables"></j-input>
             </el-form-item>
             <el-form-item label="设为全局变量" :label-width="formLabelWidth" prop="globalConfig">
-                <el-tooltip :content="'' + configForm.globalConfig" placement="right-start" class="el--swith">
+                <el-tooltip
+                    :content="'' + configForm.globalConfig"
+                    placement="right-start"
+                    class="el--swith"
+                    style="display: block;line-height: 40px;"
+                >
                     <el-switch v-model="configForm.globalConfig" active-color="#13ce66" inactive-color="#dedfe0" @change="changeValue"></el-switch>
                 </el-tooltip>
             </el-form-item>
@@ -106,7 +111,7 @@ export default {
                 .updateConfig(configId, params, project)
                 .then(() => {
                     this.notify.success('更新配置成功')
-                    this.$router.push({ name: 'GlobalConfigList', params: { id: configId }, query: this.$route.query })
+                    this.$router.push({ name: 'GlobalConfigDetail', params: { id: configId }, query: this.$route.query })
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)
@@ -132,6 +137,9 @@ export default {
 </script>
 
 <style scoped>
+.el-bread >>> .el-breadcrumb {
+    line-height: 40px !important;
+}
 .is-link >>> .is-link {
     color: #409eff !important;
 }

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <template v-if="permissions.indexOf('apitest.add_crontabscheduleextend') > -1">
+        <template v-if="permissions.indexOf('apitest.create_crontabschedule') > -1">
             <router-link tag="el-button" class="el-button--primary el-button--mini p-button" :to="{ name: 'AddRule', query: $route.query }">
                 添加定时规则
             </router-link>
@@ -55,12 +55,13 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item
                                 :command="{ type: 'update', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.change_crontabscheduleextend') === -1"
-                                >更新</el-dropdown-item
+                                :disabled="permissions.indexOf('apitest.update_crontabschedule') === -1"
                             >
+                                更新
+                            </el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.delete_crontabscheduleextend') === -1"
+                                :disabled="permissions.indexOf('apitest.delete_crontabschedule') === -1"
                             >
                                 删除
                             </el-dropdown-item>
