@@ -117,6 +117,7 @@ export default {
             } catch (e) {}
         }
         return {
+            caseId: this.$route.params.id,
             formLabelWidth: '120px',
             responseData: [],
             addCase: {},
@@ -133,9 +134,8 @@ export default {
             this.addCase.continues = val
         },
         caseDetail() {
-            let caseId = this.$route.params.id
             this.$api.api
-                .getCaseDetail(caseId)
+                .getCaseDetail(this.caseId)
                 .then(response => {
                     this.addCase = response.data
                 })
@@ -145,16 +145,14 @@ export default {
         },
         countermand(formName) {
             this.$refs[formName].resetFields()
-            this.$router.push({ name: 'ApiCaseList', query: this.$route.query })
-            // this.$router.go(-1)
+            this.$router.push({ name: 'ApiCaseDetail', params: { id: this.caseId }, query: this.$route.query })
         },
         updateCase(params) {
-            let caseId = this.$route.params.id
             this.$api.api
-                .updateCase(caseId, params)
+                .updateCase(this.caseId, params)
                 .then(() => {
                     this.notify.success('更新用例成功')
-                    this.$router.push({ name: 'ApiCaseDetail', params: { id: caseId }, query: this.$route.query })
+                    this.$router.push({ name: 'ApiCaseDetail', params: { id: this.caseId }, query: this.$route.query })
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)

@@ -74,10 +74,13 @@ export default {
         createTestTask(formName, payload, project) {
             this.$api.api
                 .addTestTask(payload, project)
-                .then(() => {
+                .then(response => {
+                    let ret = response.data
+                    let taskId = ret.id
+                    let taskName = ret.name
                     this.notify.success('添加测试任务成功')
                     this.$refs[formName].resetFields()
-                    this.$router.push({ name: 'TestTaskList', query: this.$route.query })
+                    this.$router.push({ name: 'TestTaskDetail', params: { name: taskName, id: taskId }, query: this.$route.query })
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)

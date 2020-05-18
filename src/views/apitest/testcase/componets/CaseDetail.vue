@@ -116,7 +116,7 @@
                                         <el-col :span="10" class="test-right">-</el-col>
                                     </template>
                                 </el-row>
-                                <el-row :gutter="10" class="row-class">
+                                <!-- <el-row :gutter="10" class="row-class">
                                     <el-col :span="2" class="test-left">失败原因</el-col>
                                     <template v-if="cases.caserelationship.errorMessage">
                                         <el-col :span="10" class="test-right">
@@ -131,7 +131,7 @@
                                     <template v-else>
                                         <el-col :span="10" class="test-right">-</el-col>
                                     </template>
-                                </el-row>
+                                </el-row> -->
                             </template>
                             <template v-else>
                                 <el-row :gutter="10" class="row-class">
@@ -280,13 +280,17 @@
                                 <el-row :gutter="10" class="row-class">
                                     <el-col :span="2" class="test-left">头部信息</el-col>
                                     <el-col :span="22" class="test-right">
-                                        <j-editor v-model="response.headers" :edit="false"></j-editor>
+                                        <template v-if="response.headers">
+                                            <j-editor v-model="response.headers" :edit="false"></j-editor>
+                                        </template>
                                     </el-col>
                                 </el-row>
                                 <el-row :gutter="10" class="row-class">
                                     <el-col :span="2" class="test-left">响应文本</el-col>
                                     <el-col :span="22" class="test-right">
-                                        <j-editor v-model="response.text" :edit="false"></j-editor>
+                                        <template v-if="response.text">
+                                            <j-editor v-model="response.text" :edit="false"></j-editor>
+                                        </template>
                                     </el-col>
                                 </el-row>
                             </div>

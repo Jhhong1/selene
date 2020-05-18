@@ -50,7 +50,19 @@
                     <el-col :span="3" class="c-text">-</el-col>
                 </template>
                 <template v-if="items.expression">
-                    <el-col :span="5" class="c-text">{{ items.expression }}</el-col>
+                    <el-col :span="5" class="c-text">
+                        <template v-if="items.expression.length > 20">
+                            <el-popover trigger="hover" placement="top-start">
+                                <p>{{ items.expression }}</p>
+                                <div slot="reference" class="name-wrapper">
+                                    {{ items.expression }}
+                                </div>
+                            </el-popover>
+                        </template>
+                        <template v-else>
+                            {{ items.expression }}
+                        </template>
+                    </el-col>
                 </template>
                 <template v-else>
                     <el-col :span="5" class="c-text">-</el-col>

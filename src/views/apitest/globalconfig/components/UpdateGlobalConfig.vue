@@ -111,7 +111,7 @@ export default {
                 .updateConfig(configId, params, project)
                 .then(() => {
                     this.notify.success('更新配置成功')
-                    this.$router.push({ name: 'GlobalConfigList', params: { id: configId }, query: this.$route.query })
+                    this.$router.push({ name: 'GlobalConfigDetail', params: { id: configId }, query: this.$route.query })
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)

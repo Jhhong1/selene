@@ -187,7 +187,7 @@ export default {
                     }
                     data.project = this.projectName
                     let payload = JSON.stringify(data)
-                    console.log('create test case: ', payload)
+                    // console.log('create test case: ', payload)
                     this.create(payload)
                 } else {
                     return false
@@ -197,10 +197,11 @@ export default {
         create(params) {
             this.$api.api
                 .createTestCase(params)
-                .then(() => {
+                .then(response => {
+                    let caseId = response.data.id
                     this.notify.success('添加用例成功')
                     this.$refs['addCase'].resetFields()
-                    this.$router.go(-1)
+                    this.$router.push({ name: 'ApiCaseDetail', params: { id: caseId }, query: this.$route.query })
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)

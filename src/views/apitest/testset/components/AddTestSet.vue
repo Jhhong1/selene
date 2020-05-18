@@ -86,10 +86,11 @@ export default {
         createTestSet(formName, payload, project) {
             this.$api.api
                 .createApiTestSet(payload, project)
-                .then(() => {
+                .then(response => {
+                    let setId = response.data.id
                     this.notify.success('添加测试集成功')
                     this.$refs[formName].resetFields()
-                    this.$router.push({ name: 'ApiTestSetList', query: this.$route.query })
+                    this.$router.push({ name: 'ApiTestSetDetail', params: { id: setId }, query: this.$route.query })
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)

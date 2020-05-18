@@ -58,14 +58,14 @@ export default {
         },
         cancel(formName) {
             this.$refs[formName].resetFields()
-            this.$router.push({ name: 'ApiTestSetList', query: this.$route.query })
+            this.$router.push({ name: 'ApiTestSetDetail', params: { id: this.setId }, query: this.$route.query })
         },
         updateSet(id, payload, project) {
             this.$api.api
                 .updateTestSet(id, payload, project)
                 .then(() => {
                     this.notify.success('更新测试集成功')
-                    this.$router.push({ name: 'ApiTestSetDetail', query: this.$route.query })
+                    this.$router.push({ name: 'ApiTestSetDetail', params: { id: this.setId }, query: this.$route.query })
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)

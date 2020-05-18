@@ -56,7 +56,22 @@
                     {{ items.match_type }}
                 </el-col>
                 <el-col :span="6" class="c-text">
-                    {{ items.expression }}
+                    <template v-if="items.expression">
+                        <template v-if="items.expression.length > 20">
+                            <el-popover trigger="hover" placement="top-start">
+                                <p>{{ items.expression }}</p>
+                                <div slot="reference" class="name-wrapper">
+                                    {{ items.expression }}
+                                </div>
+                            </el-popover>
+                        </template>
+                        <template v-else>
+                            {{ items.expression }}
+                        </template>
+                    </template>
+                    <template v-else>
+                        -
+                    </template>
                 </el-col>
                 <template v-if="items.group">
                     <el-col :span="2" class="c-text">

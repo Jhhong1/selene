@@ -27,7 +27,7 @@
                 <el-col :span="4">{{ items.username }}</el-col>
                 <el-col :span="4">
                     <template v-if="items.password">
-                        <template v-if="items.password.length > 30">
+                        <template v-if="items.password.length > 20">
                             <el-popover trigger="hover" placement="top-start">
                                 <p>{{ items.password }}</p>
                                 <div slot="reference" class="name-wrapper">

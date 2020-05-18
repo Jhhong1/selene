@@ -128,12 +128,12 @@
                                 <el-col :span="2">失败原因</el-col>
                                 <template v-if="setDetail.relationship.errorMessage">
                                     <el-col :span="22">
-                                        <el-tooltip placement="top-start">
-                                            <div slot="content">{{ setDetail.relationship.errorMessage }}</div>
-                                            <el-button type="text" size="mini" plain class="el-button__text is-plain">
+                                        <el-popover trigger="hover" placement="top-start">
+                                            <p>{{ setDetail.relationship.errorMessage }}</p>
+                                            <div slot="reference" class="name-wrapper">
                                                 {{ setDetail.relationship.errorMessage }}
-                                            </el-button>
-                                        </el-tooltip>
+                                            </div>
+                                        </el-popover>
                                     </el-col>
                                 </template>
                                 <template v-else>

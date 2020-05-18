@@ -11,12 +11,14 @@
                     <el-dropdown size="mini" split-button type="primary" @command="infoHandleCommand" style="float: right; margin-right: 50px">
                         操作
                         <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="link" :disabled="permissions.indexOf('apitest.associate_counter') === -1">
+                                关联计数器
+                            </el-dropdown-item>
                             <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.update_apitasks') === -1">
                                 更新
                             </el-dropdown-item>
-                            <!--<el-dropdown-item command="createCase">创建测试集</el-dropdown-item>-->
-                            <el-dropdown-item command="link" :disabled="permissions.indexOf('apitest.associate_counter') === -1">
-                                关联计数器
+                            <el-dropdown-item command="delete" :disabled="permissions.indexOf('apitest.delete_apitasks') === -1">
+                                删除
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -121,12 +123,12 @@
                             <el-col :span="2">失败原因</el-col>
                             <template v-if="taskDetail.errorMessage">
                                 <el-col :span="22">
-                                    <el-tooltip placement="top-start">
-                                        <div slot="content">{{ taskDetail.errorMessage }}</div>
-                                        <el-button type="text" size="mini" plain class="el-button__text is-plain">
+                                    <el-popover trigger="hover" placement="top-start">
+                                        <p>{{ taskDetail.errorMessage }}</p>
+                                        <div slot="reference" class="name-wrapper">
                                             {{ taskDetail.errorMessage }}
-                                        </el-button>
-                                    </el-tooltip>
+                                        </div>
+                                    </el-popover>
                                 </el-col>
                             </template>
                             <template v-else>
@@ -184,9 +186,6 @@
                             <!--<el-dropdown-item command="createCase">创建测试集</el-dropdown-item>-->
                             <el-dropdown-item command="exec" :disabled="permissions.indexOf('apitest.execute_apitasks') === -1">
                                 执行
-                            </el-dropdown-item>
-                            <el-dropdown-item command="delete" :disabled="permissions.indexOf('apitest.delete_apitasks') === -1">
-                                删除
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -410,6 +409,25 @@ export default {
                 this.$router.push({ name: 'UpdateTask', params: { id: this.taskId }, query: this.$route.query })
             } else if (command === 'link') {
                 this.showCounterdialog = true
+            } else if (command === 'delete') {
+                const h = this.$createElement
+                this.$msgbox({
+                    title: '提示',
+                    message: h('p', null, [h('span', null, '确定删除该测试任务吗？')]),
+                    showCancelButton: true,
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    beforeClose: (action, instance, done) => {
+                        if (action === 'confirm') {
+                            this.remove(this.taskId)
+                            done()
+                        } else {
+                            done()
+                        }
+                    }
+                })
+                    .then(() => {})
+                    .catch(() => {})
             }
         },
         getTaskCounter() {
@@ -520,26 +538,6 @@ export default {
         handleCommand(command) {
             if (command === 'linked') {
                 this.linked()
-            } else if (command === 'delete') {
-                const h = this.$createElement
-                this.$msgbox({
-                    title: '提示',
-                    message: h('p', null, [h('span', null, '确定删除该测试任务吗？')]),
-                    showCancelButton: true,
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    beforeClose: (action, instance, done) => {
-                        if (action === 'confirm') {
-                            this.remove(this.taskId)
-                            done()
-                        } else {
-                            done()
-                        }
-                    }
-                })
-                    .then(() => {})
-                    .catch(() => {})
-            } else if (command === 'createCase') {
             } else if (command === 'exec') {
                 this.execute()
             }
