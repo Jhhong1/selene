@@ -1,5 +1,5 @@
 <template>
-    <div class="tag-success-class">
+    <div class="tag-success-class" style="display: inline-block">
         {{ text }}
     </div>
 </template>

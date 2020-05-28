@@ -13,6 +13,10 @@ import TagNotRun from '@/plugin/TagNotRun'
 import TagRunning from '@/plugin/TagRunning'
 import TagSuccess from '@/plugin/TagSuccess'
 import SetCase from '@/plugin/TestSetCases'
+import Detail from '@/plugin/Detail'
+import CaseHistory from '@/plugin/CaseHistory'
+import Records from '@/plugin/Records'
+import CaseRecord from '@/plugin/CaseRecord'
 import '@/static/css/common.css'
 import store from '@/store'
 import axios from 'axios'
@@ -53,7 +57,10 @@ Vue.component('set-case', SetCase)
 Vue.component('j-project', ProjectPermission)
 Vue.component('j-link', LinkCases)
 Vue.component('j-proxy', ProxyCom)
-
+Vue.component('detail', Detail)
+Vue.component('case-history', CaseHistory)
+Vue.component('record', Records)
+Vue.component('case-record', CaseRecord)
 Vue.prototype.notify = notify
 
 const originalPush = VueRouter.prototype.push

@@ -90,13 +90,13 @@
                                 </template>
                             </template>
                         </el-row>
-                        <template v-if="setDetail.testsetrelationship">
+                        <template v-if="setDetail.hasOwnProperty('executionrecord_set') && setDetail.executionrecord_set.length > 0">
                             <el-row :gutter="10" class="row-class test-left">
                                 <el-col :span="2">开始时间</el-col>
-                                <template v-if="setDetail.testsetrelationship.startRunTime">
-                                    <el-col :span="22">{{
-                                        $moment(setDetail.testsetrelationship.startRunTime).format('YYYY-MM-DD HH:mm:ss')
-                                    }}</el-col>
+                                <template v-if="setDetail.executionrecord_set[0].start_time">
+                                    <el-col :span="22">
+                                        {{ $moment(setDetail.executionrecord_set[0].start_time).format('YYYY-MM-DD HH:mm:ss') }}
+                                    </el-col>
                                 </template>
                                 <template v-else>
                                     <el-col :span="22">-</el-col>
@@ -104,8 +104,10 @@
                             </el-row>
                             <el-row :gutter="10" class="row-class test-left">
                                 <el-col :span="2">结束时间</el-col>
-                                <template v-if="setDetail.testsetrelationship.endRunTime">
-                                    <el-col :span="22">{{ $moment(setDetail.testsetrelationship.endRunTime).format('YYYY-MM-DD HH:mm:ss') }}</el-col>
+                                <template v-if="setDetail.executionrecord_set[0].end_time">
+                                    <el-col :span="22">
+                                        {{ $moment(setDetail.executionrecord_set[0].end_time).format('YYYY-MM-DD HH:mm:ss') }}
+                                    </el-col>
                                 </template>
                                 <template v-else>
                                     <el-col :span="22">-</el-col>
@@ -113,12 +115,12 @@
                             </el-row>
                             <el-row :gutter="10" class="row-class test-left">
                                 <el-col :span="2">状态</el-col>
-                                <template v-if="setDetail.testsetrelationship.status === 'Starting'">
+                                <template v-if="setDetail.executionrecord_set[0].status === 'Starting'">
                                     <el-col :span="22">
                                         <tag-running></tag-running>
                                     </el-col>
                                 </template>
-                                <template v-else-if="setDetail.testsetrelationship.status === 'Done'">
+                                <template v-else-if="setDetail.executionrecord_set[0].status === 'Done'">
                                     <el-col :span="22">
                                         <tag-done></tag-done>
                                     </el-col>
@@ -131,12 +133,12 @@
                             </el-row>
                             <el-row :gutter="10" class="row-class test-left">
                                 <el-col :span="2">结果</el-col>
-                                <template v-if="setDetail.testsetrelationship.result === 'Failed'">
+                                <template v-if="setDetail.executionrecord_set[0].result === 'Failed'">
                                     <el-col :span="22">
                                         <tag-failed></tag-failed>
                                     </el-col>
                                 </template>
-                                <template v-else-if="setDetail.testsetrelationship.result === 'Succeed'">
+                                <template v-else-if="setDetail.executionrecord_set[0].result === 'Succeed'">
                                     <el-col :span="2">
                                         <tag-success></tag-success>
                                     </el-col>
@@ -145,7 +147,7 @@
                                     <el-col :span="22">-</el-col>
                                 </template>
                             </el-row>
-                            <el-row :gutter="10" class="row-class test-left">
+                            <!-- <el-row :gutter="10" class="row-class test-left">
                                 <el-col :span="2">失败原因</el-col>
                                 <template v-if="setDetail.testsetrelationship.errorMessage">
                                     <el-col :span="22">
@@ -160,7 +162,7 @@
                                 <template v-else>
                                     <el-col :span="22">-</el-col>
                                 </template>
-                            </el-row>
+                            </el-row> -->
                         </template>
                         <template v-else>
                             <el-row :gutter="10" class="row-class test-left">
@@ -181,10 +183,10 @@
                                 <el-col :span="2">结果</el-col>
                                 <el-col :span="22">-</el-col>
                             </el-row>
-                            <el-row :gutter="10" class="row-class test-left">
+                            <!-- <el-row :gutter="10" class="row-class test-left">
                                 <el-col :span="2">失败原因</el-col>
                                 <el-col :span="22">-</el-col>
-                            </el-row>
+                            </el-row> -->
                         </template>
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">配置引用</el-col>
@@ -253,7 +255,7 @@
                         @choice="listenChoice"
                     ></j-link>
                 </el-tab-pane>
-                <el-tab-pane label="前置处理器" name="setup">
+                <el-tab-pane label="前置条件" name="setup">
                     <el-row>
                         <el-dropdown size="mini" split-button type="primary" @command="handleSetUp" style="float: right; margin-right: 50px">
                             操作
@@ -278,7 +280,7 @@
                         @choice="listenSetUpChoice"
                     ></j-link>
                 </el-tab-pane>
-                <el-tab-pane label="后置处理器" name="teardown">
+                <el-tab-pane label="后置条件" name="teardown">
                     <el-row>
                         <el-dropdown size="mini" split-button type="primary" @command="handleTearDown" style="float: right; margin-right: 50px">
                             操作
@@ -308,6 +310,9 @@
                         @choice="listenTearDownChoice"
                     ></j-link>
                 </el-tab-pane>
+                <el-tab-pane label="历史记录" name="history">
+                    <record v-model="setHistory"></record>
+                </el-tab-pane>
             </el-tabs>
         </template>
     </div>
@@ -320,6 +325,7 @@ export default {
         return {
             activeName: 'info',
             setId: this.$route.params.id,
+            name: this.$route.params.name,
             projectName: this.$route.query.project_name,
             setDetail: {},
             testcases: [],
@@ -336,7 +342,8 @@ export default {
             configReference: {},
             permissions: [],
             setup: 'setup',
-            teardown: 'teardown'
+            teardown: 'teardown',
+            setHistory: []
         }
     },
     methods: {
@@ -464,7 +471,7 @@ export default {
                     .then(() => {})
                     .catch(() => {})
             } else if (command === 'update') {
-                this.$router.push({ name: 'ApiTestSetUpdate', params: { id: this.setId }, query: this.$route.query })
+                this.$router.push({ name: 'ApiTestSetUpdate', params: { name: this.name, id: this.setId }, query: this.$route.query })
             } else if (command === 'refer') {
                 this.configChoice()
             }
@@ -724,6 +731,16 @@ export default {
                 .catch(error => {
                     this.notify.error(error.response)
                 })
+        },
+        getSetHistory() {
+            this.$api.api
+                .history('set', this.setId)
+                .then(response => {
+                    this.setHistory = response.data
+                })
+                .catch(error => {
+                    this.notify.error(error)
+                })
         }
     },
     created() {
@@ -733,6 +750,7 @@ export default {
         this.getTestSetCases()
         this.getSetUpCases()
         this.getTeardownCases()
+        this.getSetHistory()
     },
     mounted() {}
 }

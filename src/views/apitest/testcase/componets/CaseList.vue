@@ -47,13 +47,13 @@
                 </template>
             </el-table-column>
             <el-table-column label="请求方法" min-width="150" prop="method"></el-table-column>
-            <el-table-column label="状态" min-width="150">
+            <el-table-column label="状态" min-width="100">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.caserelationship">
-                        <template v-if="scope.row.caserelationship.status === 'Done'">
+                    <template v-if="scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.length > 0">
+                        <template v-if="scope.row.executionrecord_set[0].status === 'Done'">
                             <tag-done></tag-done>
                         </template>
-                        <template v-else-if="scope.row.caserelationship.status === 'Starting'">
+                        <template v-else-if="scope.row.executionrecord_set[0].status === 'Starting'">
                             <tag-running></tag-running>
                         </template>
                     </template>
@@ -62,18 +62,19 @@
                     </template>
                 </template>
             </el-table-column>
-            <el-table-column label="结果" min-width="50">
+            <el-table-column label="结果" min-width="100">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.caserelationship">
-                        <template v-if="scope.row.caserelationship.result === 'Failed'">
-                            <el-popover trigger="hover" placement="top-start">
+                    <template v-if="scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.length > 0">
+                        <template v-if="scope.row.executionrecord_set[0].result === 'Failed'">
+                            <tag-failed></tag-failed>
+                            <!-- <el-popover trigger="hover" placement="top-start">
                                 <p>{{ scope.row.caserelationship.errorMessage }}</p>
                                 <div slot="reference">
                                     <tag-failed></tag-failed>
                                 </div>
-                            </el-popover>
+                            </el-popover> -->
                         </template>
-                        <template v-else-if="scope.row.caserelationship.result === 'Succeed'">
+                        <template v-else-if="scope.row.executionrecord_set[0].result === 'Succeed'">
                             <tag-success></tag-success>
                         </template>
                     </template>

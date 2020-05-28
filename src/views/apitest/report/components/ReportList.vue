@@ -13,7 +13,7 @@
                             <el-option label="全部" value="all"></el-option>
                             <el-option label="成功" value="succeed"></el-option>
                             <el-option label="失败" value="failed"></el-option>
-                            <el-option label="未执行" value="not_run"></el-option>
+                            <el-option label="运行中" value="running"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item>
@@ -31,36 +31,40 @@
             </el-col>
         </div>
         <el-table class="table-class td" :data="sets">
-            <el-table-column type="expand">
+            <el-table-column label="开始时间" min-width="200">
                 <template slot-scope="scope">
-                    {{ scope.row.errorMessage }}
+                    <template v-if="scope.row.start_time">
+                        {{ $moment(scope.row.start_time).format('YYYY-MM-DD HH:mm:ss') }}
+                    </template>
+                    <template v-else>
+                        -
+                    </template>
                 </template>
             </el-table-column>
-            <el-table-column label="名称" min-width="100">
+            <el-table-column label="结束时间" min-width="200">
                 <template slot-scope="scope">
-                    <ul class="ul-style">
-                        <li>
-                            {{ scope.row.testset__name }}
-                        </li>
-                        <li class="text-style">
-                            <template v-if="scope.row.testset__display">
-                                <template v-if="scope.row.testset__display.length > 30">
-                                    <el-popover trigger="hover" placement="top-start">
-                                        <p>{{ scope.row.testset__display }}</p>
-                                        <div slot="reference" class="name-wrapper">
-                                            {{ scope.row.testset__display }}
-                                        </div>
-                                    </el-popover>
-                                </template>
-                                <template v-else>
-                                    {{ scope.row.testset__display }}
-                                </template>
-                            </template>
-                        </li>
-                    </ul>
+                    <template v-if="scope.row.end_time">
+                        {{ $moment(scope.row.end_time).format('YYYY-MM-DD HH:mm:ss') }}
+                    </template>
+                    <template v-else>
+                        -
+                    </template>
                 </template>
             </el-table-column>
-            <el-table-column label="结果" min-width="50">
+            <el-table-column label="状态" min-width="150">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.status === 'Done'">
+                        <tag-done></tag-done>
+                    </template>
+                    <template v-else-if="scope.row.status === 'Starting'">
+                        <tag-running></tag-running>
+                    </template>
+                    <template v-else>
+                        <tag-not-run></tag-not-run>
+                    </template>
+                </template>
+            </el-table-column>
+            <el-table-column label="结果" min-width="150">
                 <template slot-scope="scope">
                     <template v-if="scope.row.result === 'Succeed'">
                         <tag-success></tag-success>
@@ -69,28 +73,20 @@
                         <tag-failed></tag-failed>
                     </template>
                     <template v-else>
-                        <tag-not-run></tag-not-run>
-                    </template>
-                </template>
-            </el-table-column>
-            <el-table-column label="开始时间" min-width="60">
-                <template slot-scope="scope">
-                    <template v-if="scope.row.startRunTime">
-                        {{ $moment(scope.row.startRunTime).format('YYYY-MM-DD HH:mm:ss') }}
-                    </template>
-                    <template v-else>
                         -
                     </template>
                 </template>
             </el-table-column>
-            <el-table-column label="结束时间" min-width="60">
+            <el-table-column label="操作" min-width="50">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.endRunTime">
-                        {{ $moment(scope.row.endRunTime).format('YYYY-MM-DD HH:mm:ss') }}
-                    </template>
-                    <template v-else>
-                        -
-                    </template>
+                    <el-dropdown @command="handleCommand">
+                        <span>
+                            <i class="el-icon-more-outline rotating"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item :command="{ type: 'view', id: scope.row.tasks, batch: scope.row.batch }">详情</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
                 </template>
             </el-table-column>
         </el-table>
@@ -131,7 +127,7 @@ export default {
                     bottom: 50,
                     right: 5,
                     orient: 'vertical',
-                    data: ['成功', '失败', '未执行']
+                    data: ['成功', '失败', '运行中']
                 },
                 tooltip: {
                     trigger: 'item',
@@ -198,21 +194,21 @@ export default {
                                     color: 'red'
                                 }
                             }
-                            let n_run = {
-                                value: ret.not_run,
-                                name: '未执行',
+                            let r_run = {
+                                value: ret.running,
+                                name: '运行中',
                                 itemStyle: {
                                     color: '#909399'
                                 }
                             }
                             if (this.queryform.result === 'all') {
-                                this.updateSub(subdata, success, failed, n_run)
+                                this.updateSub(subdata, success, failed, r_run)
                             } else if (this.queryform.result === 'succeed') {
                                 this.updateSub(subdata, success)
                             } else if (this.queryform.result === 'failed') {
                                 this.updateSub(subdata, failed)
-                            } else if (this.queryform.result === 'not_run') {
-                                this.updateSub(subdata, n_run)
+                            } else if (this.queryform.result === 'running') {
+                                this.updateSub(subdata, r_run)
                             }
                             this.loading = false
                         })
@@ -236,6 +232,23 @@ export default {
                         dest.push(element)
                     }
                 }
+            }
+        },
+        getTaskName(taskId) {
+            for (let obj of this.tasks) {
+                if (obj.id == taskId) {
+                    return obj.name
+                }
+            }
+        },
+        handleCommand(command) {
+            if (command.type == 'view') {
+                let task_name = this.getTaskName(command.id)
+                this.$router.push({
+                    name: 'TaskSetRecordDetail',
+                    params: { name: task_name, id: command.id, batch: command.batch },
+                    query: this.$route.query
+                })
             }
         }
     },

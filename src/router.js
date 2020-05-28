@@ -31,13 +31,15 @@ import ApiTestSetList from '@/views/apitest/testset/components/TestSetList'
 import AddApiTestSet from '@/views/apitest/testset/components/AddTestSet'
 import ApiTestSetDetail from '@/views/apitest/testset/components/TestSetDetail'
 import ApiTestSetUpdate from '@/views/apitest/testset/components/UpdateTestSet'
+import TestSetCaseRecord from '@/views/apitest/testset/components/TestSetCaseRecord'
 
 import TestTask from '@/views/apitest/testtask/TestTask'
 import TestTaskList from '@/views/apitest/testtask/components/TestTaskList'
 import AddTestTask from '@/views/apitest/testtask/components/AddTestTask'
 import UpdateTask from '@/views/apitest/testtask/components/UpdateTask'
 import TestTaskDetail from '@/views/apitest/testtask/components/TestTaskDetail'
-import TaskTestSetDetail from '@/views/apitest/testtask/components/TaskTestSetDetail'
+import TaskSetRecordDetail from '@/views/apitest/testtask/components/TaskSetRecordDetail'
+import TaskCaseRecordDetail from '@/views/apitest/testtask/components/TaskCaseRecordDetail'
 
 import Counter from '@/views/apitest/counter/Counter'
 import CounterList from '@/views/apitest/counter/components/CounterList'
@@ -391,7 +393,7 @@ export default new Router({
                                             }
                                         },
                                         {
-                                            path: 'detail/:id/',
+                                            path: 'detail/:name/:id/',
                                             name: 'ApiTestSetDetail',
                                             component: ApiTestSetDetail,
                                             meta: {
@@ -400,11 +402,20 @@ export default new Router({
                                             }
                                         },
                                         {
-                                            path: 'update/:id',
+                                            path: 'update/:name/:id',
                                             name: 'ApiTestSetUpdate',
                                             component: ApiTestSetUpdate,
                                             meta: {
                                                 title: '更新测试集',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'history/:name/:id/:batch',
+                                            name: 'TestSetCaseRecord',
+                                            component: TestSetCaseRecord,
+                                            meta: {
+                                                title: '历史记录',
                                                 requireAuth: true
                                             }
                                         }
@@ -455,11 +466,20 @@ export default new Router({
                                             }
                                         },
                                         {
-                                            path: 'testSetDetail/:taskName/:taskId/:setName/:id',
-                                            name: 'TaskTestSetDetail',
-                                            component: TaskTestSetDetail,
+                                            path: 'record/:name/:id/:batch',
+                                            name: 'TaskSetRecordDetail',
+                                            component: TaskSetRecordDetail,
                                             meta: {
-                                                title: '测试集详情',
+                                                title: '历史记录',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'record/:name/:set_name/:task_id/:set_id/:batch',
+                                            name: 'TaskCaseRecordDetail',
+                                            component: TaskCaseRecordDetail,
+                                            meta: {
+                                                title: '历史记录',
                                                 requireAuth: true
                                             }
                                         }
