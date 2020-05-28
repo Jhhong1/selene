@@ -33,12 +33,22 @@
         <el-table class="table-class td" :data="sets">
             <el-table-column label="开始时间" min-width="200">
                 <template slot-scope="scope">
-                    {{ $moment(scope.row.start_time).format('YYYY-MM-DD HH:mm:ss') }}
+                    <template v-if="scope.row.start_time">
+                        {{ $moment(scope.row.start_time).format('YYYY-MM-DD HH:mm:ss') }}
+                    </template>
+                    <template v-else>
+                        -
+                    </template>
                 </template>
             </el-table-column>
             <el-table-column label="结束时间" min-width="200">
                 <template slot-scope="scope">
-                    {{ $moment(scope.row.end_time).format('YYYY-MM-DD HH:mm:ss') }}
+                    <template v-if="scope.row.end_time">
+                        {{ $moment(scope.row.end_time).format('YYYY-MM-DD HH:mm:ss') }}
+                    </template>
+                    <template v-else>
+                        -
+                    </template>
                 </template>
             </el-table-column>
             <el-table-column label="状态" min-width="150">
@@ -46,7 +56,7 @@
                     <template v-if="scope.row.status === 'Done'">
                         <tag-done></tag-done>
                     </template>
-                    <template v-else-if="scope.row.result === 'Starting'">
+                    <template v-else-if="scope.row.status === 'Starting'">
                         <tag-running></tag-running>
                     </template>
                     <template v-else>
@@ -63,7 +73,7 @@
                         <tag-failed></tag-failed>
                     </template>
                     <template v-else>
-                        <tag-not-run></tag-not-run>
+                        -
                     </template>
                 </template>
             </el-table-column>

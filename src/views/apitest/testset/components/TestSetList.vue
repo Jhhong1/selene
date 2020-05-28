@@ -9,7 +9,7 @@
             <el-button class="el-button--primary el-button--mini p-button" disabled>添加测试集</el-button>
         </template>
         <el-table class="table-class td" :data="setList">
-            <el-table-column label="名称" min-width="100">
+            <el-table-column label="名称" min-width="200">
                 <template slot-scope="scope">
                     <ul class="ul-style">
                         <li>
@@ -38,7 +38,7 @@
                     </ul>
                 </template>
             </el-table-column>
-            <el-table-column label="描述信息" min-width="150">
+            <el-table-column label="描述信息" min-width="200">
                 <template slot-scope="scope">
                     <el-popover trigger="hover" placement="top-start">
                         <p>{{ scope.row.description }}</p>
@@ -61,7 +61,7 @@
                     </template>
                 </template>
             </el-table-column>
-            <el-table-column label="结果" min-width="50">
+            <el-table-column label="结果" min-width="150">
                 <template slot-scope="scope">
                     <template v-if="scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.length > 0">
                         <template v-if="scope.row.executionrecord_set[0].result === 'Failed'">
@@ -80,7 +80,7 @@
                     </template>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" min-width="100">
+            <el-table-column label="操作" min-width="50">
                 <template slot-scope="scope">
                     <el-dropdown @command="handleCommand">
                         <span>

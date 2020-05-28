@@ -1,7 +1,7 @@
 <template>
     <div class="el-form__item">
         <el-table class="table-class td" :data="results">
-            <el-table-column label="开始时间" min-width="100">
+            <el-table-column label="开始时间" min-width="200">
                 <template slot-scope="scope">
                     <template v-if="scope.row.start_time">
                         {{ $moment(scope.row.start_time).format('YYYY-MM-DD HH:mm:ss') }}
@@ -11,7 +11,7 @@
                     </template>
                 </template>
             </el-table-column>
-            <el-table-column label="结束时间" min-width="100">
+            <el-table-column label="结束时间" min-width="200">
                 <template slot-scope="scope">
                     <template v-if="scope.row.end_time">
                         {{ $moment(scope.row.end_time).format('YYYY-MM-DD HH:mm:ss') }}
@@ -21,7 +21,7 @@
                     </template>
                 </template>
             </el-table-column>
-            <el-table-column label="状态" min-width="50">
+            <el-table-column label="状态" min-width="150">
                 <template slot-scope="scope">
                     <template v-if="scope.row.status === 'Done'">
                         <tag-done></tag-done>
@@ -34,7 +34,7 @@
                     </template>
                 </template>
             </el-table-column>
-            <el-table-column label="结果" min-width="50">
+            <el-table-column label="结果" min-width="150">
                 <template slot-scope="scope">
                     <template v-if="scope.row.result === 'Succeed'">
                         <tag-success></tag-success>
@@ -47,7 +47,7 @@
                     </template>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" min-width="100">
+            <el-table-column label="操作" min-width="50">
                 <template slot-scope="scope">
                     <el-dropdown @command="handleCommand">
                         <span>
