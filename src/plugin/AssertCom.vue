@@ -1,16 +1,16 @@
 <template>
     <div class="bg-color">
         <el-row>
-            <el-col :span="3">
+            <el-col :span="4">
                 <div class="bg-purple-light">断言对象</div>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="4">
                 <div class="bg-purple-light">对比操作</div>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="2">
                 <div class="bg-purple-light">提取方式</div>
             </el-col>
-            <el-col :span="5">
+            <el-col :span="6">
                 <div class="bg-purple-light">表达式</div>
             </el-col>
             <el-col :span="2">
@@ -19,38 +19,38 @@
             <el-col :span="2">
                 <div class="bg-purple-light">匹配数字</div>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="4">
                 <div class="bg-purple-light">期望值</div>
             </el-col>
         </el-row>
         <template v-if="asserts !== undefined && asserts.length">
             <el-row v-for="(items, index) in asserts" :key="index" class="asserts-row">
                 <template v-if="items.select == 'code'">
-                    <el-col :span="3">响应码</el-col>
+                    <el-col :span="4">响应码</el-col>
                 </template>
                 <template v-else-if="items.select == 'text'">
-                    <el-col :span="3">响应文本</el-col>
+                    <el-col :span="4">响应文本</el-col>
                 </template>
                 <template v-else-if="items.select == 'response_header'">
-                    <el-col :span="3">响应头</el-col>
+                    <el-col :span="4">响应头</el-col>
                 </template>
                 <!-- <template v-else-if="items.select == 'request_history'">
                     <el-col :span="3">请求历史</el-col>
                 </template> -->
                 <template v-if="items.comparator">
-                    <el-col :span="3" class="c-text">{{ items.comparator }}</el-col>
+                    <el-col :span="4" class="c-text">{{ items.comparator }}</el-col>
                 </template>
                 <template v-else>
-                    <el-col :span="3" class="c-text">-</el-col>
+                    <el-col :span="4" class="c-text">-</el-col>
                 </template>
                 <template v-if="items.match_type">
-                    <el-col :span="3" class="c-text">{{ items.match_type }}</el-col>
+                    <el-col :span="2" class="c-text">{{ items.match_type }}</el-col>
                 </template>
                 <template v-else>
-                    <el-col :span="3" class="c-text">-</el-col>
+                    <el-col :span="2" class="c-text">-</el-col>
                 </template>
                 <template v-if="items.expression">
-                    <el-col :span="5" class="c-text">
+                    <el-col :span="6" class="c-text">
                         <template v-if="items.expression.length > 20">
                             <el-popover trigger="hover" placement="top-start">
                                 <p>{{ items.expression }}</p>
@@ -65,7 +65,7 @@
                     </el-col>
                 </template>
                 <template v-else>
-                    <el-col :span="5" class="c-text">-</el-col>
+                    <el-col :span="6" class="c-text">-</el-col>
                 </template>
                 <template v-if="items.group">
                     <el-col :span="2" class="c-text">{{ items.group }}</el-col>
@@ -80,7 +80,7 @@
                     <el-col :span="2" class="c-text">-</el-col>
                 </template>
                 <template v-if="show">
-                    <el-col :span="4" class="c-text">{{ items.expected_value }}</el-col>
+                    <el-col :span="2" class="c-text">{{ items.expected_value }}</el-col>
                     <el-col :span="1" style="text-align: right" class="icon-size">
                         <template v-if="show">
                             <el-button icon="el-icon-minus" circle @click="remove(items)"></el-button>
@@ -93,7 +93,7 @@
                     </el-col>
                 </template>
                 <template v-else>
-                    <el-col :span="6" class="c-text">{{ items.expected_value }}</el-col>
+                    <el-col :span="4" class="c-text">{{ items.expected_value }}</el-col>
                 </template>
             </el-row>
         </template>

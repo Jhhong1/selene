@@ -69,8 +69,8 @@
                         </el-row>
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">开始时间</el-col>
-                            <template v-if="taskDetail.startRunTime">
-                                <el-col :span="22">{{ $moment(taskDetail.startRunTime).format('YYYY-MM-DD HH:mm:ss') }}</el-col>
+                            <template v-if="taskDetail.hasOwnProperty('executionrecord_set') && taskDetail.executionrecord_set.length > 0">
+                                <el-col :span="22">{{ $moment(taskDetail.executionrecord_set[0].start_time).format('YYYY-MM-DD HH:mm:ss') }}</el-col>
                             </template>
                             <template v-else>
                                 <el-col :span="22">-</el-col>
@@ -78,8 +78,8 @@
                         </el-row>
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">结束时间</el-col>
-                            <template v-if="taskDetail.endRunTime">
-                                <el-col :span="22">{{ $moment(taskDetail.endRunTime).format('YYYY-MM-DD HH:mm:ss') }}</el-col>
+                            <template v-if="taskDetail.hasOwnProperty('executionrecord_set') && taskDetail.executionrecord_set.length > 0">
+                                <el-col :span="22">{{ $moment(taskDetail.executionrecord_set[0].end_time).format('YYYY-MM-DD HH:mm:ss') }}</el-col>
                             </template>
                             <template v-else>
                                 <el-col :span="22">-</el-col>
@@ -87,15 +87,17 @@
                         </el-row>
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">状态</el-col>
-                            <template v-if="taskDetail.status === 'Starting'">
-                                <el-col :span="22">
-                                    <tag-running></tag-running>
-                                </el-col>
-                            </template>
-                            <template v-else-if="taskDetail.status === 'Done'">
-                                <el-col :span="22">
-                                    <tag-done></tag-done>
-                                </el-col>
+                            <template v-if="taskDetail.hasOwnProperty('executionrecord_set') && taskDetail.executionrecord_set.length > 0">
+                                <template v-if="taskDetail.executionrecord_set[0].status === 'Starting'">
+                                    <el-col :span="22">
+                                        <tag-running></tag-running>
+                                    </el-col>
+                                </template>
+                                <template v-else-if="taskDetail.executionrecord_set[0].status === 'Done'">
+                                    <el-col :span="22">
+                                        <tag-done></tag-done>
+                                    </el-col>
+                                </template>
                             </template>
                             <template v-else>
                                 <el-col :span="22">
@@ -105,21 +107,23 @@
                         </el-row>
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">结果</el-col>
-                            <template v-if="taskDetail.result === 'Failed'">
-                                <el-col :span="22">
-                                    <tag-failed></tag-failed>
-                                </el-col>
-                            </template>
-                            <template v-else-if="taskDetail.result === 'Succeed'">
-                                <el-col :span="22">
-                                    <tag-success></tag-success>
-                                </el-col>
+                            <template v-if="taskDetail.hasOwnProperty('executionrecord_set') && taskDetail.executionrecord_set.length > 0">
+                                <template v-if="taskDetail.executionrecord_set[0].result === 'Failed'">
+                                    <el-col :span="22">
+                                        <tag-failed></tag-failed>
+                                    </el-col>
+                                </template>
+                                <template v-else-if="taskDetail.executionrecord_set[0].result === 'Succeed'">
+                                    <el-col :span="22">
+                                        <tag-success></tag-success>
+                                    </el-col>
+                                </template>
                             </template>
                             <template v-else>
                                 <el-col :span="22">-</el-col>
                             </template>
                         </el-row>
-                        <el-row :gutter="10" class="row-class test-left">
+                        <!-- <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">失败原因</el-col>
                             <template v-if="taskDetail.errorMessage">
                                 <el-col :span="22">
@@ -134,7 +138,7 @@
                             <template v-else>
                                 <el-col :span="22">-</el-col>
                             </template>
-                        </el-row>
+                        </el-row> -->
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">计数器</el-col>
                             <el-col :span="22">
@@ -190,26 +194,12 @@
                         </el-dropdown-menu>
                     </el-dropdown>
                     <el-table row-key="id" :data="taskSets" style="padding-left: 20px; padding-right: 20px">
-                        <el-table-column label="测试集名称" min-width="50">
+                        <el-table-column label="测试集名称" min-width="150">
                             <template slot-scope="scope">
                                 <template v-if="scope.row.testset">
                                     <ul class="ul-style">
                                         <li>
-                                            <router-link
-                                                :to="{
-                                                    name: 'TaskTestSetDetail',
-                                                    params: {
-                                                        taskName: $route.params.name,
-                                                        taskId: taskId,
-                                                        setName: scope.row.testset.name,
-                                                        id: scope.row.testset.id
-                                                    },
-                                                    query: $route.query
-                                                }"
-                                                class="el-link el-link--primary"
-                                            >
-                                                {{ scope.row.testset.name }}
-                                            </router-link>
+                                            {{ scope.row.testset.name }}
                                         </li>
                                         <li class="text-style">
                                             <template v-if="scope.row.testset.display">
@@ -230,34 +220,34 @@
                                 </template>
                             </template>
                         </el-table-column>
-                        <el-table-column label="状态" min-width="50">
+                        <el-table-column label="描述信息" min-width="300">
                             <template slot-scope="scope">
-                                <template v-if="scope.row.status === 'Done'">
-                                    <tag-done></tag-done>
-                                </template>
-                                <template v-else-if="scope.row.status === 'Starting'">
-                                    <tag-running></tag-running>
-                                </template>
-                                <template v-else>
-                                    <tag-not-run></tag-not-run>
+                                <template v-if="scope.row.testset">
+                                    <template v-if="scope.row.testset.description && scope.row.testset.description != 'null'">
+                                        <template v-if="scope.row.testset.description > 100">
+                                            <el-popover trigger="hover" placement="top-start">
+                                                <p>{{ scope.row.testset.description }}</p>
+                                                <div slot="reference" class="name-wrapper">
+                                                    {{ scope.row.testset.description }}
+                                                </div>
+                                            </el-popover>
+                                        </template>
+                                        <template v-else>
+                                            {{ scope.row.testset.description }}
+                                        </template>
+                                    </template>
+                                    <template v-else>
+                                        -
+                                    </template>
                                 </template>
                             </template>
                         </el-table-column>
-                        <el-table-column label="结果" min-width="100">
+                        <el-table-column label="标签" min-width="150">
                             <template slot-scope="scope">
-                                <template v-if="scope.row.result === 'Failed'">
-                                    <el-popover trigger="hover" placement="top-start">
-                                        <p>{{ scope.row.errorMessage }}</p>
-                                        <div slot="reference">
-                                            <tag-failed></tag-failed>
-                                        </div>
-                                    </el-popover>
-                                </template>
-                                <template v-else-if="scope.row.result === 'Succeed'">
-                                    <tag-success></tag-success>
-                                </template>
-                                <template v-else>
-                                    -
+                                <template v-if="scope.row.testset">
+                                    <template v-for="(tag, index) in scope.row.testset.tags">
+                                        <j-label :text="tag" :key="index"></j-label>
+                                    </template>
                                 </template>
                             </template>
                         </el-table-column>
@@ -368,6 +358,11 @@
                         </el-form>
                     </el-dialog>
                 </el-tab-pane>
+                <el-tab-pane label="历史记录" name="history">
+                    <div style="padding-left: 20px; padding-right: 20px">
+                        <record v-model="taskHistory" :categories="category"></record>
+                    </div>
+                </el-tab-pane>
             </el-tabs>
         </template>
     </div>
@@ -400,7 +395,9 @@ export default {
             counterRefer: {},
             selectValue: '',
             counters: {},
-            showCounterdialog: false
+            showCounterdialog: false,
+            taskHistory: [],
+            category: 'tasks'
         }
     },
     methods: {
@@ -510,11 +507,19 @@ export default {
                     this.notify.error(error.response.request.responseText)
                 })
         },
+        updateData(contents) {
+            for (let content of contents) {
+                if (content.hasOwnProperty('testset')) {
+                    content.testset.tags = JSON.parse(content.testset.tags)
+                }
+            }
+            return contents
+        },
         getTaskTestSets() {
             this.$api.api
                 .taskTestSet(this.taskId, this.projectName)
                 .then(response => {
-                    this.taskSets = response.data
+                    this.taskSets = this.updateData(response.data)
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)
@@ -648,6 +653,16 @@ export default {
         },
         getPermissions() {
             this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
+        },
+        getTaskHistory() {
+            this.$api.api
+                .history('tasks', this.taskId)
+                .then(response => {
+                    this.taskHistory = response.data
+                })
+                .catch(error => {
+                    this.notify.error(error)
+                })
         }
     },
     created() {
@@ -655,6 +670,7 @@ export default {
         this.getTaskTestSets()
         this.getPermissions()
         this.getTaskCounter()
+        this.getTaskHistory()
     },
     mounted() {
         if (this.load) {

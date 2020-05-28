@@ -47,8 +47,8 @@ export default {
                     if (!passregex.test(value)) {
                         callback(new Error('名称必须以小写字母开头，包含小写字母、数字、下划线、中横线'))
                     } else {
-                        if (value.length < 6 || value.length > 20) {
-                            callback(new Error('名称长度不得少于6位，大于20位'))
+                        if (value.length < 1 || value.length > 50) {
+                            callback(new Error('名称长度不得少于1位，大于50位'))
                         } else {
                             callback()
                         }
@@ -88,9 +88,10 @@ export default {
                 .createApiTestSet(payload, project)
                 .then(response => {
                     let setId = response.data.id
+                    let name = response.data.name
                     this.notify.success('添加测试集成功')
                     this.$refs[formName].resetFields()
-                    this.$router.push({ name: 'ApiTestSetDetail', params: { id: setId }, query: this.$route.query })
+                    this.$router.push({ name: 'ApiTestSetDetail', params: { name: name, id: setId }, query: this.$route.query })
                 })
                 .catch(error => {
                     this.notify.error(error.response.request.responseText)

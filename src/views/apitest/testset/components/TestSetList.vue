@@ -14,7 +14,7 @@
                     <ul class="ul-style">
                         <li>
                             <router-link
-                                :to="{ name: 'ApiTestSetDetail', params: { id: scope.row.id }, query: $route.query }"
+                                :to="{ name: 'ApiTestSetDetail', params: { name: scope.row.name, id: scope.row.id }, query: $route.query }"
                                 class="el-link el-link--primary"
                             >
                                 {{ scope.row.name }}
@@ -48,11 +48,11 @@
             </el-table-column>
             <el-table-column label="状态" min-width="150">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.testsetrelationship">
-                        <template v-if="scope.row.testsetrelationship.status === 'Done'">
+                    <template v-if="scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.length > 0">
+                        <template v-if="scope.row.executionrecord_set[0].status === 'Done'">
                             <tag-done></tag-done>
                         </template>
-                        <template v-else-if="scope.row.testsetrelationship.status === 'Starting'">
+                        <template v-else-if="scope.row.executionrecord_set[0].status === 'Starting'">
                             <tag-running></tag-running>
                         </template>
                     </template>
@@ -63,16 +63,15 @@
             </el-table-column>
             <el-table-column label="结果" min-width="50">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.testsetrelationship">
-                        <template v-if="scope.row.testsetrelationship.result === 'Failed'">
-                            <el-popover trigger="hover" placement="top-start">
+                    <template v-if="scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.length > 0">
+                        <template v-if="scope.row.executionrecord_set[0].result === 'Failed'">
+                            <tag-failed></tag-failed>
+                            <!-- <el-popover trigger="hover" placement="top-start">
                                 <p>{{ scope.row.testsetrelationship.errorMessage }}</p>
-                                <div slot="reference">
-                                    <tag-failed></tag-failed>
-                                </div>
-                            </el-popover>
+                                <div slot="reference"></div>
+                            </el-popover> -->
                         </template>
-                        <template v-else-if="scope.row.testsetrelationship.result === 'Succeed'">
+                        <template v-else-if="scope.row.executionrecord_set[0].result === 'Succeed'">
                             <tag-success></tag-success>
                         </template>
                     </template>
@@ -88,21 +87,21 @@
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :command="{ type: 'view', row: scope.row.id }">查看</el-dropdown-item>
+                            <el-dropdown-item :command="{ type: 'view', name: scope.row.name, id: scope.row.id }">查看</el-dropdown-item>
                             <el-dropdown-item
-                                :command="{ type: 'update', row: scope.row.id }"
+                                :command="{ type: 'update', name: scope.row.name, id: scope.row.id }"
                                 :disabled="permissions.indexOf('apitest.update_apiset') === -1"
                             >
                                 更新
                             </el-dropdown-item>
                             <el-dropdown-item
-                                :command="{ type: 'exec', row: scope.row.id }"
+                                :command="{ type: 'exec', id: scope.row.id }"
                                 :disabled="permissions.indexOf('apitest.execute_apiset') === -1"
                             >
                                 执行
                             </el-dropdown-item>
                             <el-dropdown-item
-                                :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
+                                :command="{ type: 'del', index: scope.$index, id: scope.row.id }"
                                 :disabled="permissions.indexOf('apitest.delete_apiset') === -1"
                             >
                                 删除
@@ -228,13 +227,13 @@ export default {
         },
         handleCommand(command) {
             if (command.type === 'del') {
-                this.deleteRow(command.index, this.setList, command.row)
+                this.deleteRow(command.index, this.setList, command.id)
             } else if (command.type === 'view') {
-                this.$router.push({ name: 'ApiTestSetDetail', params: { id: command.row }, query: this.$route.query })
+                this.$router.push({ name: 'ApiTestSetDetail', params: { name: command.name, id: command.id }, query: this.$route.query })
             } else if (command.type === 'update') {
-                this.$router.push({ name: 'ApiTestSetUpdate', params: { id: command.row }, query: this.$route.query })
+                this.$router.push({ name: 'ApiTestSetUpdate', params: { name: command.name, id: command.id }, query: this.$route.query })
             } else if (command.type === 'exec') {
-                this.execute(command.row)
+                this.execute(command.id)
             }
         },
         getPermissions() {

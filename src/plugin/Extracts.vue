@@ -8,13 +8,13 @@
                 <div class="bg-purple-light">取值对象</div>
             </el-col>
             <el-col :span="2">
-                <div class="bg-purple-light">索引值</div>
-            </el-col>
-            <el-col :span="2">
                 <div class="bg-purple-light">提取方式</div>
             </el-col>
             <el-col :span="6">
                 <div class="bg-purple-light">表达式</div>
+            </el-col>
+            <el-col :span="2">
+                <div class="bg-purple-light">索引值</div>
             </el-col>
             <el-col :span="2">
                 <div class="bg-purple-light">匹配组</div>
@@ -44,14 +44,6 @@
                         请求地址
                     </template>
                 </el-col>
-                <template v-if="items.index">
-                    <el-col :span="2" class="c-text">
-                        {{ items.index }}
-                    </el-col>
-                </template>
-                <template v-else>
-                    <el-col :span="2" class="c-text">-</el-col>
-                </template>
                 <el-col :span="2" class="c-text">
                     {{ items.match_type }}
                 </el-col>
@@ -73,6 +65,14 @@
                         -
                     </template>
                 </el-col>
+                <template v-if="items.index">
+                    <el-col :span="2" class="c-text">
+                        {{ items.index }}
+                    </el-col>
+                </template>
+                <template v-else>
+                    <el-col :span="2" class="c-text">-</el-col>
+                </template>
                 <template v-if="items.group">
                     <el-col :span="2" class="c-text">
                         {{ items.group }}

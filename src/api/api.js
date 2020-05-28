@@ -245,15 +245,6 @@ export const removeTestSetFromTask = (data, projectName = '') => {
         }
     })
 }
-// 测试任务中测试集详情
-export const taskTestSetDetail = (id, task = '', project = '') => {
-    return axios.get(`/v1/apitest/task_set_detail/${id}/`, {
-        params: {
-            task: task,
-            project: project
-        }
-    })
-}
 // 测试任务测试集中的测试用例
 export const taskSetCases = (task = '', testsetId = '', project = '', handler = '') => {
     return axios.get('/v1/apitest/task_set_cases/', {
@@ -531,6 +522,19 @@ export const deletePeriodictask = (id, projectName = '') => {
     return axios.delete(`/v1/apitest/crontab_task/${id}/`, {
         params: {
             project: projectName
+        }
+    })
+}
+
+// 获取历史记录
+export const history = (types = '', id = '', task_id = '', batch = '', handler = '') => {
+    return axios.get('/v1/apitest/history/', {
+        params: {
+            types: types,
+            id: id,
+            task_id: task_id,
+            batch: batch,
+            handler: handler
         }
     })
 }
