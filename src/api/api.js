@@ -298,14 +298,6 @@ export const deleteConfig = (configId, projectName = '') => {
         }
     })
 }
-// 设置全局配置
-export const setGlobalConfig = (data, projectName = '') => {
-    return axios.post('/v1/apitest/set_global_config/', data, {
-        params: {
-            project: projectName
-        }
-    })
-}
 // 关联配置到测试集
 export const configToSet = (data, projectName = '') => {
     return axios.post('/v1/apitest/config_to_set/', data, {

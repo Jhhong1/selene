@@ -69,20 +69,9 @@ export default {
             results: this.value
         }
     },
-    methods: {
-        updateData(contents) {
-            for (let content of contents) {
-                if (content.response) {
-                    content.response = JSON.parse(content.response)
-                }
-            }
-
-            this.results = contents
-        }
-    },
     watch: {
         value: function(newValue) {
-            this.updateData(newValue)
+            this.results = newValue
         }
     }
 }

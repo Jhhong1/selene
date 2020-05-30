@@ -26,24 +26,6 @@
             <el-form-item label="变量" :label-width="formLabelWidth" prop="variables">
                 <j-input v-model="addCase.variables" size="mini"></j-input>
             </el-form-item>
-            <!-- <el-form-item label="认证方式" :label-width="formLabelWidth" prop="authMethod">
-                <el-row>
-                    <el-col class="bg-purple-light" :span="3">类型</el-col>
-                    <el-col class="bg-purple-light" :span="10">用户名</el-col>
-                    <el-col class="bg-purple-light" :span="11">密码</el-col>
-                </el-row>
-                <el-row style="padding-left: 10px" :gutter="3">
-                    <el-col :span="3" style="text-align: left">
-                        {{ addCase.authMethod }}
-                    </el-col>
-                    <el-col :span="10">
-                        <el-input size="mini" v-model="addCase.auth.username"></el-input>
-                    </el-col>
-                    <el-col :span="11">
-                        <el-input size="mini" v-model="addCase.auth.password"></el-input>
-                    </el-col>
-                </el-row>
-            </el-form-item> -->
             <el-form-item label="头部信息" :label-width="formLabelWidth" prop="headers">
                 <j-input v-model="addCase.headers" size="mini"></j-input>
             </el-form-item>
@@ -94,8 +76,8 @@ export default {
                     if (!passregex.test(value)) {
                         callback(new Error('用例名称必须以小写字母开头，包含小写字母、数字、下划线、中横线'))
                     } else {
-                        if (value.length < 6 || value.length > 20) {
-                            callback(new Error('用例名称长度不得少于6位，大于20位'))
+                        if (value.length < 1 || value.length > 20) {
+                            callback(new Error('用例名称长度不得少于1位，大于20位'))
                         } else {
                             callback()
                         }
@@ -149,8 +131,6 @@ export default {
                 url: '',
                 method: '',
                 variables: {},
-                authMethod: 'BasicAuth',
-                auth: {},
                 headers: {},
                 body: {},
                 asserts: [],
@@ -204,7 +184,12 @@ export default {
                     this.$router.push({ name: 'ApiCaseDetail', params: { id: caseId }, query: this.$route.query })
                 })
                 .catch(error => {
-                    this.notify.error(error.response.request.responseText)
+                    let rep = error.response.data
+                    if (rep.hasOwnProperty('non_field_errors')) {
+                        this.notify.error(rep.non_field_errors[0])
+                    } else {
+                        this.notify.error(rep)
+                    }
                 })
         }
     },

@@ -93,19 +93,9 @@ export default {
             results: this.value
         }
     },
-    methods: {
-        updateData(contents) {
-            for (let content of contents) {
-                if (content.hasOwnProperty('executionrecord_set') && content.executionrecord_set.constructor == Object) {
-                    content.executionrecord_set.response = JSON.parse(content.executionrecord_set.response)
-                }
-            }
-            this.results = contents
-        }
-    },
     watch: {
         value: function(newValue) {
-            this.updateData(newValue)
+            this.results = newValue
         }
     }
 }

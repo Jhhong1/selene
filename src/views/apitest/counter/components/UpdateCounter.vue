@@ -91,7 +91,6 @@ export default {
             let _this = this
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    _this.counter.project = _this.projectName
                     let payload = _this.counter
                     _this.updateCounter(this.id, JSON.stringify(payload), _this.projectName, formName)
                 } else {

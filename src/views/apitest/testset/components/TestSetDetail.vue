@@ -191,7 +191,14 @@
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">配置引用</el-col>
                             <template v-if="Object.keys(configReference).length">
-                                <el-col :span="22">{{ configReference.name }}</el-col>
+                                <el-col :span="22">
+                                    <router-link
+                                        :to="{ name: 'GlobalConfigDetail', params: { id: configReference.id }, query: $route.query }"
+                                        class="el-link el-link--primary"
+                                    >
+                                        {{ configReference.name }}
+                                    </router-link>
+                                </el-col>
                             </template>
                             <template v-else>
                                 <el-col :span="22">-</el-col>
@@ -237,7 +244,6 @@
                                 <el-dropdown-item command="linked" :disabled="permissions.indexOf('apitest.associate_cases') === -1">
                                     关联测试用例
                                 </el-dropdown-item>
-                                <!-- <el-dropdown-item command="createCase">创建测试用例</el-dropdown-item> -->
                             </el-dropdown-menu>
                         </el-dropdown>
                     </el-row>
