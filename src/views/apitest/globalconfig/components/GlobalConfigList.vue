@@ -54,12 +54,6 @@
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item
-                                :command="{ type: 'setGlobal', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.update_config') === -1"
-                            >
-                                设为全局变量
-                            </el-dropdown-item>
                             <el-dropdown-item :command="{ type: 'view', row: scope.row.id }">查看</el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'update', row: scope.row.id }"
@@ -121,17 +115,6 @@ export default {
                     this.notify.error(error.response.data)
                 })
         },
-        setGlobalConfig(configId) {
-            let payload = {
-                config_id: configId
-            }
-            this.$api.api
-                .setGlobalConfig(JSON.stringify(payload), this.projectName)
-                .then(() => {})
-                .catch(error => {
-                    this.notify.error(error.response.data)
-                })
-        },
         currentChange(val) {
             this.currentPage = val
             this.getConfigList()
@@ -182,8 +165,6 @@ export default {
             const _this = this
             if (command.type === 'del') {
                 this.deleteRow(command.index, _this.dataTable, command.row)
-            } else if (command.type === 'setGlobal') {
-                this.setGlobalConfig(command.row)
             } else if (command.type === 'view') {
                 this.$router.push({ name: 'GlobalConfigDetail', params: { id: command.row }, query: _this.$route.query })
             } else if (command.type === 'update') {

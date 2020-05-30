@@ -504,25 +504,17 @@ export default {
                     this.taskDetail = response.data
                 })
                 .catch(error => {
-                    this.notify.error(error.response.request.responseText)
+                    this.notify.error(error.response.data)
                 })
-        },
-        updateData(contents) {
-            for (let content of contents) {
-                if (content.hasOwnProperty('testset')) {
-                    content.testset.tags = JSON.parse(content.testset.tags)
-                }
-            }
-            return contents
         },
         getTaskTestSets() {
             this.$api.api
                 .taskTestSet(this.taskId, this.projectName)
                 .then(response => {
-                    this.taskSets = this.updateData(response.data)
+                    this.taskSets = response.data
                 })
                 .catch(error => {
-                    this.notify.error(error.response.request.responseText)
+                    this.notify.error(error.response.data)
                 })
         },
         showChoices() {
@@ -558,7 +550,7 @@ export default {
                     this.$router.push({ name: 'TestTaskList', query: this.$route.query })
                 })
                 .catch(error => {
-                    this.notify.error(error.response.request.responseText)
+                    this.notify.error(error.response.data)
                 })
         },
         execute() {
@@ -567,7 +559,7 @@ export default {
         choice() {
             let payload = {
                 task_id: this.taskId,
-                testSets: JSON.stringify(this.multipleSelection)
+                testSets: this.multipleSelection
             }
             this.$api.api
                 .testSetToTask(JSON.stringify(payload), this.projectName)
@@ -578,7 +570,7 @@ export default {
                     this.activeName = 'cases'
                 })
                 .catch(error => {
-                    this.notify.error(error.response.request.responseText)
+                    this.notify.error(error.response.data)
                 })
         },
         removeTestSetFromTask(testSetId) {
@@ -592,7 +584,7 @@ export default {
                     this.notify.success('移除测试集成功')
                 })
                 .catch(error => {
-                    this.notify.error(error.response.request.responseText)
+                    this.notify.error(error.response.data)
                 })
         },
         removeAction(index, obj, id) {
@@ -641,7 +633,7 @@ export default {
                     this.labelDialog = false
                 })
                 .catch(error => {
-                    this.notify.error(error.response.request.responseText)
+                    this.notify.error(error.response.data)
                 })
         },
         autoLoad() {

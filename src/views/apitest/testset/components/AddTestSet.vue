@@ -94,7 +94,12 @@ export default {
                     this.$router.push({ name: 'ApiTestSetDetail', params: { name: name, id: setId }, query: this.$route.query })
                 })
                 .catch(error => {
-                    this.notify.error(error.response.request.responseText)
+                    let rep = error.response.data
+                    if (rep.hasOwnProperty('non_field_errors')) {
+                        this.notify.error(rep.non_field_errors[0])
+                    } else {
+                        this.notify.error(rep)
+                    }
                 })
         }
     }

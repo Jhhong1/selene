@@ -101,8 +101,6 @@ export default {
             projectName: this.$route.query.project_name,
             configForm: {
                 proxy: [],
-                authMethod: 'BasicAuth',
-                auth: {},
                 headers: {},
                 variables: {}
             },
@@ -128,7 +126,12 @@ export default {
                     _this.$router.go(-1)
                 })
                 .catch(error => {
-                    _this.notify.error(error.response.data)
+                    let rep = error.response.data
+                    if (rep.hasOwnProperty('non_field_errors')) {
+                        _this.notify.error(rep.non_field_errors[0])
+                    } else {
+                        _this.notify.error(rep)
+                    }
                 })
         },
         submit(formName) {

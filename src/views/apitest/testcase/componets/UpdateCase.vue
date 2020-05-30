@@ -26,26 +26,6 @@
             <el-form-item label="变量" :label-width="formLabelWidth" prop="variables">
                 <j-input v-model="addCase.variables"></j-input>
             </el-form-item>
-            <!-- <el-form-item label="认证方式" :label-width="formLabelWidth" prop="authMethod">
-                <el-row>
-                    <el-col class="bg-purple-light" :span="3">类型</el-col>
-                    <el-col class="bg-purple-light" :span="10">用户名</el-col>
-                    <el-col class="bg-purple-light" :span="11">密码</el-col>
-                </el-row>
-                <el-row style="padding-left: 10px" :gutter="3">
-                    <el-col :span="3" style="text-align: left">
-                        {{ addCase.authMethod }}
-                    </el-col>
-                    <template v-if="addCase.auth">
-                        <el-col :span="10">
-                            <el-input size="mini" v-model="addCase.auth.username"></el-input>
-                        </el-col>
-                        <el-col :span="11">
-                            <el-input size="mini" v-model="addCase.auth.password"></el-input>
-                        </el-col>
-                    </template>
-                </el-row>
-            </el-form-item> -->
             <el-form-item label="头部信息" :label-width="formLabelWidth" prop="headers">
                 <j-input v-model="addCase.headers"></j-input>
             </el-form-item>
@@ -161,12 +141,7 @@ export default {
         submit(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    let data = this.addCase
-                    if (!data.startRunTime) {
-                        delete data['startRunTime']
-                        delete data['endRunTime']
-                    }
-                    let payload = JSON.stringify(data)
+                    let payload = JSON.stringify(this.addCase)
                     this.updateCase(payload)
                 } else {
                     return false

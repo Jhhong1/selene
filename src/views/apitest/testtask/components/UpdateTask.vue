@@ -50,7 +50,6 @@ export default {
         submit(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    this.task.project = this.projectName
                     let payload = JSON.stringify(this.task)
                     this.updateTask(this.id, payload, this.projectName)
                 } else {

@@ -92,7 +92,12 @@ export default {
                     _this.$router.push({ name: 'CounterList', query: this.$route.query })
                 })
                 .catch(error => {
-                    _this.notify.error(error.response.data.non_field_errors)
+                    let rep = error.response.data
+                    if (rep.hasOwnProperty('non_field_errors')) {
+                        _this.notify.error(rep.non_field_errors[0])
+                    } else {
+                        _this.notify.error(rep)
+                    }
                 })
         },
         submit(formName) {

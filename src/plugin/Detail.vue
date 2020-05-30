@@ -109,31 +109,6 @@
                                 <j-input v-model="cases.variables" :edit="false"></j-input>
                             </el-col>
                         </el-row>
-                        <!-- <el-row :gutter="10" class="row-class">
-                                <el-col :span="2" class="test-left">认证方式</el-col>
-                                <el-col :span="22" class="test-right">
-                                    <el-row>
-                                        <el-col class="bg-purple-light" :span="4">类型</el-col>
-                                        <el-col class="bg-purple-light" :span="10">用户名</el-col>
-                                        <el-col class="bg-purple-light" :span="10">密码</el-col>
-                                    </el-row>
-                                    <el-row style="padding-left: 10px">
-                                        <el-col :span="4">{{ cases.authMethod }}</el-col>
-                                        <template v-if="cases.auth">
-                                            <el-col :span="10">{{ cases.auth.username }}</el-col>
-                                        </template>
-                                        <template v-else>
-                                            <el-col :span="10">-</el-col>
-                                        </template>
-                                        <template v-if="cases.auth">
-                                            <el-col :span="10">{{ cases.auth.password }}</el-col>
-                                        </template>
-                                        <template v-else>
-                                            <el-col :span="10">-</el-col>
-                                        </template>
-                                    </el-row>
-                                </el-col>
-                            </el-row> -->
                         <el-row :gutter="10" class="row-class">
                             <el-col :span="2" class="test-left">头部信息</el-col>
                             <el-col :span="22" class="test-right">
