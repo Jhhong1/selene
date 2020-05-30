@@ -55,12 +55,12 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <template v-if="cate == 'sets'">
-                                <el-dropdown-item :command="{ type: 'view', set_id: scope.row.sets_id, batch: scope.row.batch }">
+                                <el-dropdown-item :command="{ type: 'view', set_id: scope.row.sets, batch: scope.row.batch }">
                                     详情
                                 </el-dropdown-item>
                             </template>
                             <template v-else-if="cate == 'tasks'">
-                                <el-dropdown-item :command="{ type: 'view', tasks_id: scope.row.tasks_id, batch: scope.row.batch }">
+                                <el-dropdown-item :command="{ type: 'view', tasks_id: scope.row.tasks, batch: scope.row.batch }">
                                     详情
                                 </el-dropdown-item>
                             </template>
