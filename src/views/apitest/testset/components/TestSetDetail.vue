@@ -406,7 +406,7 @@ export default {
         changeRow(event) {
             let payload = {
                 apiset_id: this.setId,
-                cases: JSON.stringify(event)
+                cases: event
             }
             this.changeOrder(JSON.stringify(payload), this.projectName)
         },
@@ -663,7 +663,7 @@ export default {
         changeSetUpRow(event) {
             let payload = {
                 apiset_id: this.setId,
-                cases: JSON.stringify(event),
+                cases: event,
                 handler: 'setup'
             }
             this.$api.api
@@ -726,7 +726,7 @@ export default {
         changeTearDownRow(event) {
             let payload = {
                 apiset_id: this.setId,
-                cases: JSON.stringify(event),
+                cases: event,
                 handler: 'teardown'
             }
             this.$api.api

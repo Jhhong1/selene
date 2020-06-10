@@ -144,7 +144,7 @@
                 </el-form-item>
                 <template v-if="extractForm.match_type === 'json'">
                     <el-form-item label="表达式" prop="expression" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
-                        <el-input v-model="extractForm.expression" placeholder="请输入json路径,格式为: $.data\[[\w.-]\]+"></el-input>
+                        <el-input v-model="extractForm.expression" placeholder="请输入json路径,格式为: $.(\[[\w.\-/]+\])+"></el-input>
                     </el-form-item>
                 </template>
                 <template v-if="extractForm.match_type === 'regular'">

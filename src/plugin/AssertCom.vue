@@ -155,7 +155,7 @@
                                 :label-width="labelWidth"
                                 :rules="[{ required: true, message: '必填', trigger: 'blur' }]"
                             >
-                                <el-input v-model="form.expression" placeholder="请输入json路径,格式为: $.data\[[\w.-]\]+"></el-input>
+                                <el-input v-model="form.expression" placeholder="请输入json路径,格式为: $.(\[[\w.\-/]+\])+"></el-input>
                             </el-form-item>
                         </template>
                         <template v-else-if="form.match_type === 'regular'">
