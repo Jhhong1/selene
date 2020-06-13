@@ -125,7 +125,7 @@
                             <el-option label="等于" value="equal"></el-option>
                             <el-option label="大于" value="gt"></el-option>
                             <el-option label="小于" value="lt"></el-option>
-                            <el-option label="包含" value="in"></el-option>
+                            <!-- <el-option label="包含" value="in"></el-option> -->
                         </el-select>
                     </el-form-item>
                 </template>
