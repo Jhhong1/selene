@@ -17,6 +17,7 @@ import Detail from '@/plugin/Detail'
 import CaseHistory from '@/plugin/CaseHistory'
 import Records from '@/plugin/Records'
 import CaseRecord from '@/plugin/CaseRecord'
+import UIStep from '@/plugin/UIStep'
 import '@/static/css/common.css'
 import store from '@/store'
 import axios from 'axios'
@@ -61,6 +62,7 @@ Vue.component('detail', Detail)
 Vue.component('case-history', CaseHistory)
 Vue.component('record', Records)
 Vue.component('case-record', CaseRecord)
+Vue.component('ui-step', UIStep)
 Vue.prototype.notify = notify
 
 const originalPush = VueRouter.prototype.push

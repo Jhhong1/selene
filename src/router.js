@@ -72,6 +72,11 @@ import CrontabList from '@/views/periodictask/crontabs/components/CrontabList'
 import AddCrontab from '@/views/periodictask/crontabs/components/AddCrontab'
 import UpdateCrontab from '@/views/periodictask/crontabs/components/UpdateCrontab'
 
+import UITest from '@/views/uitest/UITest'
+import UICase from '@/views/uitest/uicases/UICase'
+import UICaseList from '@/views/uitest/uicases/components/UICaseList'
+import AddCase from '@/views/uitest/uicases/components/AddCase'
+
 Vue.use(Router)
 
 export default new Router({
@@ -583,6 +588,45 @@ export default new Router({
                                             component: UpdateCrontab,
                                             meta: {
                                                 title: '更新定时任务',
+                                                requireAuth: true
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            path: 'uitest',
+                            component: UITest,
+                            icon: 'el-icon-s-platform',
+                            meta: {
+                                title: 'UI测试',
+                                requireAuth: true
+                            },
+                            children: [
+                                {
+                                    path: 'uicase',
+                                    component: UICase,
+                                    meta: {
+                                        title: '测试用例',
+                                        requireAuth: true
+                                    },
+                                    children: [
+                                        {
+                                            path: '',
+                                            name: 'UICaseList',
+                                            component: UICaseList,
+                                            meta: {
+                                                title: '用例列表',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'add',
+                                            name: 'AddCase',
+                                            component: AddCase,
+                                            meta: {
+                                                title: '添加用例',
                                                 requireAuth: true
                                             }
                                         }

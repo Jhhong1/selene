@@ -1,7 +1,7 @@
 <template>
     <div class="home">
         <el-container>
-            <template v-if="$route.path.indexOf('apitest') > 0 || $route.path.indexOf('periodictask') > 0">
+            <template v-if="$route.path.indexOf('apitest') > 0 || $route.path.indexOf('periodictask') > 0 || $route.path.indexOf('uitest') > 0">
                 <el-aside style="width: 200px;" class="left-aside">
                     <el-menu :default-active="activeNav" router class="sidebar">
                         <el-submenu v-for="(menu, mindex) in navigate" :index="menu.path" :key="mindex">
@@ -195,7 +195,10 @@ export default {
             this.reload()
         },
         highLightNav() {
-            if (this.$route.matched.length > 3 && (this.$route.path.indexOf('apitest') > 0 || this.$route.path.indexOf('periodictask') > 0)) {
+            if (
+                this.$route.matched.length > 3 &&
+                (this.$route.path.indexOf('apitest') > 0 || this.$route.path.indexOf('periodictask') > 0 || this.$route.path.indexOf('uitest') > 0)
+            ) {
                 this.activeNav = this.$route.matched[3].path + '?project_name=' + this.value
             } else if (this.$route.matched.length > 2 && this.$route.path.indexOf('permission') > 0) {
                 this.activeNav = this.$route.matched[2].path
