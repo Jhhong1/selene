@@ -163,7 +163,8 @@ export default {
         execute(caseId) {
             let data = {
                 level: 'case',
-                tasks: caseId
+                tasks: caseId,
+                category: 'api'
             }
             this.$api.api
                 .executeCase(JSON.stringify(data), this.projectName)

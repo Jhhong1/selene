@@ -106,7 +106,8 @@ export default {
             if (command === 'execute') {
                 let data = {
                     level: 'case',
-                    tasks: this.caseId
+                    tasks: this.caseId,
+                    category: 'api'
                 }
                 this.execute(JSON.stringify(data), this.projectName)
             } else if (command === 'del') {

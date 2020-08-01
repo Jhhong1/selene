@@ -1,25 +1,22 @@
 <template>
     <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'TestTaskList', query: $route.query }" class="is-link">测试任务</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ name: 'TestTaskDetail', params: { name: name, id: id }, query: this.$route.query }" class="is-link">
+            <el-breadcrumb-item :to="{ name: 'UISetList', query: $route.query }" class="is-link">测试集</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ name: 'UISetDetail', params: { name: name, id: id }, query: $route.query }" class="is-link">
                 {{ name }}
-            </el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ name: 'TaskSetRecordDetail', params: { name: name, id: id }, query: this.$route.query }" class="is-link">
-                {{ set_name }}
             </el-breadcrumb-item>
             <el-breadcrumb-item>详情</el-breadcrumb-item>
         </el-breadcrumb>
         <el-tabs v-model="activeName" style="background-color: white">
             <el-tab-pane disabled></el-tab-pane>
             <el-tab-pane label="测试用例" name="cases">
-                <case-record v-model="cases_record"></case-record>
+                <case-record v-model="cases" :category="category"></case-record>
             </el-tab-pane>
             <el-tab-pane label="前置条件" name="setup">
-                <case-record v-model="setup_record"></case-record>
+                <case-record v-model="setUpCases" :category="category"></case-record>
             </el-tab-pane>
             <el-tab-pane label="后置条件" name="teardown">
-                <case-record v-model="teardown_record"></case-record>
+                <case-record v-model="teardownCases" :category="category"></case-record>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -27,46 +24,45 @@
 
 <script>
 export default {
-    name: 'TaskCaseRecordDetail',
+    name: 'UISetRecord',
     data() {
         return {
-            activeName: 'cases',
             name: this.$route.params.name,
-            id: this.$route.params.task_id,
-            set_name: this.$route.params.set_name,
-            set_id: this.$route.params.set_id,
+            id: this.$route.params.id,
             batch: this.$route.params.batch,
-            cases_record: [],
-            setup_record: [],
-            teardown_record: []
+            cases: [],
+            setUpCases: [],
+            teardownCases: [],
+            activeName: 'cases',
+            category: 'ui'
         }
     },
     methods: {
-        getCaseRecord() {
+        getCases() {
             this.$api.api
-                .history('task', this.set_id, this.id, this.batch)
+                .history('testSet', this.id, '', this.batch)
                 .then(response => {
-                    this.cases_record = response.data
+                    this.cases = response.data
                 })
                 .catch(error => {
                     this.notify.error(error)
                 })
         },
-        getSetupRecord() {
+        getSetupCases() {
             this.$api.api
-                .history('task', this.set_id, this.id, this.batch, 'setup')
+                .history('testSet', this.id, '', this.batch, 'setup')
                 .then(response => {
-                    this.setup_record = response.data
+                    this.setUpCases = response.data
                 })
                 .catch(error => {
                     this.notify.error(error)
                 })
         },
-        getTeadownRecord() {
+        getTeardownCases() {
             this.$api.api
-                .history('task', this.set_id, this.id, this.batch, 'teardown')
+                .history('testSet', this.id, '', this.batch, 'teardown')
                 .then(response => {
-                    this.teardown_record = response.data
+                    this.teardownCases = response.data
                 })
                 .catch(error => {
                     this.notify.error(error)
@@ -74,9 +70,9 @@ export default {
         }
     },
     created() {
-        this.getCaseRecord()
-        this.getSetupRecord()
-        this.getTeadownRecord()
+        this.getCases()
+        this.getSetupCases()
+        this.getTeardownCases()
     }
 }
 </script>

@@ -60,7 +60,9 @@
                                     </el-col>
                                 </template>
                                 <template v-else>
-                                    {{ taskDetail.description }}
+                                    <el-col :span="22">
+                                        {{ taskDetail.description }}
+                                    </el-col>
                                 </template>
                             </template>
                             <template v-else>
@@ -623,7 +625,8 @@ export default {
             let payload = {
                 level: 'task',
                 tasks: this.taskId,
-                tags: this.labels.tags
+                tags: this.labels.tags,
+                category: 'api'
             }
             this.$api.api
                 .executeCase(JSON.stringify(payload), this.projectName)

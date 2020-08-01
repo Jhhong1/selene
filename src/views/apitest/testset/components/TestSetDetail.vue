@@ -193,7 +193,7 @@
                             <template v-if="Object.keys(configReference).length">
                                 <el-col :span="22">
                                     <router-link
-                                        :to="{ name: 'GlobalConfigDetail', params: { id: configReference.id }, query: $route.query }"
+                                        :to="{ name: 'ConfigDetail', params: { id: configReference.id }, query: $route.query }"
                                         class="el-link el-link--primary"
                                     >
                                         {{ configReference.name }}
@@ -221,7 +221,7 @@
                                     </el-col>
                                     <el-col :span="22">
                                         <el-select v-model="selectValue" filterable clearable placeholder="请选择" class="el-col-24">
-                                            <el-option v-for="item in configList" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+                                            <el-option v-for="item in configList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                                         </el-select>
                                     </el-col>
                                 </el-row>
@@ -447,7 +447,8 @@ export default {
         execute() {
             let payload = {
                 level: 'testSet',
-                tasks: this.setId
+                tasks: this.setId,
+                category: 'api'
             }
             this.$api.api
                 .executeCase(JSON.stringify(payload), this.projectName)

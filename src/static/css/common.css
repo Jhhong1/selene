@@ -42,6 +42,14 @@
     line-height: 35px;
 }
 
+.ui-image {
+    background-color: white;
+    height: 35px;
+    text-align: left;
+    padding-left: 10px;
+    line-height: 35px;
+}
+
 .el-form__item {
     margin-bottom: 18px;
 }

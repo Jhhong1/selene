@@ -3,8 +3,28 @@
         <el-table class="table-class td" :data="results">
             <el-table-column type="expand">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.constructor == Object">
+                    <template
+                        v-if="
+                            cate === 'api' && scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.constructor == Object
+                        "
+                    >
                         <j-editor v-model="scope.row.executionrecord_set.response" :edit="false"></j-editor>
+                    </template>
+                    <template
+                        v-else-if="
+                            cate === 'ui' && scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.constructor == Object
+                        "
+                    >
+                        <el-row :gutter="10" class="asserts-row">
+                            <el-col :span="4">失败原因</el-col>
+                            <el-col :span="20">{{ scope.row.executionrecord_set.error_message }}</el-col>
+                        </el-row>
+                        <el-row :gutter="10" class="ui-image">
+                            <el-col :span="4">截图</el-col>
+                            <el-col :span="20">
+                                <el-image :src="scope.row.executionrecord_set.image" style="width: 800px; height: 800px"></el-image>
+                            </el-col>
+                        </el-row>
                     </template>
                 </template>
             </el-table-column>
@@ -86,11 +106,17 @@
 export default {
     name: 'CaseRecord',
     props: {
-        value: Array
+        value: Array,
+        category: {
+            type: String,
+            default: 'api'
+        }
     },
     data() {
         return {
-            results: this.value
+            results: this.value,
+            cate: this.category,
+            fit: 'contain'
         }
     },
     watch: {

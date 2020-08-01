@@ -80,27 +80,44 @@ export default {
         categories: {
             type: String,
             default: 'sets'
+        },
+        kind: {
+            type: String,
+            default: 'api'
         }
     },
     data() {
         return {
             results: this.value,
             name: this.$route.params.name,
-            cate: this.categories
+            cate: this.categories,
+            kd: this.kind
         }
     },
     methods: {
         handleCommand(command) {
             if (command.type === 'view') {
-                if (this.cate == 'sets') {
+                if (this.kd === 'api' && this.cate == 'sets') {
                     this.$router.push({
                         name: 'TestSetCaseRecord',
                         params: { name: this.name, id: command.set_id, batch: command.batch },
                         query: this.$route.query
                     })
-                } else if (this.cate == 'tasks') {
+                } else if (this.kd === 'api' && this.cate == 'tasks') {
                     this.$router.push({
                         name: 'TaskSetRecordDetail',
+                        params: { name: this.name, id: command.tasks_id, batch: command.batch },
+                        query: this.$route.query
+                    })
+                } else if (this.kd === 'ui' && this.cate == 'sets') {
+                    this.$router.push({
+                        name: 'UISetRecord',
+                        params: { name: this.name, id: command.set_id, batch: command.batch },
+                        query: this.$route.query
+                    })
+                } else if (this.kd === 'ui' && this.cate == 'tasks') {
+                    this.$router.push({
+                        name: 'UITaskSetRecord',
                         params: { name: this.name, id: command.tasks_id, batch: command.batch },
                         query: this.$route.query
                     })

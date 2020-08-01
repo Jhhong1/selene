@@ -1,7 +1,7 @@
 <template>
     <div>
         <template v-if="permissions.indexOf('apitest.create_apiset') > -1">
-            <router-link tag="el-button" class="el-button--primary el-button--mini p-button" :to="{ name: 'AddApiTestSet', query: $route.query }">
+            <router-link tag="el-button" :to="{ name: 'AddUISet', query: $route.query }" class="el-button--primary el-button--mini p-button">
                 添加测试集
             </router-link>
         </template>
@@ -14,7 +14,7 @@
                     <ul class="ul-style">
                         <li>
                             <router-link
-                                :to="{ name: 'ApiTestSetDetail', params: { name: scope.row.name, id: scope.row.id }, query: $route.query }"
+                                :to="{ name: 'UISetDetail', params: { name: scope.row.name, id: scope.row.id }, query: $route.query }"
                                 class="el-link el-link--primary"
                             >
                                 {{ scope.row.name }}
@@ -127,8 +127,8 @@
 
 <script>
 export default {
-    name: 'TestSetList',
-    data() {
+    name: 'UISetList',
+    data () {
         return {
             count: null,
             pageSizes: [10, 20, 50],
@@ -136,11 +136,13 @@ export default {
             currentPage: 1,
             setList: [],
             projectName: this.$route.query.project_name,
-            permissions: [],
-            t: null
+            permissions: []
         }
     },
     methods: {
+        getPermissions() {
+            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
+        },
         currentChange(val) {
             this.currentPage = val
             this.getSets()
@@ -151,7 +153,7 @@ export default {
         },
         getSets() {
             this.$api.api
-                .apiTestSetList(this.currentPage, this.pageSize, this.projectName)
+                .apiTestSetList(this.currentPage, this.pageSize, this.projectName, 'ui')
                 .then(response => {
                     this.setList = response.data.results
                     this.count = response.data.count
@@ -217,7 +219,7 @@ export default {
             let payload = {
                 level: 'testSet',
                 tasks: testSetId,
-                category: 'api'
+                category: 'ui'
             }
             this.$api.api
                 .executeCase(JSON.stringify(payload), project)
@@ -230,37 +232,19 @@ export default {
             if (command.type === 'del') {
                 this.deleteRow(command.index, this.setList, command.id)
             } else if (command.type === 'view') {
-                this.$router.push({ name: 'ApiTestSetDetail', params: { name: command.name, id: command.id }, query: this.$route.query })
+                this.$router.push({ name: 'UISetDetail', params: { name: command.name, id: command.id }, query: this.$route.query })
             } else if (command.type === 'update') {
-                this.$router.push({ name: 'ApiTestSetUpdate', params: { name: command.name, id: command.id }, query: this.$route.query })
+                this.$router.push({ name: 'UpdateUISet', params: { name: command.name, id: command.id }, query: this.$route.query })
             } else if (command.type === 'exec') {
                 this.execute(command.id)
             }
-        },
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         }
     },
     created() {
-        this.getSets()
         this.getPermissions()
-    },
-    watch: {
-        setList() {
-            this.notify.debounce(this.t, this.getSets)
-        }
-    },
-    mounted() {},
-    destroyed() {
-        clearTimeout(this.t)
+        this.getSets()
     }
 }
 </script>
 
-<style scoped>
-.td >>> .name-wrapper {
-    white-space: nowrap !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-</style>
+<style scoped></style>

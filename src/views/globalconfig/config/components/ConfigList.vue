@@ -1,13 +1,14 @@
 <template>
     <div>
-        <template v-if="permissions.indexOf('apitest.create_config') > -1">
-            <router-link tag="el-button" :to="{ name: 'AddGlobalConfig', query: $route.query }" class="el-button--primary el-button--mini p-button">
-                添加配置
-            </router-link>
-        </template>
-        <template v-else>
-            <el-button class="el-button--primary el-button--mini p-button" disabled>添加配置</el-button>
-        </template>
+        <router-link
+            tag="el-button"
+            :to="{ name: 'AddConfig', query: $route.query }"
+            class="el-button--primary el-button--mini p-button"
+            :class="{ 'is-disabled': permissions.indexOf('apitest.create_config') === -1 }"
+            :disabled="permissions.indexOf('apitest.create_config') === -1"
+        >
+            添加配置
+        </router-link>
         <el-table class="table-class td" :data="dataTable">
             <el-table-column label="名称" min-width="150">
                 <template slot-scope="scope">
@@ -15,7 +16,7 @@
                         <ul class="ul-style">
                             <li>
                                 <router-link
-                                    :to="{ name: 'GlobalConfigDetail', params: { id: scope.row.id }, query: $route.query }"
+                                    :to="{ name: 'ConfigDetail', params: { id: scope.row.id }, query: $route.query }"
                                     class="el-link el-link--primary"
                                 >
                                     {{ scope.row.name }}
@@ -47,6 +48,7 @@
                 </template>
             </el-table-column>
             <el-table-column label="请求地址" min-width="300" prop="baseurl"></el-table-column>
+            <el-table-column label="类型" min-width="100" prop="category"></el-table-column>
             <el-table-column label="操作" min-width="100">
                 <template slot-scope="scope">
                     <el-dropdown @command="handleCommand">
@@ -88,7 +90,7 @@
 
 <script>
 export default {
-    name: 'GlobalConfigList',
+    name: 'ConfigList',
     data() {
         return {
             dataTable: [],
@@ -166,9 +168,9 @@ export default {
             if (command.type === 'del') {
                 this.deleteRow(command.index, _this.dataTable, command.row)
             } else if (command.type === 'view') {
-                this.$router.push({ name: 'GlobalConfigDetail', params: { id: command.row }, query: _this.$route.query })
+                this.$router.push({ name: 'ConfigDetail', params: { id: command.row }, query: _this.$route.query })
             } else if (command.type === 'update') {
-                this.$router.push({ name: 'UpdateGlobalConfig', params: { id: command.row }, query: _this.$route.query })
+                this.$router.push({ name: 'UpdateConfig', params: { id: command.row }, query: _this.$route.query })
             }
         },
         getPermissions() {

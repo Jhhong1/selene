@@ -1,13 +1,14 @@
 <template>
     <div>
-        <template v-if="permissions.indexOf('apitest.create_apitasks') > -1">
-            <router-link tag="el-button" class="el-button--primary el-button--mini p-button" :to="{ name: 'AddTestTask', query: $route.query }">
-                添加测试任务
-            </router-link>
-        </template>
-        <template v-else>
-            <el-button class="el-button--primary el-button--mini p-button" disabled>添加测试任务</el-button>
-        </template>
+        <router-link
+            tag="el-button"
+            class="el-button--primary el-button--mini p-button"
+            :to="{ name: 'AddTestTask', query: $route.query }"
+            :class="{ 'is-disabled': permissions.indexOf('apitest.create_apitasks') === -1 }"
+            :disabled="permissions.indexOf('apitest.create_apitasks') === -1"
+        >
+            添加测试任务
+        </router-link>
         <el-table class="table-class td" :data="taskList">
             <el-table-column label="名称" min-width="200">
                 <template slot-scope="scope">
@@ -259,7 +260,8 @@ export default {
             let payload = {
                 level: 'task',
                 tasks: this.taskId,
-                tags: this.labels.tags
+                tags: this.labels.tags,
+                category: 'api'
             }
             this.$api.api
                 .executeCase(JSON.stringify(payload), this.projectName)

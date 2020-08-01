@@ -1,11 +1,11 @@
 <template>
     <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'TestTaskList', query: $route.query }" class="is-link">测试任务</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ name: 'TestTaskDetail', params: { name: name, id: id }, query: this.$route.query }" class="is-link">
+            <el-breadcrumb-item :to="{ name: 'UITaskList', query: $route.query }" class="is-link">测试任务</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ name: 'UITaskDetail', params: { name: name, id: id }, query: this.$route.query }" class="is-link">
                 {{ name }}
             </el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ name: 'TaskSetRecordDetail', params: { name: name, id: id }, query: this.$route.query }" class="is-link">
+            <el-breadcrumb-item :to="{ name: 'UITaskSetRecord', params: { name: name, id: id }, query: this.$route.query }" class="is-link">
                 {{ set_name }}
             </el-breadcrumb-item>
             <el-breadcrumb-item>详情</el-breadcrumb-item>
@@ -13,13 +13,13 @@
         <el-tabs v-model="activeName" style="background-color: white">
             <el-tab-pane disabled></el-tab-pane>
             <el-tab-pane label="测试用例" name="cases">
-                <case-record v-model="cases_record"></case-record>
+                <case-record v-model="cases_record" :category="category"></case-record>
             </el-tab-pane>
             <el-tab-pane label="前置条件" name="setup">
-                <case-record v-model="setup_record"></case-record>
+                <case-record v-model="setup_record" :category="category"></case-record>
             </el-tab-pane>
             <el-tab-pane label="后置条件" name="teardown">
-                <case-record v-model="teardown_record"></case-record>
+                <case-record v-model="teardown_record" :category="category"></case-record>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -27,7 +27,7 @@
 
 <script>
 export default {
-    name: 'TaskCaseRecordDetail',
+    name: 'UITaskCaseRecord',
     data() {
         return {
             activeName: 'cases',
@@ -38,7 +38,8 @@ export default {
             batch: this.$route.params.batch,
             cases_record: [],
             setup_record: [],
-            teardown_record: []
+            teardown_record: [],
+            category: 'ui'
         }
     },
     methods: {
