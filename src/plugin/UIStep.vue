@@ -33,7 +33,9 @@
             <el-row v-for="(items, index) in steps" :key="index" class="asserts-row">
                 <el-col :span="3">{{ items.action }}</el-col>
                 <el-col :span="2">
-                    <template v-if="items.browser">{{ items.browser }}</template>
+                    <template v-if="items.browser">
+                        {{ items.browser }}
+                    </template>
                     <template v-else>
                         -
                     </template>
@@ -170,7 +172,7 @@
                         <el-option label="输入" value="input"></el-option>
                         <el-option label="滚动页面" value="scroll"></el-option>
                         <el-option label="打开浏览器" value="open_browser"></el-option>
-                        <el-option label="关闭浏览器" value="close"></el-option>
+                        <el-option label="关闭浏览器" value="close_browser"></el-option>
                     </el-select>
                 </el-form-item>
                 <template v-if="form.action === 'open_browser'">
