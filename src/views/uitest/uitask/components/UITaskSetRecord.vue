@@ -1,8 +1,8 @@
 <template>
     <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'TestTaskList', query: $route.query }" class="is-link">测试任务</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ name: 'TestTaskDetail', params: { name: name, id: id }, query: this.$route.query }" class="is-link">
+            <el-breadcrumb-item :to="{ name: 'UITaskList', query: $route.query }" class="is-link">测试任务</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ name: 'UITaskDetail', params: { name: name, id: id }, query: this.$route.query }" class="is-link">
                 {{ name }}
             </el-breadcrumb-item>
             <el-breadcrumb-item>详情</el-breadcrumb-item>
@@ -96,7 +96,7 @@
 
 <script>
 export default {
-    name: 'TaskSetRecordDetail',
+    name: 'UITaskSetRecord',
     data() {
         return {
             name: this.$route.params.name,
@@ -119,7 +119,7 @@ export default {
         handleCommand(command) {
             if (command.type == 'view') {
                 this.$router.push({
-                    name: 'TaskCaseRecordDetail',
+                    name: 'UITaskCaseRecord',
                     params: { name: this.name, set_name: command.set_name, task_id: this.id, set_id: command.set_id, batch: this.batch },
                     query: this.$route.query
                 })

@@ -1,9 +1,17 @@
 <template>
     <div class="home">
         <el-container>
-            <template v-if="$route.path.indexOf('apitest') > 0 || $route.path.indexOf('periodictask') > 0 || $route.path.indexOf('uitest') > 0">
+            <template
+                v-if="
+                    $route.path.indexOf('apitest') > 0 ||
+                        $route.path.indexOf('periodictask') > 0 ||
+                        $route.path.indexOf('uitest') > 0 ||
+                        $route.path.indexOf('report') > 0 ||
+                        $route.path.indexOf('config') > 0
+                "
+            >
                 <el-aside style="width: 200px;" class="left-aside">
-                    <el-menu :default-active="activeNav" router class="sidebar">
+                    <el-menu :default-active="activeNav" router unique-opened class="sidebar">
                         <el-submenu v-for="(menu, mindex) in navigate" :index="menu.path" :key="mindex">
                             <template slot="title">
                                 <i :class="menu.icon"></i>
@@ -15,7 +23,6 @@
                                 :index="$route.matched[1].path + '/' + menu.path + '/' + item.path + '?project_name=' + value"
                                 @click="highLightNav"
                             >
-                                <!-- {{ $route.matched[1].path + '/' + menu.path + '/' + item.path + '?project_name=' + value }} -->
                                 {{ item.meta.title }}
                             </el-menu-item>
                         </el-submenu>
@@ -151,7 +158,7 @@ export default {
     methods: {
         active() {
             if (this.$route.path.indexOf('apitest') > 0) {
-                return '/home/project/apitest/config/?project_name=' + this.value
+                return '/home/project/config/?project_name=' + this.value
             } else {
                 return '/home/permission/group'
             }
@@ -197,7 +204,11 @@ export default {
         highLightNav() {
             if (
                 this.$route.matched.length > 3 &&
-                (this.$route.path.indexOf('apitest') > 0 || this.$route.path.indexOf('periodictask') > 0 || this.$route.path.indexOf('uitest') > 0)
+                (this.$route.path.indexOf('apitest') > 0 ||
+                    this.$route.path.indexOf('periodictask') > 0 ||
+                    this.$route.path.indexOf('uitest') > 0 ||
+                    this.$route.path.indexOf('report') > 0 ||
+                    this.$route.path.indexOf('config') > 0)
             ) {
                 this.activeNav = this.$route.matched[3].path + '?project_name=' + this.value
             } else if (this.$route.matched.length > 2 && this.$route.path.indexOf('permission') > 0) {

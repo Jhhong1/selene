@@ -14,11 +14,17 @@ import ProjectDetail from '@/views/project/components/ProjectDetail'
 
 import ApiTest from '@/views/apitest/ApiTest'
 
-import GlobalConfig from '@/views/apitest/globalconfig/GlobalConfig'
-import GlobalConfigList from '@/views/apitest/globalconfig/components/GlobalConfigList'
-import AddGlobalConfig from '@/views/apitest/globalconfig/components/AddGlobalConfig'
-import UpdateGlobalConfig from '@/views/apitest/globalconfig/components/UpdateGlobalConfig'
-import GlobalConfigDetail from '@/views/apitest/globalconfig/components/GlobalConfigDetail'
+import GlobalConfig from '@/views/globalconfig/GlobalConfig'
+import Config from '@/views/globalconfig/config/Config'
+import ConfigList from '@/views/globalconfig/config/components/ConfigList'
+import AddConfig from '@/views/globalconfig/config/components/AddConfig'
+import UpdateConfig from '@/views/globalconfig/config/components/UpdateConfig'
+import ConfigDetail from '@/views/globalconfig/config/components/ConfigDetail'
+
+import Counter from '@/views/globalconfig/counter/Counter'
+import CounterList from '@/views/globalconfig/counter/components/CounterList'
+import AddCounter from '@/views/globalconfig/counter/components/AddCounter'
+import UpdateCounter from '@/views/globalconfig/counter/components/UpdateCounter'
 
 import ApiTestCase from '@/views/apitest/testcase/TestCase'
 import ApiCaseList from '@/views/apitest/testcase/componets/CaseList'
@@ -41,13 +47,8 @@ import TestTaskDetail from '@/views/apitest/testtask/components/TestTaskDetail'
 import TaskSetRecordDetail from '@/views/apitest/testtask/components/TaskSetRecordDetail'
 import TaskCaseRecordDetail from '@/views/apitest/testtask/components/TaskCaseRecordDetail'
 
-import Counter from '@/views/apitest/counter/Counter'
-import CounterList from '@/views/apitest/counter/components/CounterList'
-import AddCounter from '@/views/apitest/counter/components/AddCounter'
-import UpdateCounter from '@/views/apitest/counter/components/UpdateCounter'
-
-import Report from '@/views/apitest/report/Report'
-import ReportList from '@/views/apitest/report/components/ReportList'
+import Report from '@/views/report/Report'
+import ReportList from '@/views/report/components/ReportList'
 
 import Permission from '@/views/permissions/Permission'
 
@@ -76,6 +77,23 @@ import UITest from '@/views/uitest/UITest'
 import UICase from '@/views/uitest/uicases/UICase'
 import UICaseList from '@/views/uitest/uicases/components/UICaseList'
 import AddCase from '@/views/uitest/uicases/components/AddCase'
+import UICaseDetail from '@/views/uitest/uicases/components/UICaseDetail'
+import UpdateCase from '@/views/uitest/uicases/components/UpdateCase'
+
+import UISet from '@/views/uitest/uiset/UISet'
+import AddUISet from '@/views/uitest/uiset/components/AddSet'
+import UISetDetail from '@/views/uitest/uiset/components/UISetDetail'
+import UISetList from '@/views/uitest/uiset/components/UISetList'
+import UpdateUISet from '@/views/uitest/uiset/components/UpdateSet'
+import UISetRecord from '@/views/uitest/uiset/components/UISetRecord'
+
+import UITask from '@/views/uitest/uitask/UITask'
+import AddUITask from '@/views/uitest/uitask/components/AddUITask'
+import UITaskList from '@/views/uitest/uitask/components/UITaskList'
+import UpdateUITask from '@/views/uitest/uitask/components/UpdateUITask'
+import UITaskDetail from '@/views/uitest/uitask/components/UITaskDetail'
+import UITaskSetRecord from '@/views/uitest/uitask/components/UITaskSetRecord'
+import UITaskCaseRecord from '@/views/uitest/uitask/components/UITaskCaseRecord'
 
 Vue.use(Router)
 
@@ -233,18 +251,17 @@ export default new Router({
                     },
                     children: [
                         {
-                            path: 'apitest',
-                            // name: 'ApiTest',
-                            component: ApiTest,
-                            icon: 'el-icon-s-operation',
+                            path: 'config',
+                            component: GlobalConfig,
+                            icon: 'el-icon-s-tools',
                             meta: {
-                                title: '接口测试',
+                                title: '设置',
                                 requireAuth: true
                             },
                             children: [
                                 {
                                     path: 'config',
-                                    component: GlobalConfig,
+                                    component: Config,
                                     meta: {
                                         title: '配置',
                                         requireAuth: true
@@ -252,8 +269,8 @@ export default new Router({
                                     children: [
                                         {
                                             path: '',
-                                            name: 'GlobalConfigList',
-                                            component: GlobalConfigList,
+                                            name: 'ConfigList',
+                                            component: ConfigList,
                                             meta: {
                                                 title: '配置列表',
                                                 requireAuth: true
@@ -261,8 +278,8 @@ export default new Router({
                                         },
                                         {
                                             path: 'addconfig',
-                                            name: 'AddGlobalConfig',
-                                            component: AddGlobalConfig,
+                                            name: 'AddConfig',
+                                            component: AddConfig,
                                             meta: {
                                                 title: '添加配置',
                                                 requireAuth: true
@@ -270,8 +287,8 @@ export default new Router({
                                         },
                                         {
                                             path: 'updateconfig/:id',
-                                            name: 'UpdateGlobalConfig',
-                                            component: UpdateGlobalConfig,
+                                            name: 'UpdateConfig',
+                                            component: UpdateConfig,
                                             meta: {
                                                 title: '更新配置',
                                                 requireAuth: true
@@ -279,8 +296,8 @@ export default new Router({
                                         },
                                         {
                                             path: 'configdetail/:id',
-                                            name: 'GlobalConfigDetail',
-                                            component: GlobalConfigDetail,
+                                            name: 'ConfigDetail',
+                                            component: ConfigDetail,
                                             meta: {
                                                 title: '配置详情',
                                                 requireAuth: true
@@ -324,7 +341,19 @@ export default new Router({
                                             }
                                         }
                                     ]
-                                },
+                                }
+                            ]
+                        },
+                        {
+                            path: 'apitest',
+                            // name: 'ApiTest',
+                            component: ApiTest,
+                            icon: 'el-icon-s-operation',
+                            meta: {
+                                title: '接口测试',
+                                requireAuth: true
+                            },
+                            children: [
                                 {
                                     path: 'cases',
                                     component: ApiTestCase,
@@ -489,24 +518,6 @@ export default new Router({
                                             }
                                         }
                                     ]
-                                },
-                                {
-                                    path: 'report',
-                                    component: Report,
-                                    meta: {
-                                        title: '测试报告',
-                                        requireAuth: true
-                                    },
-                                    children: [
-                                        {
-                                            path: '',
-                                            name: 'ReportList',
-                                            component: ReportList,
-                                            meta: {
-                                                requireAuth: true
-                                            }
-                                        }
-                                    ]
                                 }
                             ]
                         },
@@ -629,8 +640,165 @@ export default new Router({
                                                 title: '添加用例',
                                                 requireAuth: true
                                             }
+                                        },
+                                        {
+                                            path: 'detail/:id',
+                                            name: 'UICaseDetail',
+                                            component: UICaseDetail,
+                                            meta: {
+                                                title: '用例详情',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'update/:id',
+                                            name: 'UpdateCase',
+                                            component: UpdateCase,
+                                            meta: {
+                                                title: '更新用例',
+                                                requireAuth: true
+                                            }
                                         }
                                     ]
+                                },
+                                {
+                                    path: 'uiset',
+                                    component: UISet,
+                                    meta: {
+                                        title: '测试集',
+                                        requireAuth: true
+                                    },
+                                    children: [
+                                        {
+                                            path: '',
+                                            component: UISetList,
+                                            name: 'UISetList',
+                                            meta: {
+                                                title: '测试集列表',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'add',
+                                            component: AddUISet,
+                                            name: 'AddUISet',
+                                            meta: {
+                                                title: '添加测试集',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'update/:name/:id',
+                                            component: UpdateUISet,
+                                            name: 'UpdateUISet',
+                                            meta: {
+                                                title: '更新测试集',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'detail/:name/:id',
+                                            component: UISetDetail,
+                                            name: 'UISetDetail',
+                                            meta: {
+                                                title: '测试集详情',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'history/:name/:id/:batch',
+                                            component: UISetRecord,
+                                            name: 'UISetRecord',
+                                            meta: {
+                                                title: '历史记录',
+                                                requireAuth: true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    path: 'uitask',
+                                    component: UITask,
+                                    meta: {
+                                        title: '测试任务',
+                                        requireAuth: true
+                                    },
+                                    children: [
+                                        {
+                                            path: '',
+                                            component: UITaskList,
+                                            name: 'UITaskList',
+                                            meta: {
+                                                title: '测试任务列表',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'addUITask',
+                                            name: 'AddUITask',
+                                            component: AddUITask,
+                                            meta: {
+                                                title: '添加测试任务',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'updateTask/:id',
+                                            name: 'UpdateUITask',
+                                            component: UpdateUITask,
+                                            meta: {
+                                                title: '更新测试任务',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'uiTaskDetail/:name/:id',
+                                            name: 'UITaskDetail',
+                                            component: UITaskDetail,
+                                            meta: {
+                                                title: '测试任务详情',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'record/:name/:id/:batch',
+                                            name: 'UITaskSetRecord',
+                                            component: UITaskSetRecord,
+                                            meta: {
+                                                title: '历史记录',
+                                                requireAuth: true
+                                            }
+                                        },
+                                        {
+                                            path: 'record/:name/:set_name/:task_id/:set_id/:batch',
+                                            name: 'UITaskCaseRecord',
+                                            component: UITaskCaseRecord,
+                                            meta: {
+                                                title: '历史记录',
+                                                requireAuth: true
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            path: 'report',
+                            component: Report,
+                            icon: 'el-icon-s-data',
+                            meta: {
+                                title: '测试报告',
+                                requireAuth: true
+                            },
+                            children: [
+                                {
+                                    path: '',
+                                    name: 'ReportList',
+                                    component: ReportList,
+                                    meta: {
+                                        title: '测试报告',
+                                        requireAuth: true
+                                    }
                                 }
                             ]
                         }

@@ -8,6 +8,12 @@
                             <el-option v-for="(task, index) in tasks" :label="task.name" :value="task.id" :key="index"></el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="任务类型:" :label-width="formlabel" prop="category">
+                        <el-select v-model="queryform.category" placeholder="请选择" class="method-class" size="mini" @change="selectChange">
+                            <el-option label="api" value="api"></el-option>
+                            <el-option label="ui" value="ui"></el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item label="运行结果:" :label-width="formlabel" prop="result">
                         <el-select v-model="queryform.result" placeholder="请选择" class="method-class" size="mini">
                             <el-option label="全部" value="all"></el-option>
@@ -108,8 +114,10 @@ export default {
         return {
             tasks: [],
             sets: [],
+            taskId: '',
             queryform: {
                 task: '',
+                category: 'api',
                 result: 'all'
             },
             formlabel: '90px',
@@ -160,22 +168,27 @@ export default {
     methods: {
         taskList() {
             this.$api.api
-                .getTaskList(1, 1000, this.projectName)
+                .getTaskList(1, 1000, this.projectName, this.queryform.category)
                 .then(response => {
                     this.tasks = response.data.results
                     if (this.tasks.length > 0) {
                         this.queryform.task = this.tasks[0].id
+                        this.taskId = this.tasks[0].id
                     }
                 })
                 .catch(error => {
                     this.notify.error(error.response)
                 })
         },
-        change() {
+        selectChange(val) {
+            this.queryform.category = val
+            this.taskList()
+        },
+        change(id) {
             this.$refs['queryform'].validate(valid => {
                 if (valid) {
                     this.$api.api
-                        .resultStatics(this.queryform.task, this.queryform.result, this.projectName)
+                        .resultStatics(id, this.queryform.result, this.projectName)
                         .then(response => {
                             const ret = response.data
                             this.sets = response.data.sets
@@ -237,39 +250,49 @@ export default {
         getTaskName(taskId) {
             for (let obj of this.tasks) {
                 if (obj.id == taskId) {
-                    return obj.name
+                    return { name: obj.name, category: obj.category }
                 }
             }
         },
         handleCommand(command) {
             if (command.type == 'view') {
-                let task_name = this.getTaskName(command.id)
-                this.$router.push({
-                    name: 'TaskSetRecordDetail',
-                    params: { name: task_name, id: command.id, batch: command.batch },
-                    query: this.$route.query
-                })
+                let obj = this.getTaskName(command.id)
+                if (obj.category === 'api') {
+                    this.$router.push({
+                        name: 'TaskSetRecordDetail',
+                        params: { name: obj.name, id: command.id, batch: command.batch },
+                        query: this.$route.query
+                    })
+                } else if (obj.category === 'ui') {
+                    this.$router.push({
+                        name: 'UITaskSetRecord',
+                        params: { name: obj.name, id: command.id, batch: command.batch },
+                        query: this.$route.query
+                    })
+                }
             }
         }
     },
     mounted() {
         this.taskList()
-        setTimeout(() => {
-            this.change()
-        }, 1000)
+    },
+    watch: {
+        taskId: function(newValue) {
+            this.change(newValue)
+        }
     }
 }
 </script>
 <style scoped>
 .top-box {
     background-color: #fff;
-    height: 200px;
+    height: 250px;
 }
 .filter-box {
     width: 290px;
-    height: 200px;
+    height: 250px;
     font-size: 12px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 .chart-pie {
     width: 600px;

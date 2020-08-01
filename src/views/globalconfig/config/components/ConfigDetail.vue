@@ -1,7 +1,7 @@
 <template>
     <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'GlobalConfigList', query: $route.query }" class="is-link">配置</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ name: 'ConfigList', query: $route.query }" class="is-link">配置</el-breadcrumb-item>
             <el-breadcrumb-item>详情</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="box-card">
@@ -56,50 +56,25 @@
                     <el-card>
                         <div>
                             <el-row :gutter="10" class="row-class">
-                                <el-col :span="2" class="test-left">请求地址</el-col>
-                                <el-col :span="22" class="test-right">{{ configDetail.baseurl }}</el-col>
+                                <el-col :span="2" class="test-left">类型</el-col>
+                                <el-col :span="22" class="test-right">{{ configDetail.category }}</el-col>
                             </el-row>
-                            <!-- <template v-if="configDetail.counter">
+                            <template v-if="configDetail.category === 'api'">
                                 <el-row :gutter="10" class="row-class">
-                                    <el-col :span="1" class="test-left">计数器</el-col>
-                                    <el-col :span="23" class="test-right">
-                                        <el-row>
-                                            <el-col :span="12">
-                                                <div class="grid-content bg-purple-light">键</div>
-                                            </el-col>
-                                            <el-col :span="12">
-                                                <div class="grid-content bg-purple-light">值</div>
-                                            </el-col>
-                                        </el-row>
-                                        <el-row class="asserts-row">
-                                            <el-col :span="12">引用名</el-col>
-                                            <el-col :span="12">{{ configDetail.counter.referName }}</el-col>
-                                        </el-row>
-                                        <el-row class="asserts-row">
-                                            <el-col :span="12">初始值</el-col>
-                                            <el-col :span="12">{{ configDetail.counter.initial }}</el-col>
-                                        </el-row>
-                                        <el-row class="asserts-row">
-                                            <el-col :span="12">增量</el-col>
-                                            <el-col :span="12">{{ configDetail.counter.step }}</el-col>
-                                        </el-row>
-                                        <el-row class="asserts-row">
-                                            <el-col :span="12">最大值</el-col>
-                                            <el-col :span="12">{{ configDetail.counter.final }}</el-col>
-                                        </el-row>
+                                    <el-col :span="2" class="test-left">请求地址</el-col>
+                                    <el-col :span="22" class="test-right">{{ configDetail.baseurl }}</el-col>
+                                </el-row>
+                                <el-row :gutter="10" class="row-class">
+                                    <el-col :span="2" class="test-left">头部信息</el-col>
+                                    <el-col :span="22" class="test-right">
+                                        <j-input v-model="configDetail.headers" :edit="false"></j-input>
                                     </el-col>
                                 </el-row>
-                            </template> -->
-                            <el-row :gutter="10" class="row-class">
-                                <el-col :span="2" class="test-left">头部信息</el-col>
-                                <el-col :span="22" class="test-right">
-                                    <j-input v-model="configDetail.headers" :edit="false"></j-input>
-                                </el-col>
-                            </el-row>
+                            </template>
                             <el-row :gutter="10" class="row-class">
                                 <el-col :span="2" class="test-left">请求代理</el-col>
                                 <el-col :span="22" class="test-right">
-                                    <j-proxy v-model="configDetail.proxy" :showBtn="false"></j-proxy>
+                                    <j-proxy v-model="configDetail.proxy" :showBtn="false" :category="configDetail.category"></j-proxy>
                                 </el-col>
                             </el-row>
                             <el-row :gutter="10" class="row-class">
@@ -138,7 +113,7 @@
 
 <script>
 export default {
-    name: 'GlobalConfigDetail',
+    name: 'ConfigDetail',
     data() {
         return {
             configDetail: {},
@@ -161,7 +136,7 @@ export default {
                 })
         },
         update() {
-            this.$router.push({ name: 'UpdateGlobalConfig', params: { id: this.configId }, query: this.$route.query })
+            this.$router.push({ name: 'UpdateConfig', params: { id: this.configId }, query: this.$route.query })
         },
         removeConfig(configId, project) {
             let _this = this
@@ -169,7 +144,7 @@ export default {
                 .deleteConfig(configId, project)
                 .then(() => {
                     _this.notify.success('删除用例成功')
-                    _this.$router.push({ name: 'GlobalConfigList', query: _this.$route.query })
+                    _this.$router.push({ name: 'ConfigList', query: _this.$route.query })
                 })
                 .catch(error => {
                     this.notify.error(error.response.data)

@@ -12,7 +12,11 @@
                 <el-input v-model="cases.display" size="mini"></el-input>
             </el-form-item>
             <el-form-item label="步骤" :label-width="formLabelWidth">
-                <ui-step v-model="cases.data"></ui-step>
+                <ui-step v-model="cases.procedures"></ui-step>
+            </el-form-item>
+            <el-form-item size="mini">
+                <el-button type="info" plain @click="cancle('cases')" size="mini">取消</el-button>
+                <el-button type="primary" plain @click="addCase('cases')" size="mini">确定</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -41,13 +45,51 @@ export default {
             } catch (e) {}
         }
         return {
+            projectName: this.$route.query.project_name,
             cases: {
-                data: []
+                procedures: [],
+                category: 'ui'
             },
             formLabelWidth: '120px',
             rules: {
                 name: [{ validator: validateCaseName, required: true, trigger: 'blur' }]
             }
+        }
+    },
+    methods: {
+        cancle(formName) {
+            this.$refs[formName].resetFields()
+            this.$router.go('-1')
+        },
+        create(payload) {
+            this.$api.api
+                .createTestCase(payload)
+                .then(response => {
+                    let caseId = response.data.id
+                    this.notify.success('添加用例成功')
+                    this.$refs['cases'].resetFields()
+                    this.$router.push({ name: 'UICaseDetail', params: { id: caseId }, query: this.$route.query })
+                })
+                .catch(error => {
+                    let rep = error.response.data
+                    if (rep.hasOwnProperty('non_field_errors')) {
+                        this.notify.error(rep.non_field_errors[0])
+                    } else {
+                        this.notify.error(rep)
+                    }
+                })
+        },
+        addCase(formName) {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    let data = this.cases
+                    data.project = this.projectName
+                    // console.log('create test case: ', payload)
+                    this.create(JSON.stringify(data))
+                } else {
+                    return false
+                }
+            })
         }
     }
 }

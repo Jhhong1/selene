@@ -1,73 +1,125 @@
 <template>
     <div>
-        <el-table :data="testSetCases" :class="custom" row-key="orderNum" style="padding-left: 20px; padding-right: 20px">
-            <el-table-column label="用例名称" min-width="100">
-                <template slot-scope="scope">
-                    <ul class="ul-style">
-                        <li>
-                            {{ scope.row.testcase.name }}
-                        </li>
-                        <li class="text-style">
-                            <template v-if="scope.row.testcase.display">
-                                <template v-if="scope.row.testcase.display.length > 30">
-                                    <el-popover trigger="hover" placement="top-start">
-                                        <p>{{ scope.row.testcase.display }}</p>
-                                        <div slot="reference" class="name-wrapper">
-                                            {{ scope.row.testcase.display }}
-                                        </div>
-                                    </el-popover>
+        <template v-if="cate === 'api'">
+            <el-table :data="testSetCases" :class="custom" row-key="orderNum" style="padding-left: 20px; padding-right: 20px">
+                <el-table-column label="用例名称" min-width="100">
+                    <template slot-scope="scope">
+                        <ul class="ul-style">
+                            <li>
+                                {{ scope.row.testcase.name }}
+                            </li>
+                            <li class="text-style">
+                                <template v-if="scope.row.testcase.display">
+                                    <template v-if="scope.row.testcase.display.length > 30">
+                                        <el-popover trigger="hover" placement="top-start">
+                                            <p>{{ scope.row.testcase.display }}</p>
+                                            <div slot="reference" class="name-wrapper">
+                                                {{ scope.row.testcase.display }}
+                                            </div>
+                                        </el-popover>
+                                    </template>
+                                    <template v-else>
+                                        {{ scope.row.testcase.display }}
+                                    </template>
                                 </template>
-                                <template v-else>
-                                    {{ scope.row.testcase.display }}
-                                </template>
-                            </template>
-                        </li>
-                    </ul>
-                </template>
-            </el-table-column>
-            <el-table-column label="请求方法" min-width="50">
-                <template slot-scope="scope">
-                    {{ scope.row.testcase.method }}
-                </template>
-            </el-table-column>
-            <el-table-column label="请求地址" min-width="200">
-                <template slot-scope="scope">
-                    <template v-if="scope.row.testcase.url.length > 200">
-                        <el-popover trigger="hover" placement="top-start">
-                            <p>{{ scope.row.testcase.url }}</p>
-                            <div slot="reference" class="name-wrapper">
-                                {{ scope.row.testcase.url }}
-                            </div>
-                        </el-popover>
+                            </li>
+                        </ul>
                     </template>
-                    <template v-else>
-                        {{ scope.row.testcase.url }}
+                </el-table-column>
+                <el-table-column label="请求方法" min-width="50">
+                    <template slot-scope="scope">
+                        {{ scope.row.testcase.method }}
                     </template>
-                </template>
-            </el-table-column>
-            <el-table-column label="操作" min-width="50">
-                <template slot-scope="scope">
-                    <el-button
-                        type="text"
-                        size="mini"
-                        @click="removeAction(scope.$index, testSetCases, scope.row)"
-                        :disabled="permissions.indexOf('apitest.remove_case') === -1"
-                    >
-                        移除
-                    </el-button>
-                    <template v-if="showCopy">
+                </el-table-column>
+                <el-table-column label="请求地址" min-width="200">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.testcase.url.length > 200">
+                            <el-popover trigger="hover" placement="top-start">
+                                <p>{{ scope.row.testcase.url }}</p>
+                                <div slot="reference" class="name-wrapper">
+                                    {{ scope.row.testcase.url }}
+                                </div>
+                            </el-popover>
+                        </template>
+                        <template v-else>
+                            {{ scope.row.testcase.url }}
+                        </template>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" min-width="50">
+                    <template slot-scope="scope">
                         <el-button
                             type="text"
                             size="mini"
-                            @click="copyRow(scope.$index, scope.row)"
-                            :disabled="permissions.indexOf('apitest.copy_case') === -1"
+                            @click="removeAction(scope.$index, testSetCases, scope.row)"
+                            :disabled="permissions.indexOf('apitest.remove_case') === -1"
                         >
-                            复制
+                            移除
                         </el-button>
+                        <template v-if="showCopy">
+                            <el-button
+                                type="text"
+                                size="mini"
+                                @click="copyRow(scope.$index, scope.row)"
+                                :disabled="permissions.indexOf('apitest.copy_case') === -1"
+                            >
+                                复制
+                            </el-button>
+                        </template>
                     </template>
-                </template>
-            </el-table-column>
-        </el-table>
+                </el-table-column>
+            </el-table>
+        </template>
+        <template v-else-if="cate === 'ui'">
+            <el-table :data="testSetCases" :class="custom" row-key="orderNum" style="padding-left: 20px; padding-right: 20px">
+                <el-table-column label="用例名称" min-width="100">
+                    <template slot-scope="scope">
+                        <ul class="ul-style">
+                            <li>
+                                {{ scope.row.testcase.name }}
+                            </li>
+                            <li class="text-style">
+                                <template v-if="scope.row.testcase.display">
+                                    <template v-if="scope.row.testcase.display.length > 30">
+                                        <el-popover trigger="hover" placement="top-start">
+                                            <p>{{ scope.row.testcase.display }}</p>
+                                            <div slot="reference" class="name-wrapper">
+                                                {{ scope.row.testcase.display }}
+                                            </div>
+                                        </el-popover>
+                                    </template>
+                                    <template v-else>
+                                        {{ scope.row.testcase.display }}
+                                    </template>
+                                </template>
+                            </li>
+                        </ul>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" min-width="50">
+                    <template slot-scope="scope">
+                        <el-button
+                            type="text"
+                            size="mini"
+                            @click="removeAction(scope.$index, testSetCases, scope.row)"
+                            :disabled="permissions.indexOf('apitest.remove_case') === -1"
+                        >
+                            移除
+                        </el-button>
+                        <template v-if="showCopy">
+                            <el-button
+                                type="text"
+                                size="mini"
+                                @click="copyRow(scope.$index, scope.row)"
+                                :disabled="permissions.indexOf('apitest.copy_case') === -1"
+                            >
+                                复制
+                            </el-button>
+                        </template>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </template>
     </div>
 </template>
 
@@ -89,6 +141,10 @@ export default {
         attr: {
             type: String,
             default: 'cases'
+        },
+        category: {
+            type: String,
+            default: 'api'
         }
     },
     data() {
@@ -96,7 +152,8 @@ export default {
             testSetCases: this.value,
             permissions: [],
             showCopy: this.copy,
-            custom: this.attr
+            custom: this.attr,
+            cate: this.category
         }
     },
     methods: {

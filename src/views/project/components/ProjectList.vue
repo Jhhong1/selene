@@ -26,11 +26,7 @@
                 <div class="child-div" v-for="(project, index) in projects" :key="index">
                     <el-card shadow="hover">
                         <div slot="header">
-                            <router-link
-                                tag="el-button"
-                                :to="{ name: 'GlobalConfigList', query: { project_name: project.name } }"
-                                class="el-button--text"
-                            >
+                            <router-link tag="el-button" :to="{ name: 'ConfigList', query: { project_name: project.name } }" class="el-button--text">
                                 {{ project.name }}
                             </router-link>
                             <div style="float: right;">

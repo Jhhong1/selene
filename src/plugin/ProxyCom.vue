@@ -1,61 +1,128 @@
 <template>
     <div class="bg-color">
         <el-row>
-            <el-col :span="4">
-                <div class="bg-purple-light">代理类型</div>
-            </el-col>
-            <el-col :span="4">
-                <div class="bg-purple-light">scheme</div>
-            </el-col>
-            <el-col :span="4">
-                <div class="bg-purple-light">用户名</div>
-            </el-col>
-            <el-col :span="4">
-                <div class="bg-purple-light">密码</div>
-            </el-col>
-            <el-col :span="4">
-                <div class="bg-purple-light">IP地址</div>
-            </el-col>
-            <el-col :span="4">
-                <div class="bg-purple-light">端口</div>
-            </el-col>
+            <template v-if="cate === 'api'">
+                <el-col :span="4">
+                    <div class="bg-purple-light">代理类型</div>
+                </el-col>
+                <el-col :span="4">
+                    <div class="bg-purple-light">scheme</div>
+                </el-col>
+                <el-col :span="4">
+                    <div class="bg-purple-light">用户名</div>
+                </el-col>
+                <el-col :span="4">
+                    <div class="bg-purple-light">密码</div>
+                </el-col>
+                <el-col :span="4">
+                    <div class="bg-purple-light">IP地址</div>
+                </el-col>
+                <el-col :span="4">
+                    <div class="bg-purple-light">端口</div>
+                </el-col>
+            </template>
+            <template v-else-if="cate === 'ui'">
+                <el-col :span="4">
+                    <div class="bg-purple-light">代理类型</div>
+                </el-col>
+                <el-col :span="4">
+                    <div class="bg-purple-light">用户名</div>
+                </el-col>
+                <el-col :span="4">
+                    <div class="bg-purple-light">密码</div>
+                </el-col>
+                <el-col :span="6">
+                    <div class="bg-purple-light">IP地址</div>
+                </el-col>
+                <el-col :span="6">
+                    <div class="bg-purple-light">端口</div>
+                </el-col>
+            </template>
         </el-row>
         <template v-if="proxies !== undefined && proxies.length">
             <el-row v-for="(items, index) in proxies" :key="index" class="asserts-row">
-                <el-col :span="4">{{ items.protocol }}</el-col>
-                <el-col :span="4">{{ items.scheme }}</el-col>
-                <el-col :span="4">{{ items.username }}</el-col>
-                <el-col :span="4">
-                    <template v-if="items.password">
-                        <template v-if="items.password.length > 20">
-                            <el-popover trigger="hover" placement="top-start">
-                                <p>{{ items.password }}</p>
-                                <div slot="reference" class="name-wrapper">
-                                    {{ items.password }}
-                                </div>
-                            </el-popover>
+                <template v-if="cate === 'api'">
+                    <el-col :span="4">{{ items.protocol }}</el-col>
+                    <el-col :span="4">{{ items.scheme }}</el-col>
+                    <el-col :span="4">{{ items.username }}</el-col>
+                    <el-col :span="4">
+                        <template v-if="items.password">
+                            <template v-if="items.password.length > 20">
+                                <el-popover trigger="hover" placement="top-start">
+                                    <p>{{ items.password }}</p>
+                                    <div slot="reference" class="name-wrapper">
+                                        {{ items.password }}
+                                    </div>
+                                </el-popover>
+                            </template>
+                            <template v-else>
+                                {{ items.password }}
+                            </template>
+                        </template>
+                    </el-col>
+                    <el-col :span="4">{{ items.ip }}</el-col>
+                    <template v-if="show">
+                        <el-col :span="2" class="c-text">{{ items.port }}</el-col>
+                        <el-col :span="1" style="text-align: right" class="icon-size">
+                            <template v-if="show">
+                                <el-button icon="el-icon-minus" circle @click="remove(items)"></el-button>
+                            </template>
+                        </el-col>
+                        <el-col :span="1" style="padding-left: 10px" class="icon-size">
+                            <template v-if="show">
+                                <el-button icon="el-icon-edit-outline" circle @click="update(items, index)"></el-button>
+                            </template>
+                        </el-col>
+                    </template>
+                    <template v-else>
+                        <el-col :span="4" class="c-text">{{ items.port }}</el-col>
+                    </template>
+                </template>
+                <template v-else-if="cate === 'ui'">
+                    <el-col :span="4">{{ items.protocol }}</el-col>
+                    <el-col :span="4">
+                        <template v-if="items.username">
+                            {{ items.username }}
                         </template>
                         <template v-else>
-                            {{ items.password }}
+                            -
                         </template>
+                    </el-col>
+                    <el-col :span="4">
+                        <template v-if="items.password">
+                            <template v-if="items.password.length > 20">
+                                <el-popover trigger="hover" placement="top-start">
+                                    <p>{{ items.password }}</p>
+                                    <div slot="reference" class="name-wrapper">
+                                        {{ items.password }}
+                                    </div>
+                                </el-popover>
+                            </template>
+                            <template v-else>
+                                {{ items.password }}
+                            </template>
+                        </template>
+                        <template v-else>
+                            -
+                        </template>
+                    </el-col>
+                    <el-col :span="6">{{ items.ip }}</el-col>
+                    <template v-if="show">
+                        <el-col :span="4" class="c-text">{{ items.port }}</el-col>
+                        <el-col :span="1" style="text-align: right" class="icon-size">
+                            <template v-if="show">
+                                <el-button icon="el-icon-minus" circle @click="remove(items)"></el-button>
+                            </template>
+                        </el-col>
+                        <el-col :span="1" style="padding-left: 10px" class="icon-size">
+                            <template v-if="show">
+                                <el-button icon="el-icon-edit-outline" circle @click="update(items, index)"></el-button>
+                            </template>
+                        </el-col>
                     </template>
-                </el-col>
-                <el-col :span="4">{{ items.ip }}</el-col>
-                <template v-if="show">
-                    <el-col :span="2" class="c-text">{{ items.port }}</el-col>
-                    <el-col :span="1" style="text-align: right" class="icon-size">
-                        <template v-if="show">
-                            <el-button icon="el-icon-minus" circle @click="remove(items)"></el-button>
-                        </template>
-                    </el-col>
-                    <el-col :span="1" style="padding-left: 10px" class="icon-size">
-                        <template v-if="show">
-                            <el-button icon="el-icon-edit-outline" circle @click="update(items, index)"></el-button>
-                        </template>
-                    </el-col>
-                </template>
-                <template v-else>
-                    <el-col :span="4" class="c-text">{{ items.port }}</el-col>
+                    <template v-else>
+                        <el-col :span="6" class="c-text">{{ items.port }}</el-col>
+                    </template>
                 </template>
             </el-row>
         </template>
@@ -74,22 +141,33 @@
         <el-dialog title="添加代理" :visible.sync="dialogFormVisible" :close-on-click-modal="false" class="dialog-header" :before-close="handleClose">
             <el-form :model="form" ref="form" :hide-required-asterisk="true" class="select_class el-form__item">
                 <el-form-item prop="protocol" label="代理类型" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
-                    <el-select v-model="form.protocol" placeholder="请选择" size="mini">
-                        <el-option label="http" value="http"></el-option>
-                        <el-option label="https" value="https"></el-option>
-                    </el-select>
+                    <template v-if="cate === 'api'">
+                        <el-select v-model="form.protocol" placeholder="请选择" size="mini">
+                            <el-option label="http" value="http"></el-option>
+                            <el-option label="https" value="https"></el-option>
+                        </el-select>
+                    </template>
+                    <template v-else-if="cate === 'ui'">
+                        <el-select v-model="form.protocol" placeholder="请选择" size="mini">
+                            <el-option label="http_proxy" value="http_proxy"></el-option>
+                            <el-option label="ssl_proxy" value="ssl_proxy"></el-option>
+                            <el-option label="socks_proxy" value="socks_proxy"></el-option>
+                        </el-select>
+                    </template>
                 </el-form-item>
-                <el-form-item prop="scheme" label="scheme" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
-                    <el-select v-model="form.scheme" placeholder="请选择" size="mini">
-                        <el-option label="http" value="http"></el-option>
-                        <el-option label="https" value="https"></el-option>
-                        <el-option label="socks5" value="socks5"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="用户名" prop="username" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
+                <template v-if="cate === 'api'">
+                    <el-form-item prop="scheme" label="scheme" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
+                        <el-select v-model="form.scheme" placeholder="请选择" size="mini">
+                            <el-option label="http" value="http"></el-option>
+                            <el-option label="https" value="https"></el-option>
+                            <el-option label="socks5" value="socks5"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </template>
+                <el-form-item label="用户名" prop="username" :label-width="labelWidth">
                     <el-input v-model="form.username" size="mini"></el-input>
                 </el-form-item>
-                <el-form-item label="密码" prop="password" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
+                <el-form-item label="密码" prop="password" :label-width="labelWidth">
                     <el-input v-model="form.password" size="mini"></el-input>
                 </el-form-item>
                 <el-form-item label="IP地址" prop="ip" :label-width="labelWidth" :rules="[{ required: true, message: '必填' }]">
@@ -123,11 +201,13 @@ export default {
         showBtn: {
             type: Boolean,
             default: true
-        }
+        },
+        category: String
     },
     data() {
         return {
             show: this.showBtn,
+            cate: this.category,
             proxies: this.value,
             dialogFormVisible: false,
             updateDialogFormVisible: false,
@@ -191,6 +271,9 @@ export default {
         value: function(newValue) {
             // console.log('asserts: ', newValue)
             this.proxies = newValue
+        },
+        category: function(newValue) {
+            this.cate = newValue
         }
     }
 }

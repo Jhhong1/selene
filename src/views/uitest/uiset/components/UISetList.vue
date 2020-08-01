@@ -1,20 +1,20 @@
 <template>
     <div>
-        <template v-if="permissions.indexOf('apitest.create_apicases') > -1">
-            <router-link tag="el-button" :to="{ name: 'AddCase', query: $route.query }" class="el-button--primary el-button--mini p-button">
-                添加测试用例
+        <template v-if="permissions.indexOf('apitest.create_apiset') > -1">
+            <router-link tag="el-button" :to="{ name: 'AddUISet', query: $route.query }" class="el-button--primary el-button--mini p-button">
+                添加测试集
             </router-link>
         </template>
         <template v-else>
-            <el-button class="el-button--primary el-button--mini p-button" disabled>添加测试用例</el-button>
+            <el-button class="el-button--primary el-button--mini p-button" disabled>添加测试集</el-button>
         </template>
-        <el-table class="table-class td" :data="cases">
-            <el-table-column label="用例名称" min-width="200">
+        <el-table class="table-class td" :data="setList">
+            <el-table-column label="名称" min-width="200">
                 <template slot-scope="scope">
                     <ul class="ul-style">
                         <li>
                             <router-link
-                                :to="{ name: 'UICaseDetail', params: { id: scope.row.id }, query: $route.query }"
+                                :to="{ name: 'UISetDetail', params: { name: scope.row.name, id: scope.row.id }, query: $route.query }"
                                 class="el-link el-link--primary"
                             >
                                 {{ scope.row.name }}
@@ -38,7 +38,15 @@
                     </ul>
                 </template>
             </el-table-column>
-            <el-table-column label="状态" min-width="100">
+            <el-table-column label="描述信息" min-width="200">
+                <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top-start">
+                        <p>{{ scope.row.description }}</p>
+                        <div slot="reference" class="name-wrapper">{{ scope.row.description }}</div>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column label="状态" min-width="150">
                 <template slot-scope="scope">
                     <template v-if="scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.length > 0">
                         <template v-if="scope.row.executionrecord_set[0].status === 'Done'">
@@ -53,16 +61,14 @@
                     </template>
                 </template>
             </el-table-column>
-            <el-table-column label="结果" min-width="100">
+            <el-table-column label="结果" min-width="150">
                 <template slot-scope="scope">
                     <template v-if="scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.length > 0">
                         <template v-if="scope.row.executionrecord_set[0].result === 'Failed'">
                             <tag-failed></tag-failed>
                             <!-- <el-popover trigger="hover" placement="top-start">
-                                <p>{{ scope.row.caserelationship.errorMessage }}</p>
-                                <div slot="reference">
-                                    <tag-failed></tag-failed>
-                                </div>
+                                <p>{{ scope.row.testsetrelationship.errorMessage }}</p>
+                                <div slot="reference"></div>
                             </el-popover> -->
                         </template>
                         <template v-else-if="scope.row.executionrecord_set[0].result === 'Succeed'">
@@ -74,29 +80,29 @@
                     </template>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" min-width="80">
+            <el-table-column label="操作" min-width="50">
                 <template slot-scope="scope">
                     <el-dropdown @command="handleCommand">
                         <span>
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :command="{ type: 'view', row: scope.row.id }">查看</el-dropdown-item>
+                            <el-dropdown-item :command="{ type: 'view', name: scope.row.name, id: scope.row.id }">查看</el-dropdown-item>
                             <el-dropdown-item
-                                :command="{ type: 'update', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.update_apicases') === -1"
+                                :command="{ type: 'update', name: scope.row.name, id: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.update_apiset') === -1"
                             >
                                 更新
                             </el-dropdown-item>
                             <el-dropdown-item
-                                :command="{ type: 'exec', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.execute_apicases') === -1"
+                                :command="{ type: 'exec', id: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.execute_apiset') === -1"
                             >
                                 执行
                             </el-dropdown-item>
                             <el-dropdown-item
-                                :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.delete_apicases') === -1"
+                                :command="{ type: 'del', index: scope.$index, id: scope.row.id }"
+                                :disabled="permissions.indexOf('apitest.delete_apiset') === -1"
                             >
                                 删除
                             </el-dropdown-item>
@@ -121,49 +127,62 @@
 
 <script>
 export default {
-    name: 'UICaseList',
-    data() {
+    name: 'UISetList',
+    data () {
         return {
             count: null,
             pageSizes: [10, 20, 50],
             pageSize: 10,
             currentPage: 1,
+            setList: [],
             projectName: this.$route.query.project_name,
-            permissions: [],
-            cases: []
+            permissions: []
         }
     },
     methods: {
         getPermissions() {
             this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         },
-        uiCaseList() {
+        currentChange(val) {
+            this.currentPage = val
+            this.getSets()
+        },
+        handleSizeChange(val) {
+            this.pageSize = val
+            this.getSets()
+        },
+        getSets() {
             this.$api.api
-                .testCaseList(this.currentPage, this.pageSize, this.projectName, 'ui')
+                .apiTestSetList(this.currentPage, this.pageSize, this.projectName, 'ui')
                 .then(response => {
-                    this.cases = response.data.results
+                    this.setList = response.data.results
                     this.count = response.data.count
                 })
                 .catch(error => {
-                    this.notify.error(error.response.data)
+                    this.notify.error(error)
                 })
         },
-        removeCase(caseId) {
-            this.$api.api.deleteCase(caseId).then(() => {
-                this.notify.success('删除用例成功')
-            })
+        deleteSet(setId) {
+            this.$api.api
+                .deleteApiTestSet(setId)
+                .then(() => {
+                    this.notify.success('删除测试集成功')
+                })
+                .catch(error => {
+                    this.notify.error(error)
+                })
         },
-        deleteRow(index, rows, caseId) {
+        deleteRow(index, rows, setId) {
             const h = this.$createElement
             this.$msgbox({
                 title: '提示',
-                message: h('p', null, [h('span', null, '确定删除该条用例吗？')]),
+                message: h('p', null, [h('span', null, '确定删除该测试集吗？')]),
                 showCancelButton: true,
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 beforeClose: (action, instance, done) => {
                     if (action === 'confirm') {
-                        this.removeCase(caseId)
+                        this.deleteSet(setId)
                         done()
                     } else {
                         done()
@@ -175,66 +194,57 @@ export default {
                 })
                 .catch(() => {})
         },
-        execute(caseId) {
-            let data = {
-                level: 'case',
-                tasks: caseId,
+        execute(setId) {
+            let _this = this
+            const h = this.$createElement
+            this.$msgbox({
+                title: '提示',
+                message: h('p', null, [h('span', null, '确定执行该测试集吗？')]),
+                showCancelButton: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                beforeClose: (action, instance, done) => {
+                    if (action === 'confirm') {
+                        _this.executeSet(setId, _this.projectName)
+                        done()
+                    } else {
+                        done()
+                    }
+                }
+            })
+                .then(() => {})
+                .catch(() => {})
+        },
+        executeSet(testSetId, project) {
+            let payload = {
+                level: 'testSet',
+                tasks: testSetId,
                 category: 'ui'
             }
             this.$api.api
-                .executeCase(JSON.stringify(data), this.projectName)
+                .executeCase(JSON.stringify(payload), project)
                 .then(() => {})
                 .catch(error => {
-                    this.notify.error(error.response.data)
+                    this.notify.error(error)
                 })
         },
         handleCommand(command) {
-            const _this = this
             if (command.type === 'del') {
-                this.deleteRow(command.index, _this.cases, command.row)
+                this.deleteRow(command.index, this.setList, command.id)
             } else if (command.type === 'view') {
-                this.$router.push({ name: 'UICaseDetail', params: { id: command.row }, query: _this.$route.query })
+                this.$router.push({ name: 'UISetDetail', params: { name: command.name, id: command.id }, query: this.$route.query })
             } else if (command.type === 'update') {
-                this.$router.push({ name: 'UpdateCase', params: { id: command.row }, query: _this.$route.query })
+                this.$router.push({ name: 'UpdateUISet', params: { name: command.name, id: command.id }, query: this.$route.query })
             } else if (command.type === 'exec') {
-                this.execute(command.row)
+                this.execute(command.id)
             }
-        },
-        currentChange(val) {
-            this.currentPage = val
-            this.uiCaseList()
-        },
-        handleSizeChange(val) {
-            this.pageSize = val
-            this.uiCaseList()
         }
     },
     created() {
         this.getPermissions()
-        this.uiCaseList()
+        this.getSets()
     }
 }
 </script>
 
-<style scoped>
-.td >>> .name-wrapper {
-    white-space: nowrap !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-</style>
-<style>
-.el-popover {
-    max-width: 500px;
-    max-height: 100px;
-    word-break: break-word;
-    background-color: #303133;
-    color: white;
-    padding: 0 10px 0 10px;
-    font-size: 12px;
-    overflow: auto;
-}
-.el-popper .popper__arrow {
-    display: none;
-}
-</style>
+<style scoped></style>

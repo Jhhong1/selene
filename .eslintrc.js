@@ -7,7 +7,17 @@ module.exports = {
     rules: {
         'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-        'prettier/prettier': ['error'],
+        'prettier/prettier': [
+            'error',
+            {
+                "tabWidth": 4,
+                "singleQuote": true,
+                "semi": false,
+                "printWidth": 150,
+                "bracketSpacing": true,
+                "htmlWhitespaceSensitivity": "ignore"
+            }
+        ],
         'generator-star-spacing': 'off',
         //强制使用单引号
         quotes: ['error', 'single'],

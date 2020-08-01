@@ -48,12 +48,13 @@ export const createTestCase = params => {
 }
 
 // 测试用例列表
-export const testCaseList = (page = 1, pagesize = 10, projectName = '') => {
+export const testCaseList = (page = 1, pagesize = 10, projectName = '', category = 'api') => {
     return axios.get('/v1/apitest/apiCases/', {
         params: {
             page: page,
             page_size: pagesize,
-            project: projectName
+            project: projectName,
+            category: category
         }
     })
 }
@@ -107,12 +108,13 @@ export const apiProjectDetail = projectId => {
 }
 
 // 测试集列表
-export const apiTestSetList = (page = 1, pagesize = 10, projectName = '') => {
+export const apiTestSetList = (page = 1, pagesize = 10, projectName = '', category = 'api') => {
     return axios.get('/v1/apitest/apiSet/', {
         params: {
             page: page,
             page_size: pagesize,
-            project: projectName
+            project: projectName,
+            category: category
         }
     })
 }
@@ -174,14 +176,6 @@ export const TestSetCases = (testSetId, projectName = '', handler = '') => {
         }
     })
 }
-// 复制测试集中的测试用例
-export const copyTestSetCase = (data, projectName = '') => {
-    return axios.post('/v1/apitest/copy_testset_case/', data, {
-        params: {
-            project: projectName
-        }
-    })
-}
 // 添加测试任务
 export const addTestTask = (data, projectName = '') => {
     return axios.post('/v1/apitest/apiTask/', data, {
@@ -191,12 +185,13 @@ export const addTestTask = (data, projectName = '') => {
     })
 }
 // 获取测试任务列表
-export const getTaskList = (page = 1, pageSize = 10, projectName = '') => {
+export const getTaskList = (page = 1, pageSize = 10, projectName = '', category = 'api') => {
     return axios.get('/v1/apitest/apiTask/', {
         params: {
             page: page,
             page_size: pageSize,
-            project: projectName
+            project: projectName,
+            category: category
         }
     })
 }
@@ -257,12 +252,13 @@ export const taskSetCases = (task = '', testsetId = '', project = '', handler = 
     })
 }
 // 获取配置列表
-export const getConfigList = (page = 1, pageSize = 10, projectName = '') => {
+export const getConfigList = (page = 1, pageSize = 10, projectName = '', category = '') => {
     return axios.get('/v1/apitest/config/', {
         params: {
             project: projectName,
             page: page,
-            page_size: pageSize
+            page_size: pageSize,
+            category: category
         }
     })
 }

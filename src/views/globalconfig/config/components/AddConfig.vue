@@ -1,7 +1,7 @@
 <template>
     <div class="el-bread">
         <el-breadcrumb class="bread" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'GlobalConfigList', query: $route.query }" class="is-link">配置</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ name: 'ConfigList', query: $route.query }" class="is-link">配置</el-breadcrumb-item>
             <el-breadcrumb-item>添加配置</el-breadcrumb-item>
         </el-breadcrumb>
         <el-form :model="configForm" ref="configForm" :rules="rules" class="case-form">
@@ -11,33 +11,25 @@
             <el-form-item label="显示名称" :label-width="formLabelWidth" prop="display">
                 <el-input v-model="configForm.display" size="mini"></el-input>
             </el-form-item>
-            <el-form-item label="请求地址" :label-width="formLabelWidth" prop="baseurl">
-                <el-input v-model="configForm.baseurl" size="mini"></el-input>
+            <el-form-item label="类型" :label-width="formLabelWidth" prop="display">
+                <div style="text-align: left;">
+                    <el-radio-group v-model="configForm.category" size="mini" @change="reset">
+                        <el-radio-button label="api"></el-radio-button>
+                        <el-radio-button label="ui"></el-radio-button>
+                    </el-radio-group>
+                </div>
             </el-form-item>
             <el-form-item label="请求代理" :label-width="formLabelWidth" prop="proxies">
-                <j-proxy v-model="configForm.proxy"></j-proxy>
+                <j-proxy v-model="configForm.proxy" :category="category"></j-proxy>
             </el-form-item>
-            <!-- <el-form-item label="认证方式" :label-width="formLabelWidth" prop="authMethod">
-                <el-row>
-                    <el-col class="bg-purple-light" :span="3">类型</el-col>
-                    <el-col class="bg-purple-light" :span="10">用户名</el-col>
-                    <el-col class="bg-purple-light" :span="11">密码</el-col>
-                </el-row>
-                <el-row style="padding-left: 10px" :gutter="3">
-                    <el-col :span="3" style="text-align: left">
-                        {{ configForm.authMethod }}
-                    </el-col>
-                    <el-col :span="10">
-                        <el-input size="mini" v-model="configForm.auth.username"></el-input>
-                    </el-col>
-                    <el-col :span="11">
-                        <el-input size="mini" v-model="configForm.auth.password"></el-input>
-                    </el-col>
-                </el-row>
-            </el-form-item> -->
-            <el-form-item label="头部信息" :label-width="formLabelWidth" prop="headers">
-                <j-input v-model="configForm.headers" size="mini"></j-input>
-            </el-form-item>
+            <template v-if="configForm.category === 'api'">
+                <el-form-item label="请求地址" :label-width="formLabelWidth" prop="baseurl">
+                    <el-input v-model="configForm.baseurl" size="mini"></el-input>
+                </el-form-item>
+                <el-form-item label="头部信息" :label-width="formLabelWidth" prop="headers">
+                    <j-input v-model="configForm.headers" size="mini"></j-input>
+                </el-form-item>
+            </template>
             <el-form-item label="变量" :label-width="formLabelWidth" prop="variables">
                 <j-input v-model="configForm.variables" size="mini"></j-input>
             </el-form-item>
@@ -62,7 +54,7 @@
 
 <script>
 export default {
-    name: 'AddGlobalConfig',
+    name: 'AddConfig',
     data() {
         const validateCaseName = (rule, value, callback) => {
             try {
@@ -102,8 +94,10 @@ export default {
             configForm: {
                 proxy: [],
                 headers: {},
-                variables: {}
+                variables: {},
+                category: 'api'
             },
+            category: 'api',
             formLabelWidth: '120px',
             rules: {
                 name: [{ validator: validateCaseName, required: true, trigger: 'blur' }],
@@ -116,14 +110,18 @@ export default {
             this.$refs[formName].resetFields()
             this.$router.go(-1)
         },
-        create(params, project, formName) {
+        reset(val) {
+            this.category = val
+            this.configForm.proxy = []
+        },
+        create(params, project) {
             const _this = this
             this.$api.api
                 .createConfig(params, project)
-                .then(() => {
+                .then(response => {
+                    let id = response.data.id
                     _this.notify.success('添加配置成功')
-                    _this.$refs[formName].resetFields()
-                    _this.$router.go(-1)
+                    _this.$router.push({ name: 'ConfigDetail', params: { id: id }, query: this.$route.query })
                 })
                 .catch(error => {
                     let rep = error.response.data
