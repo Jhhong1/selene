@@ -718,6 +718,16 @@ export default {
                 .catch(error => {
                     this.notify.error(error.response.data)
                 })
+        },
+        timedTask() {
+            let timer = setInterval(() => {
+                if (this.activeName === 'info') {
+                    this.getTestSetDetail()
+                }
+            }, 3000)
+            this.$once('hook:beforeDestroy', () => {
+                clearInterval(timer)
+            })
         }
     },
     created() {
@@ -728,6 +738,9 @@ export default {
         this.getSetUpCases()
         this.getTeardownCases()
         this.getSetHistory()
+    },
+    mounted() {
+        this.timedTask()
     }
 }
 </script>

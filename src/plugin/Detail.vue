@@ -136,7 +136,7 @@
                         <el-row :gutter="10" class="row-class">
                             <el-col :span="2" class="test-left">超时时间</el-col>
                             <template v-if="cases.waitingTime">
-                                <el-col :span="22"> {{ cases.waitingTime }} s </el-col>
+                                <el-col :span="22">{{ cases.waitingTime }} s</el-col>
                             </template>
                             <template v-else>
                                 <el-col :span="22">-</el-col>
@@ -145,7 +145,7 @@
                         <el-row :gutter="10" class="row-class">
                             <el-col :span="2" class="test-left">重试次数</el-col>
                             <template v-if="cases.cycle">
-                                <el-col :span="22"> {{ cases.cycle }} 次</el-col>
+                                <el-col :span="22">{{ cases.cycle }} 次</el-col>
                             </template>
                             <template v-else>
                                 <el-col :span="22">0 次</el-col>

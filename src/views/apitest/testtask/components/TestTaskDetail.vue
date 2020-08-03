@@ -392,7 +392,6 @@ export default {
                 tags: ''
             },
             formLabelWidth: '45px',
-            load: null,
             permissions: [],
             counterRefer: {},
             selectValue: '',
@@ -639,13 +638,6 @@ export default {
                     this.notify.error(error.response.data)
                 })
         },
-        autoLoad() {
-            if (this.activeName === 'info') {
-                this.getTaskDetail()
-            } else if (this.activeName === 'cases') {
-                this.getTaskTestSets()
-            }
-        },
         getPermissions() {
             this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         },
@@ -658,6 +650,16 @@ export default {
                 .catch(error => {
                     this.notify.error(error)
                 })
+        },
+        timedTask() {
+            let timer = setInterval(() => {
+                if (this.activeName === 'info') {
+                    this.getTaskDetail()
+                }
+            }, 3000)
+            this.$once('hook:beforeDestroy', () => {
+                clearInterval(timer)
+            })
         }
     },
     created() {
@@ -668,18 +670,7 @@ export default {
         this.getTaskHistory()
     },
     mounted() {
-        if (this.load) {
-            clearInterval(this.load)
-        } else {
-            const _this = this
-            this.load = setInterval(() => {
-                _this.taskId = _this.$route.params.id
-                _this.autoLoad()
-            }, 3000)
-        }
-    },
-    destroyed() {
-        clearInterval(this.load)
+        this.timedTask()
     }
 }
 </script>

@@ -128,7 +128,7 @@
 <script>
 export default {
     name: 'UISetList',
-    data () {
+    data() {
         return {
             count: null,
             pageSizes: [10, 20, 50],
@@ -238,11 +238,22 @@ export default {
             } else if (command.type === 'exec') {
                 this.execute(command.id)
             }
+        },
+        timedTask() {
+            let timer = setInterval(() => {
+                this.getSets()
+            }, 3000)
+            this.$once('hook:beforeDestroy', () => {
+                clearInterval(timer)
+            })
         }
     },
     created() {
         this.getPermissions()
         this.getSets()
+    },
+    mounted() {
+        this.timedTask()
     }
 }
 </script>

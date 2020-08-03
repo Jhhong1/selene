@@ -68,11 +68,11 @@ export default {
                             ? self.$moment(self.cases.executionrecord_set[0].start_time).format('YYYY-MM-DD HH:mm:ss')
                             : null
                     self.cases.endRunTime =
-                        self.cases.executionrecord_set > 0
+                        self.cases.executionrecord_set.length > 0
                             ? self.$moment(self.cases.executionrecord_set[0].end_time).format('YYYY-MM-DD HH:mm:ss')
                             : null
-                    self.cases.status = self.cases.executionrecord_set > 0 ? self.cases.executionrecord_set[0].status : null
-                    self.cases.result = self.cases.executionrecord_set > 0 ? self.cases.executionrecord_set[0].result : null
+                    self.cases.status = self.cases.executionrecord_set.length > 0 ? self.cases.executionrecord_set[0].status : null
+                    self.cases.result = self.cases.executionrecord_set.length > 0 ? self.cases.executionrecord_set[0].result : null
 
                     this.loading = false
                 })
@@ -145,12 +145,25 @@ export default {
                 .catch(error => {
                     this.notify.error(error)
                 })
+        },
+        timedTask() {
+            let timer = setInterval(() => {
+                if (this.activeName === 'baseinfo') {
+                    this.CaseDetail()
+                }
+            }, 3000)
+            this.$once('hook:beforeDestroy', () => {
+                clearInterval(timer)
+            })
         }
     },
     created() {
         this.CaseDetail()
         this.getPermissions()
         this.historyRecord()
+    },
+    mounted() {
+        this.timedTask()
     }
 }
 </script>

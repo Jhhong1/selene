@@ -643,6 +643,16 @@ export default {
                 .catch(error => {
                     this.notify.error(error)
                 })
+        },
+        timedTask() {
+            let timer = setInterval(() => {
+                if (this.activeName === 'info') {
+                    this.getTaskDetail()
+                }
+            }, 3000)
+            this.$once('hook:beforeDestroy', () => {
+                clearInterval(timer)
+            })
         }
     },
     created() {
@@ -651,6 +661,9 @@ export default {
         this.getTaskCounter()
         this.getTaskTestSets()
         this.getTaskHistory()
+    },
+    mounted() {
+        this.timedTask()
     }
 }
 </script>

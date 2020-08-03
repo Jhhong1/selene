@@ -277,11 +277,22 @@ export default {
                 .catch(error => {
                     this.notify.error(error)
                 })
+        },
+        timedTask() {
+            let timer = setInterval(() => {
+                this.getTaskList()
+            }, 3000)
+            this.$once('hook:beforeDestroy', () => {
+                clearInterval(timer)
+            })
         }
     },
     created() {
         this.getPermissions()
         this.getTaskList()
+    },
+    mounted() {
+        this.timedTask()
     }
 }
 </script>
