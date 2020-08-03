@@ -207,11 +207,22 @@ export default {
         handleSizeChange(val) {
             this.pageSize = val
             this.uiCaseList()
+        },
+        timedTask() {
+            let timer = setInterval(() => {
+                this.uiCaseList()
+            }, 3000)
+            this.$once('hook:beforeDestroy', () => {
+                clearInterval(timer)
+            })
         }
     },
     created() {
         this.getPermissions()
         this.uiCaseList()
+    },
+    mounted() {
+        this.timedTask()
     }
 }
 </script>

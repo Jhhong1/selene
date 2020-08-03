@@ -271,10 +271,21 @@ export default {
                     })
                 }
             }
+        },
+        timedTask() {
+            let timer = setInterval(() => {
+                this.change(this.taskId)
+            }, 3000)
+            this.$once('hook:beforeDestroy', () => {
+                clearInterval(timer)
+            })
         }
     },
-    mounted() {
+    created() {
         this.taskList()
+    },
+    mounted() {
+        this.timedTask()
     },
     watch: {
         taskId: function(newValue) {

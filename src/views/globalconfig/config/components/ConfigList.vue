@@ -100,8 +100,7 @@ export default {
             pageSize: 10,
             currentPage: 1,
             loading: true,
-            permissions: [],
-            t: null
+            permissions: []
         }
     },
     methods: {
@@ -175,21 +174,22 @@ export default {
         },
         getPermissions() {
             this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
+        },
+        timedTask() {
+            let timer = setInterval(() => {
+                this.getConfigList()
+            }, 3000)
+            this.$once('hook:beforeDestroy', () => {
+                clearInterval(timer)
+            })
         }
     },
     created() {
         this.getConfigList()
         this.getPermissions()
     },
-    watch: {
-        dataTable() {
-            // this.timer()
-            this.notify.debounce(this.t, this.getConfigList)
-        }
-    },
-    mounted() {},
-    destroyed() {
-        clearTimeout(this.t)
+    mounted() {
+        this.timedTask()
     }
 }
 </script>

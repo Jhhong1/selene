@@ -165,8 +165,7 @@ export default {
                 tags: ''
             },
             taskId: null,
-            permissions: [],
-            t: null
+            permissions: []
         }
     },
     methods: {
@@ -276,20 +275,22 @@ export default {
         },
         getPermissions() {
             this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
+        },
+        timedTask() {
+            let timer = setInterval(() => {
+                this.getTaskList()
+            }, 3000)
+            this.$once('hook:beforeDestroy', () => {
+                clearInterval(timer)
+            })
         }
     },
     created() {
         this.getTaskList()
         this.getPermissions()
     },
-    watch: {
-        taskList() {
-            this.notify.debounce(this.t, this.getTaskList)
-        }
-    },
-    mounted() {},
-    destroyed() {
-        clearTimeout(this.t)
+    mounted() {
+        this.timedTask()
     }
 }
 </script>

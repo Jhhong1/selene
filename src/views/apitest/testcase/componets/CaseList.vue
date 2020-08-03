@@ -139,8 +139,7 @@ export default {
             pageSize: 10,
             currentPage: 1,
             projectName: this.$route.query.project_name,
-            permissions: [],
-            t: null
+            permissions: []
         }
     },
     methods: {
@@ -217,20 +216,22 @@ export default {
         },
         getPermissions() {
             this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
+        },
+        timeTask() {
+            let timer = setInterval(() => {
+                this.getCases()
+            }, 3000)
+            this.$once('hook:beforeDestroy', () => {
+                clearInterval(timer)
+            })
         }
     },
     created() {
         this.getCases()
         this.getPermissions()
     },
-    watch: {
-        dataTable() {
-            this.notify.debounce(this.t, this.getCases)
-        }
-    },
-    mounted() {},
-    destroyed() {
-        clearTimeout(this.t)
+    mounted() {
+        this.timeTask()
     }
 }
 </script>

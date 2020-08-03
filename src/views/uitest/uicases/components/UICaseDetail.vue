@@ -46,6 +46,80 @@
                                         <el-col :span="2">创建时间</el-col>
                                         <el-col :span="10">{{ $moment(cases.updateTime).format('YYYY-MM-DD HH:mm:ss') }}</el-col>
                                     </el-row>
+                                    <el-row :gutter="10" class="row-class">
+                                        <el-col :span="2">开始时间</el-col>
+                                        <el-col :span="10">
+                                            <template
+                                                v-if="
+                                                    cases.hasOwnProperty('executionrecord_set') &&
+                                                        cases.executionrecord_set.length > 0 &&
+                                                        cases.executionrecord_set[0].hasOwnProperty('start_time')
+                                                "
+                                            >
+                                                {{ $moment(cases.executionrecord_set[0].start_time).format('YYYY-MM-DD HH:mm:ss') }}
+                                            </template>
+                                            <template v-else>
+                                                -
+                                            </template>
+                                        </el-col>
+                                        <el-col :span="2">结束时间</el-col>
+                                        <el-col :span="10">
+                                            <template
+                                                v-if="
+                                                    cases.hasOwnProperty('executionrecord_set') &&
+                                                        cases.executionrecord_set.length > 0 &&
+                                                        cases.executionrecord_set[0].hasOwnProperty('end_time')
+                                                "
+                                            >
+                                                {{ $moment(cases.executionrecord_set[0].end_time).format('YYYY-MM-DD HH:mm:ss') }}
+                                            </template>
+                                            <template v-else>
+                                                -
+                                            </template>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row :gutter="10" class="row-class">
+                                        <el-col :span="2">状态</el-col>
+                                        <el-col :span="10">
+                                            <template
+                                                v-if="
+                                                    cases.hasOwnProperty('executionrecord_set') &&
+                                                        cases.executionrecord_set.length > 0 &&
+                                                        cases.executionrecord_set[0].hasOwnProperty('status')
+                                                "
+                                            >
+                                                <template v-if="cases.executionrecord_set[0].status === 'Starting'">
+                                                    <tag-running></tag-running>
+                                                </template>
+                                                <template v-if="cases.executionrecord_set[0].status === 'Done'">
+                                                    <tag-done></tag-done>
+                                                </template>
+                                            </template>
+                                            <template v-else>
+                                                <tag-not-run></tag-not-run>
+                                            </template>
+                                        </el-col>
+                                        <el-col :span="2">结果</el-col>
+                                        <el-col :span="10">
+                                            <template
+                                                v-if="
+                                                    cases.hasOwnProperty('executionrecord_set') &&
+                                                        cases.executionrecord_set.length > 0 &&
+                                                        cases.executionrecord_set[0].hasOwnProperty('result')
+                                                "
+                                            >
+                                                <template v-if="cases.executionrecord_set[0].result === 'Failed'">
+                                                    <tag-failed></tag-failed>
+                                                </template>
+                                                <template v-if="cases.executionrecord_set[0].result === 'Succeed'">
+                                                    <tag-success></tag-success>
+                                                </template>
+                                            </template>
+                                            <template v-else>
+                                                -
+                                            </template>
+                                        </el-col>
+                                    </el-row>
                                 </div>
                             </el-card>
                         </el-collapse-item>
@@ -163,12 +237,23 @@ export default {
                 .catch(error => {
                     this.notify.error(error)
                 })
+        },
+        timedTask() {
+            let timer = setInterval(() => {
+                if (this.activeName === 'baseinfo') {
+                    this.detail()
+                }
+            }, 3000)
+            this.$once('hook:beforeDestroy', () => {
+                clearInterval(timer)
+            })
         }
     },
     mounted() {
         this.getPermissions()
         this.detail()
         this.historyRecord()
+        this.timedTask()
     }
 }
 </script>
