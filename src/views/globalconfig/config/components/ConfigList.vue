@@ -99,8 +99,7 @@ export default {
             pageSizes: [10, 20, 50],
             pageSize: 10,
             currentPage: 1,
-            loading: true,
-            permissions: []
+            loading: true
         }
     },
     methods: {
@@ -172,9 +171,6 @@ export default {
                 this.$router.push({ name: 'UpdateConfig', params: { id: command.row }, query: _this.$route.query })
             }
         },
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
-        },
         timedTask() {
             let timer = setInterval(() => {
                 this.getConfigList()
@@ -184,9 +180,13 @@ export default {
             })
         }
     },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
+    },
     created() {
         this.getConfigList()
-        this.getPermissions()
     },
     mounted() {
         this.timedTask()

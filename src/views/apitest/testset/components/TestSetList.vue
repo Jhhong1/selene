@@ -135,8 +135,7 @@ export default {
             pageSize: 10,
             currentPage: 1,
             setList: [],
-            projectName: this.$route.query.project_name,
-            permissions: []
+            projectName: this.$route.query.project_name
         }
     },
     methods: {
@@ -236,9 +235,6 @@ export default {
                 this.execute(command.id)
             }
         },
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
-        },
         timedTask() {
             let timer = setInterval(() => {
                 this.getSets()
@@ -248,9 +244,13 @@ export default {
             })
         }
     },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
+    },
     created() {
         this.getSets()
-        this.getPermissions()
     },
     mounted() {
         this.timedTask()

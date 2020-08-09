@@ -165,15 +165,10 @@ export default {
             labels: {
                 tags: ''
             },
-            taskId: null,
-            permissions: [],
-            t: null
+            taskId: null
         }
     },
     methods: {
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
-        },
         getTaskList() {
             this.$api.api
                 .getTaskList(this.currentPage, this.pageSize, this.projectName, 'ui')
@@ -287,8 +282,12 @@ export default {
             })
         }
     },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
+    },
     created() {
-        this.getPermissions()
         this.getTaskList()
     },
     mounted() {

@@ -274,7 +274,7 @@ export default {
         },
         timedTask() {
             let timer = setInterval(() => {
-                this.change(this.taskId)
+                this.change(this.queryform.task)
             }, 3000)
             this.$once('hook:beforeDestroy', () => {
                 clearInterval(timer)

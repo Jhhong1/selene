@@ -152,7 +152,6 @@ export default {
             activeNames: ['1', '2'],
             loading: false,
             cases: {},
-            permissions: [],
             caseId: this.$route.params.id,
             projectName: this.$route.query.project_name,
             records: [],
@@ -225,9 +224,6 @@ export default {
                 this.update()
             }
         },
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
-        },
         historyRecord() {
             this.$api.api
                 .history('case', this.caseId)
@@ -249,8 +245,12 @@ export default {
             })
         }
     },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
+    },
     mounted() {
-        this.getPermissions()
         this.detail()
         this.historyRecord()
         this.timedTask()

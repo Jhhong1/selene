@@ -93,8 +93,7 @@ export default {
             count: null,
             pageSizes: [10, 20, 50],
             pageSize: 10,
-            currentPage: 1,
-            permissions: []
+            currentPage: 1
         }
     },
     methods: {
@@ -155,13 +154,14 @@ export default {
         handleSizeChange(val) {
             this.pageSize = val
             this.ruleList()
-        },
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
+        }
+    },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
         }
     },
     created() {
-        this.getPermissions()
         this.ruleList()
     }
 }

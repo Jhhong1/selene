@@ -346,7 +346,6 @@ export default {
             configList: [],
             selectValue: '',
             configReference: {},
-            permissions: [],
             setup: 'setup',
             teardown: 'teardown',
             setHistory: []
@@ -570,9 +569,6 @@ export default {
                     this.notify.error(error.response.request.responseText)
                 })
         },
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
-        },
         handleSetUp(command) {
             if (command === 'setup') {
                 this.setupFormVisible = true
@@ -760,8 +756,12 @@ export default {
             })
         }
     },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
+    },
     created() {
-        this.getPermissions()
         this.getTestSetDetail()
         this.getSetConfig()
         this.getTestSetCases()

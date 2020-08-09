@@ -129,14 +129,10 @@ export default {
             pageSize: 10,
             currentPage: 1,
             projectName: this.$route.query.project_name,
-            permissions: [],
             cases: []
         }
     },
     methods: {
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
-        },
         uiCaseList() {
             this.$api.api
                 .testCaseList(this.currentPage, this.pageSize, this.projectName, 'ui')
@@ -217,8 +213,12 @@ export default {
             })
         }
     },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
+    },
     created() {
-        this.getPermissions()
         this.uiCaseList()
     },
     mounted() {
