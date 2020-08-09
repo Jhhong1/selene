@@ -135,14 +135,10 @@ export default {
             pageSize: 10,
             currentPage: 1,
             setList: [],
-            projectName: this.$route.query.project_name,
-            permissions: []
+            projectName: this.$route.query.project_name
         }
     },
     methods: {
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
-        },
         currentChange(val) {
             this.currentPage = val
             this.getSets()
@@ -248,8 +244,12 @@ export default {
             })
         }
     },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
+    },
     created() {
-        this.getPermissions()
         this.getSets()
     },
     mounted() {

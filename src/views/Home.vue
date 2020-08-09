@@ -143,7 +143,6 @@ export default {
             dialogFormVisible: false,
             value: this.$route.query.project_name,
             url: bird,
-            projectList: [],
             form: {
                 password: '',
                 repassword: ''
@@ -192,9 +191,6 @@ export default {
         cancel() {
             this.$refs['form'].resetFields()
             this.dialogFormVisible = false
-        },
-        projects() {
-            this.projectList = JSON.parse(localStorage.getItem('project'))
         },
         handleChange() {
             let path = this.$route.path + '?project_name=' + this.value
@@ -247,20 +243,17 @@ export default {
             return navList
         },
         username() {
-            let name1 = localStorage.getItem('username')
-            let name2 = this.$store.state.username
-            if (name1 !== name2) {
-                this.$store.commit('STORE_USER_NAME', { username: name1 })
-            }
-            return name1
+            return this.$store.state.username
         },
         userInfo() {
-            return JSON.parse(localStorage.getItem('userinfo'))
+            return this.$store.state.userinfo
+        },
+        projectList() {
+            return this.$store.state.project
         }
     },
     mounted() {
         this.highLightNav()
-        this.projects()
     },
     updated() {
         this.highLightNav()
@@ -268,14 +261,6 @@ export default {
     watch: {
         $route() {
             this.value = this.$route.query.project_name
-        }
-    },
-    beforeRouteUpdate(to, from, next) {
-        if (to.query.project_name) {
-            this.projects()
-            next()
-        } else {
-            next()
         }
     }
 }

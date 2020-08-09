@@ -119,8 +119,7 @@ export default {
             configDetail: {},
             activeNames: ['1', '2'],
             configId: this.$route.params.id,
-            projectName: this.$route.query.project_name,
-            permissions: []
+            projectName: this.$route.query.project_name
         }
     },
     methods: {
@@ -174,14 +173,15 @@ export default {
             } else if (command === 'update') {
                 this.update()
             }
-        },
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
+        }
+    },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
         }
     },
     created() {
         this.getConfigDetail()
-        this.getPermissions()
     },
     mounted() {}
 }

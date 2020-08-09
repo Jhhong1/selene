@@ -3,14 +3,15 @@
         <div>
             <el-row style="margin-right: 6px">
                 <el-col :span="20" style="text-align: right">
-                    <template v-if="permissions.indexOf('apitest.create_apiprojects') > -1">
-                        <el-button type="primary" size="small" @click="addProject">创建项目</el-button>
-                    </template>
-                    <template v-else>
-                        <el-tooltip content="无权限" placement="top">
-                            <el-button type="primary" size="small" disabled>创建项目</el-button>
-                        </el-tooltip>
-                    </template>
+                    <el-button
+                        type="primary"
+                        size="small"
+                        @click="addProject"
+                        :disabled="permissions.indexOf('apitest.create_apiprojects') === -1"
+                        :class="{ disabled: permissions.indexOf('apitest.create_apiprojects') === -1 }"
+                    >
+                        创建项目
+                    </el-button>
                 </el-col>
                 <el-col :span="4">
                     <el-input size="small" placeholder="请输入项目名称" v-model="search">
@@ -88,9 +89,7 @@ export default {
         return {
             search: '',
             name: '',
-            projects: [],
-            permissions: [],
-            t: null
+            projects: []
         }
     },
     methods: {
@@ -102,14 +101,13 @@ export default {
                 .apiProjectList(this.name)
                 .then(response => {
                     this.projects = response.data.results
-                    this.$store.commit('STORE_PROJECT', this.projects)
+                    if (!this.search) {
+                        this.$store.commit('STORE_PROJECT', this.projects)
+                    }
                 })
                 .catch(error => {
                     this.notify.error(error.response.data)
                 })
-        },
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
         },
         deleteProject(id) {
             this.$api.api
@@ -150,18 +148,13 @@ export default {
             this.getProjectList()
         }
     },
-    watch: {
-        projects() {
-            this.notify.debounce(this.t, this.getProjectList)
-        }
-    },
     created() {
         this.getProjectList()
-        this.getPermissions()
     },
-    mounted() {},
-    destroyed() {
-        clearTimeout(this.t)
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
     }
 }
 </script>

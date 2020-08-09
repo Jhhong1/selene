@@ -51,7 +51,6 @@ export default {
             projects: [],
             group: '',
             groups: [],
-            projectList: [],
             dialogFormVisible: false,
             form: {},
             formLabelWidth: '100px'
@@ -113,9 +112,6 @@ export default {
                 }
             }
         },
-        getProjects() {
-            this.projectList = JSON.parse(localStorage.getItem('project'))
-        },
         getGroups() {
             this.$api.api
                 .getGroupList()
@@ -159,9 +155,13 @@ export default {
             })
         }
     },
+    computed: {
+        projectList() {
+            return this.$store.state.project
+        }
+    },
     created() {
         this.getUsers()
-        this.getProjects()
         this.getGroups()
     }
 }

@@ -138,8 +138,7 @@ export default {
             pageSizes: [10, 20, 50],
             pageSize: 10,
             currentPage: 1,
-            projectName: this.$route.query.project_name,
-            permissions: []
+            projectName: this.$route.query.project_name
         }
     },
     methods: {
@@ -214,9 +213,6 @@ export default {
             this.pageSize = val
             this.getCases()
         },
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
-        },
         timeTask() {
             let timer = setInterval(() => {
                 this.getCases()
@@ -226,9 +222,13 @@ export default {
             })
         }
     },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
+    },
     created() {
         this.getCases()
-        this.getPermissions()
     },
     mounted() {
         this.timeTask()

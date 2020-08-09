@@ -371,7 +371,6 @@ export default {
             taskId: this.$route.params.id,
             projectName: this.$route.query.project_name,
             taskDetail: {},
-            permissions: [],
             counterRefer: {},
             counters: {},
             selectValue: '',
@@ -395,9 +394,6 @@ export default {
         }
     },
     methods: {
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
-        },
         remove(id) {
             this.$api.api
                 .deleteTestTask(id)
@@ -655,8 +651,12 @@ export default {
             })
         }
     },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
+    },
     created() {
-        this.getPermissions()
         this.getTaskDetail()
         this.getTaskCounter()
         this.getTaskTestSets()

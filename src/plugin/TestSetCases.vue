@@ -150,7 +150,6 @@ export default {
     data() {
         return {
             testSetCases: this.value,
-            permissions: [],
             showCopy: this.copy,
             custom: this.attr,
             cate: this.category
@@ -207,13 +206,14 @@ export default {
                     this.$emit('removeRow', row)
                 })
                 .catch(() => {})
-        },
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
+        }
+    },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
         }
     },
     mounted() {
-        this.getPermissions()
         this.makeSortTable()
     },
     watch: {

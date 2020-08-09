@@ -114,5 +114,8 @@ router.beforeEach((to, from, next) => {
 new Vue({
     router,
     store,
+    beforeCreate () {
+        this.$store.commit('INITIAL_STORE')
+    },
     render: h => h(App)
 }).$mount('#app')

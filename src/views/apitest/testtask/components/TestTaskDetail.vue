@@ -392,7 +392,6 @@ export default {
                 tags: ''
             },
             formLabelWidth: '45px',
-            permissions: [],
             counterRefer: {},
             selectValue: '',
             counters: {},
@@ -638,9 +637,6 @@ export default {
                     this.notify.error(error.response.data)
                 })
         },
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
-        },
         getTaskHistory() {
             this.$api.api
                 .history('tasks', this.taskId)
@@ -662,10 +658,14 @@ export default {
             })
         }
     },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
+    },
     created() {
         this.getTaskDetail()
         this.getTaskTestSets()
-        this.getPermissions()
         this.getTaskCounter()
         this.getTaskHistory()
     },

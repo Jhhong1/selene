@@ -164,8 +164,7 @@ export default {
             labels: {
                 tags: ''
             },
-            taskId: null,
-            permissions: []
+            taskId: null
         }
     },
     methods: {
@@ -273,9 +272,6 @@ export default {
                     this.notify.error(error)
                 })
         },
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
-        },
         timedTask() {
             let timer = setInterval(() => {
                 this.getTaskList()
@@ -285,9 +281,13 @@ export default {
             })
         }
     },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
+    },
     created() {
         this.getTaskList()
-        this.getPermissions()
     },
     mounted() {
         this.timedTask()

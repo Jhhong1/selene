@@ -360,9 +360,6 @@ export default {
                 this.setDetail = response.data
             })
         },
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
-        },
         getSetConfig() {
             this.$api.api
                 .getSetConfig(this.setId, this.projectName)
@@ -730,9 +727,13 @@ export default {
             })
         }
     },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
+    },
     created() {
         this.getTestSetDetail()
-        this.getPermissions()
         this.getSetConfig()
         this.getTestSetCases()
         this.getSetUpCases()

@@ -68,15 +68,11 @@ export default {
     name: 'CounterList',
     data() {
         return {
-            permissions: [],
             counters: [],
             projectName: this.$route.query.project_name
         }
     },
     methods: {
-        getPermissions() {
-            this.permissions = JSON.parse(localStorage.getItem('userinfo')).permissions
-        },
         getCounter() {
             this.$api.api
                 .getCounters(this.projectName)
@@ -128,9 +124,13 @@ export default {
             }
         }
     },
+    computed: {
+        permissions() {
+            return this.$store.state.userinfo.permissions
+        }
+    },
     created() {
         this.getCounter()
-        this.getPermissions()
     }
 }
 </script>
