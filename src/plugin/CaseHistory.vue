@@ -9,7 +9,19 @@
                     <template v-else-if="cate === 'ui' && scope.row.error_message">
                         <el-row :gutter="10" class="asserts-row">
                             <el-col :span="4">失败原因</el-col>
-                            <el-col :span="20">{{ scope.row.error_message }}</el-col>
+                            <el-col :span="20">
+                                <template v-if="scope.row.error_message.length > 30">
+                                    <el-popover trigger="hover" placement="top-start">
+                                        <p>{{ scope.row.error_message }}</p>
+                                        <div slot="reference" class="name-wrapper">
+                                            {{ scope.row.error_message }}
+                                        </div>
+                                    </el-popover>
+                                </template>
+                                <template v-else>
+                                    {{ scope.row.error_message }}
+                                </template>
+                            </el-col>
                         </el-row>
                         <el-row :gutter="10" class="ui-image">
                             <el-col :span="4">截图</el-col>
