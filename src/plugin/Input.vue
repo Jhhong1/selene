@@ -12,14 +12,7 @@
             <template v-if="parameters !== undefined && parameters.length">
                 <el-row v-for="(param, index) in parameters" :key="index" :gutter="3">
                     <el-col :span="12">
-                        <template v-if="showSelect">
-                            <el-select v-model="param.name" size="mini" class="select_class" @change="changeValue(param, index)">
-                                <el-option v-for="(st, index) in selectes" :key="index" :label="st.label" :value="st.value"></el-option>
-                            </el-select>
-                        </template>
-                        <template v-else>
-                            <el-input v-model="param.name" @change="changeValue(param, index)" size="mini"></el-input>
-                        </template>
+                        <el-input v-model="param.name" @change="changeValue(param, index)" size="mini"></el-input>
                     </el-col>
                     <el-col :span="11">
                         <el-input v-model="param.value" @change="changeValue(param, index)" size="mini"></el-input>
@@ -37,9 +30,9 @@
                 </el-row>
             </template>
             <el-row class="row-class">
-                <el-col :span="24" class="col-class ch-button"
-                    ><el-button type="text" @click="add" class="add-class el-col-24" icon="el-icon-circle-plus-outline">添加</el-button></el-col
-                >
+                <el-col :span="24" class="col-class ch-button">
+                    <el-button type="text" @click="add" class="add-class el-col-24" icon="el-icon-circle-plus-outline">添加</el-button>
+                </el-col>
             </el-row>
         </template>
         <template v-else>
@@ -82,44 +75,13 @@ export default {
         edit: {
             type: Boolean,
             default: true
-        },
-        select: {
-            type: Boolean,
-            default: false
         }
     },
     data() {
         return {
             resources: this.value,
             show: this.edit,
-            parameters: [],
-            showSelect: this.select,
-            selectes: [
-                {
-                    label: '用户名',
-                    value: 'username'
-                },
-                {
-                    label: '密码',
-                    value: 'password'
-                },
-                {
-                    label: '代理端口',
-                    value: 'port'
-                },
-                {
-                    label: '代理类型',
-                    value: 'protocol'
-                },
-                {
-                    label: '链接体系',
-                    value: 'scheme'
-                },
-                {
-                    label: 'IP地址',
-                    value: 'ip'
-                }
-            ]
+            parameters: []
         }
     },
     methods: {
@@ -178,10 +140,8 @@ export default {
     watch: {
         value: function(newValue) {
             this.resources = newValue
+            this.parameters = []
             this.changeToArry(newValue, this.parameters)
-        },
-        select: function(newValue) {
-            this.showSelect = newValue
         }
     }
 }

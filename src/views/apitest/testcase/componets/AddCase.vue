@@ -136,7 +136,8 @@ export default {
                 asserts: [],
                 extracts: [],
                 cycle: 0,
-                waitingTime: 10
+                waitingTime: 10,
+                category: 'api'
             },
             rules: {
                 name: [{ validator: validateCaseName, required: true, trigger: 'blur' }],

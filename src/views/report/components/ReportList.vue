@@ -174,6 +174,9 @@ export default {
                     if (this.tasks.length > 0) {
                         this.queryform.task = this.tasks[0].id
                         this.taskId = this.tasks[0].id
+                    } else {
+                        this.queryform.task = null
+                        this.taskId = null
                     }
                 })
                 .catch(error => {
@@ -184,7 +187,8 @@ export default {
             this.queryform.category = val
             this.taskList()
         },
-        change(id) {
+        change() {
+            let id = this.queryform.task
             this.$refs['queryform'].validate(valid => {
                 if (valid) {
                     this.$api.api
@@ -288,8 +292,8 @@ export default {
         this.timedTask()
     },
     watch: {
-        taskId: function(newValue) {
-            this.change(newValue)
+        taskId: function() {
+            this.change()
         }
     }
 }

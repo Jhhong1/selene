@@ -1,26 +1,24 @@
 <template>
     <div>
         <template v-if="cate === 'api'">
-            <el-table :data="testSetCases" :class="custom" row-key="orderNum" style="padding-left: 20px; padding-right: 20px">
+            <el-table :data="testSetCases" :class="custom" row-key="relations__order" style="padding-left: 20px; padding-right: 20px">
                 <el-table-column label="用例名称" min-width="100">
                     <template slot-scope="scope">
                         <ul class="ul-style">
                             <li>
-                                {{ scope.row.testcase.name }}
+                                {{ scope.row.name }}
                             </li>
                             <li class="text-style">
-                                <template v-if="scope.row.testcase.display">
-                                    <template v-if="scope.row.testcase.display.length > 30">
-                                        <el-popover trigger="hover" placement="top-start">
-                                            <p>{{ scope.row.testcase.display }}</p>
-                                            <div slot="reference" class="name-wrapper">
-                                                {{ scope.row.testcase.display }}
-                                            </div>
-                                        </el-popover>
-                                    </template>
-                                    <template v-else>
-                                        {{ scope.row.testcase.display }}
-                                    </template>
+                                <template v-if="scope.row.display && scope.row.display.length > 30">
+                                    <el-popover trigger="hover" placement="top-start">
+                                        <p>{{ scope.row.display }}</p>
+                                        <div slot="reference" class="name-wrapper">
+                                            {{ scope.row.display }}
+                                        </div>
+                                    </el-popover>
+                                </template>
+                                <template v-else>
+                                    {{ scope.row.display }}
                                 </template>
                             </li>
                         </ul>
@@ -28,21 +26,21 @@
                 </el-table-column>
                 <el-table-column label="请求方法" min-width="50">
                     <template slot-scope="scope">
-                        {{ scope.row.testcase.method }}
+                        {{ scope.row.method }}
                     </template>
                 </el-table-column>
                 <el-table-column label="请求地址" min-width="200">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.testcase.url.length > 200">
+                        <template v-if="scope.row.url.length > 200">
                             <el-popover trigger="hover" placement="top-start">
-                                <p>{{ scope.row.testcase.url }}</p>
+                                <p>{{ scope.row.url }}</p>
                                 <div slot="reference" class="name-wrapper">
-                                    {{ scope.row.testcase.url }}
+                                    {{ scope.row.url }}
                                 </div>
                             </el-popover>
                         </template>
                         <template v-else>
-                            {{ scope.row.testcase.url }}
+                            {{ scope.row.url }}
                         </template>
                     </template>
                 </el-table-column>
@@ -52,7 +50,7 @@
                             type="text"
                             size="mini"
                             @click="removeAction(scope.$index, testSetCases, scope.row)"
-                            :disabled="permissions.indexOf('apitest.remove_case') === -1"
+                            :disabled="permissions.indexOf('services.remove_case') === -1"
                         >
                             移除
                         </el-button>
@@ -61,7 +59,7 @@
                                 type="text"
                                 size="mini"
                                 @click="copyRow(scope.$index, scope.row)"
-                                :disabled="permissions.indexOf('apitest.copy_case') === -1"
+                                :disabled="permissions.indexOf('services.copy_case') === -1"
                             >
                                 复制
                             </el-button>
@@ -71,26 +69,24 @@
             </el-table>
         </template>
         <template v-else-if="cate === 'ui'">
-            <el-table :data="testSetCases" :class="custom" row-key="orderNum" style="padding-left: 20px; padding-right: 20px">
+            <el-table :data="testSetCases" :class="custom" row-key="relations__order" style="padding-left: 20px; padding-right: 20px">
                 <el-table-column label="用例名称" min-width="100">
                     <template slot-scope="scope">
                         <ul class="ul-style">
                             <li>
-                                {{ scope.row.testcase.name }}
+                                {{ scope.row.name }}
                             </li>
                             <li class="text-style">
-                                <template v-if="scope.row.testcase.display">
-                                    <template v-if="scope.row.testcase.display.length > 30">
-                                        <el-popover trigger="hover" placement="top-start">
-                                            <p>{{ scope.row.testcase.display }}</p>
-                                            <div slot="reference" class="name-wrapper">
-                                                {{ scope.row.testcase.display }}
-                                            </div>
-                                        </el-popover>
-                                    </template>
-                                    <template v-else>
-                                        {{ scope.row.testcase.display }}
-                                    </template>
+                                <template v-if="scope.row.display && scope.row.display.length > 30">
+                                    <el-popover trigger="hover" placement="top-start">
+                                        <p>{{ scope.row.display }}</p>
+                                        <div slot="reference" class="name-wrapper">
+                                            {{ scope.row.display }}
+                                        </div>
+                                    </el-popover>
+                                </template>
+                                <template v-else>
+                                    {{ scope.row.display }}
                                 </template>
                             </li>
                         </ul>
@@ -102,7 +98,7 @@
                             type="text"
                             size="mini"
                             @click="removeAction(scope.$index, testSetCases, scope.row)"
-                            :disabled="permissions.indexOf('apitest.remove_case') === -1"
+                            :disabled="permissions.indexOf('services.remove_case') === -1"
                         >
                             移除
                         </el-button>
@@ -111,7 +107,7 @@
                                 type="text"
                                 size="mini"
                                 @click="copyRow(scope.$index, scope.row)"
-                                :disabled="permissions.indexOf('apitest.copy_case') === -1"
+                                :disabled="permissions.indexOf('services.copy_case') === -1"
                             >
                                 复制
                             </el-button>
@@ -157,7 +153,7 @@ export default {
     },
     methods: {
         makeSortTable() {
-            if (this.permissions.indexOf('apitest.associate_cases') > -1) {
+            if (this.permissions.indexOf('services.associate_cases') > -1) {
                 let selector = '.' + this.custom + ' .el-table__body-wrapper table tbody'
                 const table = document.querySelector(selector)
                 const self = this

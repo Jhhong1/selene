@@ -4,8 +4,8 @@
             tag="el-button"
             :to="{ name: 'AddConfig', query: $route.query }"
             class="el-button--primary el-button--mini p-button"
-            :class="{ 'is-disabled': permissions.indexOf('apitest.create_config') === -1 }"
-            :disabled="permissions.indexOf('apitest.create_config') === -1"
+            :class="{ 'is-disabled': permissions.indexOf('services.create_config') === -1 }"
+            :disabled="permissions.indexOf('services.create_config') === -1"
         >
             添加配置
         </router-link>
@@ -56,16 +56,21 @@
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :command="{ type: 'view', row: scope.row.id }">查看</el-dropdown-item>
+                            <el-dropdown-item
+                                :command="{ type: 'view', row: scope.row.id }"
+                                :disabled="permissions.indexOf('services.view_config') === -1"
+                            >
+                                查看
+                            </el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'update', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.update_config') === -1"
+                                :disabled="permissions.indexOf('services.update_config') === -1"
                             >
                                 更新
                             </el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.delete_config') === -1"
+                                :disabled="permissions.indexOf('services.delete_config') === -1"
                             >
                                 删除
                             </el-dropdown-item>

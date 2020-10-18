@@ -13,13 +13,13 @@
                         <el-dropdown size="mini" split-button type="primary" @command="handleCommand">
                             操作
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.update_apicases') === -1">
+                                <el-dropdown-item command="update" :disabled="permissions.indexOf('services.update_cases') === -1">
                                     更新
                                 </el-dropdown-item>
-                                <el-dropdown-item command="execute" :disabled="permissions.indexOf('apitest.execute_apicases') === -1">
+                                <el-dropdown-item command="execute" :disabled="permissions.indexOf('services.execute_cases') === -1">
                                     执行
                                 </el-dropdown-item>
-                                <el-dropdown-item command="del" :disabled="permissions.indexOf('apitest.delete_apicases') === -1">
+                                <el-dropdown-item command="del" :disabled="permissions.indexOf('services.delete_cases') === -1">
                                     删除
                                 </el-dropdown-item>
                             </el-dropdown-menu>
@@ -51,12 +51,12 @@
                                         <el-col :span="10">
                                             <template
                                                 v-if="
-                                                    cases.hasOwnProperty('executionrecord_set') &&
-                                                        cases.executionrecord_set.length > 0 &&
-                                                        cases.executionrecord_set[0].hasOwnProperty('start_time')
+                                                    cases.hasOwnProperty('history') &&
+                                                        cases.history.length > 0 &&
+                                                        cases.history[0].hasOwnProperty('start_time')
                                                 "
                                             >
-                                                {{ $moment(cases.executionrecord_set[0].start_time).format('YYYY-MM-DD HH:mm:ss') }}
+                                                {{ $moment(cases.history[0].start_time).format('YYYY-MM-DD HH:mm:ss') }}
                                             </template>
                                             <template v-else>
                                                 -
@@ -66,12 +66,12 @@
                                         <el-col :span="10">
                                             <template
                                                 v-if="
-                                                    cases.hasOwnProperty('executionrecord_set') &&
-                                                        cases.executionrecord_set.length > 0 &&
-                                                        cases.executionrecord_set[0].hasOwnProperty('end_time')
+                                                    cases.hasOwnProperty('history') &&
+                                                        cases.history.length > 0 &&
+                                                        cases.history[0].hasOwnProperty('end_time')
                                                 "
                                             >
-                                                {{ $moment(cases.executionrecord_set[0].end_time).format('YYYY-MM-DD HH:mm:ss') }}
+                                                {{ $moment(cases.history[0].end_time).format('YYYY-MM-DD HH:mm:ss') }}
                                             </template>
                                             <template v-else>
                                                 -
@@ -83,15 +83,15 @@
                                         <el-col :span="10">
                                             <template
                                                 v-if="
-                                                    cases.hasOwnProperty('executionrecord_set') &&
-                                                        cases.executionrecord_set.length > 0 &&
-                                                        cases.executionrecord_set[0].hasOwnProperty('status')
+                                                    cases.hasOwnProperty('history') &&
+                                                        cases.history.length > 0 &&
+                                                        cases.history[0].hasOwnProperty('status')
                                                 "
                                             >
-                                                <template v-if="cases.executionrecord_set[0].status === 'Starting'">
+                                                <template v-if="cases.history[0].status === 'Starting'">
                                                     <tag-running></tag-running>
                                                 </template>
-                                                <template v-if="cases.executionrecord_set[0].status === 'Done'">
+                                                <template v-if="cases.history[0].status === 'Done'">
                                                     <tag-done></tag-done>
                                                 </template>
                                             </template>
@@ -103,15 +103,15 @@
                                         <el-col :span="10">
                                             <template
                                                 v-if="
-                                                    cases.hasOwnProperty('executionrecord_set') &&
-                                                        cases.executionrecord_set.length > 0 &&
-                                                        cases.executionrecord_set[0].hasOwnProperty('result')
+                                                    cases.hasOwnProperty('history') &&
+                                                        cases.history.length > 0 &&
+                                                        cases.history[0].hasOwnProperty('result')
                                                 "
                                             >
-                                                <template v-if="cases.executionrecord_set[0].result === 'Failed'">
+                                                <template v-if="cases.history[0].result === 'Failed'">
                                                     <tag-failed></tag-failed>
                                                 </template>
-                                                <template v-if="cases.executionrecord_set[0].result === 'Succeed'">
+                                                <template v-if="cases.history[0].result === 'Succeed'">
                                                     <tag-success></tag-success>
                                                 </template>
                                             </template>
@@ -187,8 +187,8 @@ export default {
         },
         execute(caseId) {
             let data = {
-                level: 'case',
-                tasks: caseId,
+                level: 'cases',
+                id: caseId,
                 category: 'ui'
             }
             this.$api.api
@@ -226,7 +226,7 @@ export default {
         },
         historyRecord() {
             this.$api.api
-                .history('case', this.caseId)
+                .history('cases', this.caseId)
                 .then(response => {
                     this.records = response.data
                 })

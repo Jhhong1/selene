@@ -19,13 +19,13 @@
                             >
                                 操作
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="refer" :disabled="permissions.indexOf('apitest.associate_config') === -1">
+                                    <el-dropdown-item command="refer" :disabled="permissions.indexOf('services.associate_config') === -1">
                                         配置引用
                                     </el-dropdown-item>
-                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.update_apiset') === -1">
+                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('services.update_sets') === -1">
                                         更新
                                     </el-dropdown-item>
-                                    <el-dropdown-item command="delete" :disabled="permissions.indexOf('apitest.delete_apiset') === -1">
+                                    <el-dropdown-item command="delete" :disabled="permissions.indexOf('services.delete_sets') === -1">
                                         删除
                                     </el-dropdown-item>
                                 </el-dropdown-menu>
@@ -90,12 +90,12 @@
                                 </template>
                             </template>
                         </el-row>
-                        <template v-if="setDetail.hasOwnProperty('executionrecord_set') && setDetail.executionrecord_set.length > 0">
+                        <template v-if="setDetail.hasOwnProperty('history') && setDetail.history.length > 0">
                             <el-row :gutter="10" class="row-class test-left">
                                 <el-col :span="2">开始时间</el-col>
-                                <template v-if="setDetail.executionrecord_set[0].start_time">
+                                <template v-if="setDetail.history[0].start_time">
                                     <el-col :span="22">
-                                        {{ $moment(setDetail.executionrecord_set[0].start_time).format('YYYY-MM-DD HH:mm:ss') }}
+                                        {{ $moment(setDetail.history[0].start_time).format('YYYY-MM-DD HH:mm:ss') }}
                                     </el-col>
                                 </template>
                                 <template v-else>
@@ -104,9 +104,9 @@
                             </el-row>
                             <el-row :gutter="10" class="row-class test-left">
                                 <el-col :span="2">结束时间</el-col>
-                                <template v-if="setDetail.executionrecord_set[0].end_time">
+                                <template v-if="setDetail.history[0].end_time">
                                     <el-col :span="22">
-                                        {{ $moment(setDetail.executionrecord_set[0].end_time).format('YYYY-MM-DD HH:mm:ss') }}
+                                        {{ $moment(setDetail.history[0].end_time).format('YYYY-MM-DD HH:mm:ss') }}
                                     </el-col>
                                 </template>
                                 <template v-else>
@@ -115,12 +115,12 @@
                             </el-row>
                             <el-row :gutter="10" class="row-class test-left">
                                 <el-col :span="2">状态</el-col>
-                                <template v-if="setDetail.executionrecord_set[0].status === 'Starting'">
+                                <template v-if="setDetail.history[0].status === 'Starting'">
                                     <el-col :span="22">
                                         <tag-running></tag-running>
                                     </el-col>
                                 </template>
-                                <template v-else-if="setDetail.executionrecord_set[0].status === 'Done'">
+                                <template v-else-if="setDetail.history[0].status === 'Done'">
                                     <el-col :span="22">
                                         <tag-done></tag-done>
                                     </el-col>
@@ -133,12 +133,12 @@
                             </el-row>
                             <el-row :gutter="10" class="row-class test-left">
                                 <el-col :span="2">结果</el-col>
-                                <template v-if="setDetail.executionrecord_set[0].result === 'Failed'">
+                                <template v-if="setDetail.history[0].result === 'Failed'">
                                     <el-col :span="22">
                                         <tag-failed></tag-failed>
                                     </el-col>
                                 </template>
-                                <template v-else-if="setDetail.executionrecord_set[0].result === 'Succeed'">
+                                <template v-else-if="setDetail.history[0].result === 'Succeed'">
                                     <el-col :span="2">
                                         <tag-success></tag-success>
                                     </el-col>
@@ -212,7 +212,7 @@
                             :before-close="configBeforeClose"
                             class="dialog-header table-class dialog-class el-table_empty-block"
                             style="position: fixed"
-                            @open="getConfigList"
+                            @open="configs"
                         >
                             <template>
                                 <el-row>
@@ -238,10 +238,10 @@
                         <el-dropdown size="mini" split-button type="primary" @command="handleCommand" style="float: right; margin-right: 50px">
                             操作
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="exec" :disabled="permissions.indexOf('apitest.execute_apiset') === -1">
+                                <el-dropdown-item command="exec" :disabled="permissions.indexOf('services.execute_set') === -1">
                                     执行
                                 </el-dropdown-item>
-                                <el-dropdown-item command="linked" :disabled="permissions.indexOf('apitest.associate_cases') === -1">
+                                <el-dropdown-item command="linked" :disabled="permissions.indexOf('services.associate_cases') === -1">
                                     关联测试用例
                                 </el-dropdown-item>
                             </el-dropdown-menu>
@@ -266,7 +266,7 @@
                         <el-dropdown size="mini" split-button type="primary" @command="handleSetUp" style="float: right; margin-right: 50px">
                             操作
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="setup" :disabled="permissions.indexOf('apitest.associate_cases') === -1">
+                                <el-dropdown-item command="setup" :disabled="permissions.indexOf('services.associate_cases') === -1">
                                     关联测试用例
                                 </el-dropdown-item>
                             </el-dropdown-menu>
@@ -291,7 +291,7 @@
                         <el-dropdown size="mini" split-button type="primary" @command="handleTearDown" style="float: right; margin-right: 50px">
                             操作
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="teardown" :disabled="permissions.indexOf('apitest.associate_cases') === -1">
+                                <el-dropdown-item command="teardown" :disabled="permissions.indexOf('services.associate_cases') === -1">
                                     关联测试用例
                                 </el-dropdown-item>
                             </el-dropdown-menu>
@@ -360,15 +360,15 @@ export default {
         },
         selectChoice() {
             let payload = {
-                testset_id: this.setId,
+                set_id: this.setId,
                 config_id: this.selectValue
             }
             this.configToSet(JSON.stringify(payload), this.projectName)
             this.dialogConfigVisible = false
         },
-        getConfigList() {
+        configs() {
             this.$api.api
-                .getConfigList(this.currentPage, this.pageSize, this.projectName)
+                .getConfigList(1, 1000, this.projectName, 'api')
                 .then(response => {
                     this.configList = response.data.results
                     this.selectValue = this.configReference.id
@@ -391,7 +391,7 @@ export default {
         configToSet(payload, project) {
             let _this = this
             this.$api.api
-                .configToSet(payload, project)
+                .bindingConfig(payload, project)
                 .then(() => {
                     _this.getSetConfig()
                 })
@@ -404,7 +404,7 @@ export default {
         },
         changeRow(event) {
             let payload = {
-                apiset_id: this.setId,
+                set_id: this.setId,
                 cases: event
             }
             this.changeOrder(JSON.stringify(payload), this.projectName)
@@ -419,16 +419,16 @@ export default {
         },
         removeRow(event) {
             let payload = {
-                case_id: event.testcase.id,
-                testset_id: this.setId,
-                orderNum: event.orderNum
+                case_id: event.id,
+                set_id: this.setId,
+                order: event.relations__order
             }
             this.removeCase(payload)
         },
         changeOrder(payload, project) {
             let _this = this
             this.$api.api
-                .changeCasesOrder(payload, project)
+                .ordering(payload, project)
                 .then(() => {
                     _this.getTestSetCases(_this.setId, _this.projectName)
                 })
@@ -439,14 +439,14 @@ export default {
         getTestSetDetail() {
             let id = this.$route.params.id
             let project = this.$route.query.project_name
-            this.$api.api.ApiTestSetDetail(id, project).then(response => {
+            this.$api.api.setDetail(id, project).then(response => {
                 this.setDetail = response.data
             })
         },
         execute() {
             let payload = {
-                level: 'testSet',
-                tasks: this.setId,
+                level: 'sets',
+                id: this.setId,
                 category: 'api'
             }
             this.$api.api
@@ -494,7 +494,7 @@ export default {
         },
         remove(id) {
             this.$api.api
-                .deleteApiTestSet(id)
+                .deleteSet(id)
                 .then(() => {
                     this.notify.success('删除测试集成功')
                     this.$router.push({ name: 'ApiTestSetList', query: this.$route.query })
@@ -549,7 +549,7 @@ export default {
         },
         removeCase(payload) {
             this.$api.api
-                .removeCaseFromSet(JSON.stringify(payload), this.projectName)
+                .unboundCases(JSON.stringify(payload), this.projectName)
                 .then(() => {
                     this.notify.success('移除测试用例成功')
                     this.getTestSetCases()
@@ -580,7 +580,7 @@ export default {
             }
         },
         linkCases(payload) {
-            return this.$api.api.caseToTestset(JSON.stringify(payload))
+            return this.$api.api.bindingCases(JSON.stringify(payload))
         },
         listenVisible(event) {
             this.dialogFormVisible = event
@@ -596,7 +596,7 @@ export default {
         },
         listenChoice(event) {
             let payload = {
-                apiset_id: this.$route.params.id,
+                set_id: this.$route.params.id,
                 cases: event.cases
             }
             this.linkCases(payload)
@@ -623,7 +623,7 @@ export default {
         },
         listenSetUpChoice(event) {
             let payload = {
-                apiset_id: this.$route.params.id,
+                set_id: this.$route.params.id,
                 cases: event.cases,
                 handler: 'setup'
             }
@@ -639,16 +639,16 @@ export default {
         },
         removeSetUpRow(event) {
             let payload = {
-                case_id: event.testcase.id,
-                testset_id: this.setId,
-                orderNum: event.orderNum,
+                case_id: event.id,
+                set_id: this.setId,
+                order: event.relations__order,
                 handler: 'setup'
             }
             this.removeSetUpCases(payload)
         },
         removeSetUpCases(payload) {
             this.$api.api
-                .removeCaseFromSet(JSON.stringify(payload), this.projectName)
+                .unboundCases(JSON.stringify(payload), this.projectName)
                 .then(() => {
                     this.notify.success('移除测试用例成功')
                     this.getSetUpCases()
@@ -659,12 +659,12 @@ export default {
         },
         changeSetUpRow(event) {
             let payload = {
-                apiset_id: this.setId,
+                set_id: this.setId,
                 cases: event,
                 handler: 'setup'
             }
             this.$api.api
-                .changeCasesOrder(JSON.stringify(payload), this.projectName)
+                .ordering(JSON.stringify(payload), this.projectName)
                 .then(() => {
                     this.getSetUpCases()
                 })
@@ -686,7 +686,7 @@ export default {
         },
         listenTearDownChoice(event) {
             let payload = {
-                apiset_id: this.$route.params.id,
+                set_id: this.$route.params.id,
                 cases: event.cases,
                 handler: 'teardown'
             }
@@ -702,16 +702,16 @@ export default {
         },
         removeTearDownRow(event) {
             let payload = {
-                case_id: event.testcase.id,
-                testset_id: this.setId,
-                orderNum: event.orderNum,
+                case_id: event.id,
+                set_id: this.setId,
+                order: event.relations__order,
                 handler: 'teardown'
             }
             this.removeTearDownCases(payload)
         },
         removeTearDownCases(payload) {
             this.$api.api
-                .removeCaseFromSet(JSON.stringify(payload), this.projectName)
+                .unboundCases(JSON.stringify(payload), this.projectName)
                 .then(() => {
                     this.notify.success('移除测试用例成功')
                     this.getTeardownCases()
@@ -722,12 +722,12 @@ export default {
         },
         changeTearDownRow(event) {
             let payload = {
-                apiset_id: this.setId,
+                set_id: this.setId,
                 cases: event,
                 handler: 'teardown'
             }
             this.$api.api
-                .changeCasesOrder(JSON.stringify(payload), this.projectName)
+                .ordering(JSON.stringify(payload), this.projectName)
                 .then(() => {
                     this.getTeardownCases()
                 })
@@ -737,7 +737,7 @@ export default {
         },
         getSetHistory() {
             this.$api.api
-                .history('set', this.setId)
+                .history('sets', this.setId)
                 .then(response => {
                     this.setHistory = response.data
                 })

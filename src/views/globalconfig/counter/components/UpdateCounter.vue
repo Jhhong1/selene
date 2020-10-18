@@ -38,7 +38,6 @@ export default {
                 if (!value) {
                     callback(new Error('必填项不能为空'))
                 } else {
-                    console.log('number: ', value)
                     if (!passregex.test(value)) {
                         callback(new Error('请输入正整数'))
                     } else {

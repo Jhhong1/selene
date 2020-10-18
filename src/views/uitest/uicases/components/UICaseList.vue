@@ -1,13 +1,15 @@
 <template>
     <div>
-        <template v-if="permissions.indexOf('apitest.create_apicases') > -1">
-            <router-link tag="el-button" :to="{ name: 'AddCase', query: $route.query }" class="el-button--primary el-button--mini p-button">
-                添加测试用例
-            </router-link>
-        </template>
-        <template v-else>
-            <el-button class="el-button--primary el-button--mini p-button" disabled>添加测试用例</el-button>
-        </template>
+        <router-link
+            tag="el-button"
+            :to="{ name: 'AddCase', query: $route.query }"
+            class="el-button--primary el-button--mini p-button"
+            :class="{ 'is-disabled': permissions.indexOf('services.create_cases') === -1 }"
+            :disabled="permissions.indexOf('services.create_cases') === -1"
+        >
+            添加测试用例
+        </router-link>
+
         <el-table class="table-class td" :data="cases">
             <el-table-column label="用例名称" min-width="200">
                 <template slot-scope="scope">
@@ -40,11 +42,11 @@
             </el-table-column>
             <el-table-column label="状态" min-width="100">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.length > 0">
-                        <template v-if="scope.row.executionrecord_set[0].status === 'Done'">
+                    <template v-if="scope.row.hasOwnProperty('history') && scope.row.history.length > 0">
+                        <template v-if="scope.row.history[0].status === 'Done'">
                             <tag-done></tag-done>
                         </template>
-                        <template v-else-if="scope.row.executionrecord_set[0].status === 'Starting'">
+                        <template v-else-if="scope.row.history[0].status === 'Starting'">
                             <tag-running></tag-running>
                         </template>
                     </template>
@@ -55,8 +57,8 @@
             </el-table-column>
             <el-table-column label="结果" min-width="100">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.length > 0">
-                        <template v-if="scope.row.executionrecord_set[0].result === 'Failed'">
+                    <template v-if="scope.row.hasOwnProperty('history') && scope.row.history.length > 0">
+                        <template v-if="scope.row.history[0].result === 'Failed'">
                             <tag-failed></tag-failed>
                             <!-- <el-popover trigger="hover" placement="top-start">
                                 <p>{{ scope.row.caserelationship.errorMessage }}</p>
@@ -65,7 +67,7 @@
                                 </div>
                             </el-popover> -->
                         </template>
-                        <template v-else-if="scope.row.executionrecord_set[0].result === 'Succeed'">
+                        <template v-else-if="scope.row.history[0].result === 'Succeed'">
                             <tag-success></tag-success>
                         </template>
                     </template>
@@ -84,19 +86,19 @@
                             <el-dropdown-item :command="{ type: 'view', row: scope.row.id }">查看</el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'update', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.update_apicases') === -1"
+                                :disabled="permissions.indexOf('services.update_cases') === -1"
                             >
                                 更新
                             </el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'exec', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.execute_apicases') === -1"
+                                :disabled="permissions.indexOf('services.execute_cases') === -1"
                             >
                                 执行
                             </el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.delete_apicases') === -1"
+                                :disabled="permissions.indexOf('services.delete_cases') === -1"
                             >
                                 删除
                             </el-dropdown-item>
@@ -173,8 +175,8 @@ export default {
         },
         execute(caseId) {
             let data = {
-                level: 'case',
-                tasks: caseId,
+                level: 'cases',
+                id: caseId,
                 category: 'ui'
             }
             this.$api.api

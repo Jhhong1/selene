@@ -49,7 +49,7 @@ export default {
     methods: {
         setDetail() {
             this.$api.api
-                .ApiTestSetDetail(this.setId, this.projectName)
+                .setDetail(this.setId, this.projectName)
                 .then(response => {
                     this.setForm = response.data
                 })
@@ -63,7 +63,7 @@ export default {
         },
         updateSet(id, payload, project) {
             this.$api.api
-                .updateTestSet(id, payload, project)
+                .updateSet(id, payload, project)
                 .then(() => {
                     this.notify.success('更新测试集成功')
                     this.$router.push({ name: 'UISetDetail', params: { name: this.name, id: this.setId }, query: this.$route.query })

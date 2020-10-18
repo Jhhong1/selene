@@ -4,8 +4,8 @@
             tag="el-button"
             class="el-button--primary el-button--mini p-button"
             :to="{ name: 'AddTestTask', query: $route.query }"
-            :class="{ 'is-disabled': permissions.indexOf('apitest.create_apitasks') === -1 }"
-            :disabled="permissions.indexOf('apitest.create_apitasks') === -1"
+            :class="{ 'is-disabled': permissions.indexOf('services.create_tasks') === -1 }"
+            :disabled="permissions.indexOf('services.create_tasks') === -1"
         >
             添加测试任务
         </router-link>
@@ -49,11 +49,11 @@
             </el-table-column>
             <el-table-column label="状态" min-width="150">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.length > 0">
-                        <template v-if="scope.row.executionrecord_set[0].status === 'Done'">
+                    <template v-if="scope.row.hasOwnProperty('history') && scope.row.history.length > 0">
+                        <template v-if="scope.row.history[0].status === 'Done'">
                             <tag-done></tag-done>
                         </template>
-                        <template v-else-if="scope.row.executionrecord_set[0].status === 'Starting'">
+                        <template v-else-if="scope.row.history[0].status === 'Starting'">
                             <tag-running></tag-running>
                         </template>
                     </template>
@@ -64,8 +64,8 @@
             </el-table-column>
             <el-table-column label="结果" min-width="150">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.hasOwnProperty('executionrecord_set') && scope.row.executionrecord_set.length > 0">
-                        <template v-if="scope.row.executionrecord_set[0].result === 'Failed'">
+                    <template v-if="scope.row.hasOwnProperty('history') && scope.row.history.length > 0">
+                        <template v-if="scope.row.history[0].result === 'Failed'">
                             <tag-failed></tag-failed>
                             <!-- <el-popover trigger="hover" placement="top-start">
                                 <p>{{ scope.row.errorMessage }}</p>
@@ -73,7 +73,7 @@
                                 </div>
                             </el-popover> -->
                         </template>
-                        <template v-else-if="scope.row.executionrecord_set[0].result === 'Succeed'">
+                        <template v-else-if="scope.row.history[0].result === 'Succeed'">
                             <tag-success></tag-success>
                         </template>
                     </template>
@@ -92,19 +92,19 @@
                             <el-dropdown-item :command="{ type: 'view', name: scope.row.name, row: scope.row.id }">查看</el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'update', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.update_apitasks') === -1"
+                                :disabled="permissions.indexOf('services.update_tasks') === -1"
                             >
                                 更新
                             </el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'exec', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.execute_apitasks') === -1"
+                                :disabled="permissions.indexOf('services.execute_tasks') === -1"
                             >
                                 执行
                             </el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.delete_apitasks') === -1"
+                                :disabled="permissions.indexOf('services.delete_tasks') === -1"
                             >
                                 删除
                             </el-dropdown-item>
@@ -256,8 +256,8 @@ export default {
         },
         submit(formName) {
             let payload = {
-                level: 'task',
-                tasks: this.taskId,
+                level: 'tasks',
+                id: this.taskId,
                 tags: this.labels.tags,
                 category: 'api'
             }

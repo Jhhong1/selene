@@ -1,29 +1,1 @@
-# selene
-
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
-
-### Compiles and minifies for production
-```
-yarn run build
-```
-
-### Run your tests
-```
-yarn run test
-```
-
-### Lints and fixes files
-```
-yarn run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+一个简易的API及UI自动化测试平台，前端部分。前端代码使用vue.js编写。下面简要介绍一下运行方式  将代码克隆到本地，到代码的目录下使用docker命令构建出需要的镜像(这里起名为selene)  ```docker build -t selene .```运行selene  ```docker run -d -p 8080:80 --name=selene --env cronus_ip=${address} --env cronus_port=8081 selene```环境变量说明:  cronus_ip: cronus的IP地址  cronus_port: cronus对外暴露的端口  selene运行起来后，访问```IP地址:8080```即可  登录界面  ![login](/image/login.png)   项目列表页  登录成功后，进入项目列表页，后续测试的相关操作都是在项目下进行  ![project](/image/project.png)   配置  可以通过创建配置来管理API和UI的一些公共资源![config](/image/config.png)  ![config detail](/image/config_detail.png)  接口测试用例  测试用例会默认引用被设置为全局的配置。如果在全局配置中设置了请求地址，在创建测试用例的时候可以不用填IP地址，只填请求路径即可。支持添加多个断言和提取参数。提取的参数，在同一个测试集合里面是共享的。     ![api cases list](/image/api_cases_list.png)    ![api case detail](/image/api_case.png)  ![api case history](/image/api_case_history.png)  UI测试用例  ![ui case](/image/ui_case.png)  ![ui case detail](/image/ui_case_detail.png)   ![ui case history](/image/ui_case_history.png) 测试用例集合  多个测试用例可以组合成一个测试场景的测试集合，在同一个测试集合中，测试用例提取的参数是共享的，可以被同一个测试集合中的其它测试用例使用。在测试集合中可以单独的引用配置，这时就不会使用全局配置。前置条件可以用来做一些初始化操作，如：数据准备，后置条件可以用来做一些数据清理的操作，测试用例里面是由一些单个的测试用例组合成的测试场景，支持通过拖拽来重新调整case的顺序     ![sets list](/image/set_list.png)   ![sets detail](/image/set_detail.png)  ![sets cases](/image/set_cases.png)  ![sets setup](/image/set_setup.png)  ![sets teardown](/image/set_teardown.png)  ![sets history](/image/set_history.png)  测试任务  多个测试集合可以组成一个测试任务，在执行测试任务的时候，通过标签来只运行任务中的某些类型的测试集。为了避免某些资源名冲突，可以给测试任务引用计数器，供测试任务下的测试用例使用  ![task list](/image/task_list.png)  ![task detail](/image/task_detail.png)  ![task set](/image/task_set.png)  ![task history](/image/task_history.png)  定时任务  支持设置定时任务来定时执行指定的任务  ![cron add](/image/add_cron.png)  ![cron list](/image/cron_list.png)   测试报告  测试报告里面会动态展示测试任务的运行状态  ![report](/image/report.png)  

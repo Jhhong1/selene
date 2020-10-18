@@ -14,13 +14,13 @@
                             <el-dropdown size="mini" split-button type="primary" @command="handleCommand">
                                 操作
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.update_apicases') === -1">
+                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('services.update_cases') === -1">
                                         更新
                                     </el-dropdown-item>
-                                    <el-dropdown-item command="execute" :disabled="permissions.indexOf('apitest.execute_apicases') === -1">
+                                    <el-dropdown-item command="execute" :disabled="permissions.indexOf('services.execute_cases') === -1">
                                         执行
                                     </el-dropdown-item>
-                                    <el-dropdown-item command="del" :disabled="permissions.indexOf('apitest.delete_apicases') === -1">
+                                    <el-dropdown-item command="del" :disabled="permissions.indexOf('services.delete_cases') === -1">
                                         删除
                                     </el-dropdown-item>
                                 </el-dropdown-menu>
@@ -63,15 +63,11 @@ export default {
                     self.cases.createTime = self.$moment(self.cases.createTime).format('YYYY-MM-DD HH:mm:ss')
                     self.cases.updateTime = self.$moment(self.cases.updateTime).format('YYYY-MM-DD HH:mm:ss')
                     self.cases.startRunTime =
-                        self.cases.executionrecord_set.length > 0
-                            ? self.$moment(self.cases.executionrecord_set[0].start_time).format('YYYY-MM-DD HH:mm:ss')
-                            : null
+                        self.cases.history.length > 0 ? self.$moment(self.cases.history[0].start_time).format('YYYY-MM-DD HH:mm:ss') : null
                     self.cases.endRunTime =
-                        self.cases.executionrecord_set.length > 0
-                            ? self.$moment(self.cases.executionrecord_set[0].end_time).format('YYYY-MM-DD HH:mm:ss')
-                            : null
-                    self.cases.status = self.cases.executionrecord_set.length > 0 ? self.cases.executionrecord_set[0].status : null
-                    self.cases.result = self.cases.executionrecord_set.length > 0 ? self.cases.executionrecord_set[0].result : null
+                        self.cases.history.length > 0 ? self.$moment(self.cases.history[0].end_time).format('YYYY-MM-DD HH:mm:ss') : null
+                    self.cases.status = self.cases.history.length > 0 ? self.cases.history[0].status : null
+                    self.cases.result = self.cases.history.length > 0 ? self.cases.history[0].result : null
 
                     this.loading = false
                 })
@@ -104,8 +100,8 @@ export default {
         handleCommand(command) {
             if (command === 'execute') {
                 let data = {
-                    level: 'case',
-                    tasks: this.caseId,
+                    level: 'cases',
+                    id: this.caseId,
                     category: 'api'
                 }
                 this.execute(JSON.stringify(data), this.projectName)
@@ -134,7 +130,7 @@ export default {
         },
         historyRecord() {
             this.$api.api
-                .history('case', this.caseId)
+                .history('cases', this.caseId)
                 .then(response => {
                     this.records = response.data
                 })

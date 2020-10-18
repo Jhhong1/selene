@@ -32,6 +32,10 @@
     display: block;
 }
 
+.is-display {
+    display: none;
+}
+
 .asserts-row {
     /*border-top: 1px rgb(219, 219, 222) dashed;*/
     border-bottom: 1px rgb(219, 219, 222) dashed;

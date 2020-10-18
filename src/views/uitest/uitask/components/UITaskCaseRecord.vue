@@ -45,7 +45,7 @@ export default {
     methods: {
         getCaseRecord() {
             this.$api.api
-                .history('task', this.set_id, this.id, this.batch)
+                .history('task_cases', this.set_id, this.id, this.batch)
                 .then(response => {
                     this.cases_record = response.data
                 })
@@ -55,7 +55,7 @@ export default {
         },
         getSetupRecord() {
             this.$api.api
-                .history('task', this.set_id, this.id, this.batch, 'setup')
+                .history('task_cases', this.set_id, this.id, this.batch, 'setup')
                 .then(response => {
                     this.setup_record = response.data
                 })
@@ -65,7 +65,7 @@ export default {
         },
         getTeadownRecord() {
             this.$api.api
-                .history('task', this.set_id, this.id, this.batch, 'teardown')
+                .history('task_cases', this.set_id, this.id, this.batch, 'teardown')
                 .then(response => {
                     this.teardown_record = response.data
                 })
