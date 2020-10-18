@@ -39,7 +39,7 @@ export default {
     methods: {
         getCases() {
             this.$api.api
-                .history('testSet', this.id, '', this.batch)
+                .history('set_cases', this.id, '', this.batch)
                 .then(response => {
                     this.cases = response.data
                 })
@@ -49,7 +49,7 @@ export default {
         },
         getSetupCases() {
             this.$api.api
-                .history('testSet', this.id, '', this.batch, 'setup')
+                .history('set_cases', this.id, '', this.batch, 'setup')
                 .then(response => {
                     this.setUpCases = response.data
                 })
@@ -59,7 +59,7 @@ export default {
         },
         getTeardownCases() {
             this.$api.api
-                .history('testSet', this.id, '', this.batch, 'teardown')
+                .history('set_cases', this.id, '', this.batch, 'teardown')
                 .then(response => {
                     this.teardownCases = response.data
                 })

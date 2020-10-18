@@ -1,13 +1,15 @@
 <template>
     <div>
-        <template v-if="permissions.indexOf('apitest.create_counter') > -1">
-            <router-link tag="el-button" :to="{ name: 'AddCounter', query: $route.query }" class="el-button--primary el-button--mini p-button">
-                添加计数器
-            </router-link>
-        </template>
-        <template v-else>
-            <el-button class="el-button--primary el-button--mini p-button" disabled>添加计数器</el-button>
-        </template>
+        <router-link
+            tag="el-button"
+            :to="{ name: 'AddCounter', query: $route.query }"
+            class="el-button--primary el-button--mini p-button"
+            :class="{ 'is-disabled': permissions.indexOf('services.create_counter') === -1 }"
+            :disabled="permissions.indexOf('services.create_counter') === -1"
+        >
+            添加计数器
+        </router-link>
+
         <el-table class="table-class td" :data="counters">
             <el-table-column label="名称" min-width="100">
                 <template slot-scope="scope">
@@ -45,13 +47,13 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item
                                 :command="{ type: 'update', row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.update_counter') === -1"
+                                :disabled="permissions.indexOf('services.update_counter') === -1"
                             >
                                 更新
                             </el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ type: 'del', index: scope.$index, row: scope.row.id }"
-                                :disabled="permissions.indexOf('apitest.delete_counter') === -1"
+                                :disabled="permissions.indexOf('services.delete_counter') === -1"
                             >
                                 删除
                             </el-dropdown-item>
@@ -60,6 +62,17 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+            class="pagination-class"
+            background
+            layout="total, sizes, prev, pager, next"
+            :total="count"
+            :page-sizes="pageSizes"
+            :page-size="pageSize"
+            :current-page="currentPage"
+            @size-change="handleSizeChange"
+            @current-change="currentChange"
+        ></el-pagination>
     </div>
 </template>
 
@@ -69,19 +82,33 @@ export default {
     data() {
         return {
             counters: [],
-            projectName: this.$route.query.project_name
+            projectName: this.$route.query.project_name,
+            count: null,
+            pageSizes: [10, 20, 50],
+            pageSize: 10,
+            currentPage: 1,
+            loading: true
         }
     },
     methods: {
         getCounter() {
             this.$api.api
-                .getCounters(this.projectName)
+                .getCounters(this.currentPage, this.pageSize, this.projectName)
                 .then(response => {
-                    this.counters = response.data
+                    this.counters = response.data.results
+                    this.count = response.data.count
                 })
                 .catch(error => {
                     this.notify.error(error.response.data)
                 })
+        },
+        currentChange(val) {
+            this.currentPage = val
+            this.getCounter()
+        },
+        handleSizeChange(val) {
+            this.pageSize = val
+            this.getCounter()
         },
         deleteCounter(counterId) {
             this.$api.api

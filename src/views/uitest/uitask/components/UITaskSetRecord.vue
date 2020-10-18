@@ -12,19 +12,19 @@
                 <template slot-scope="scope">
                     <ul class="ul-style">
                         <li>
-                            {{ scope.row.testset.name }}
+                            {{ scope.row.sets.name }}
                         </li>
                         <li class="text-style">
-                            <template v-if="scope.row.testset.display.length > 30">
+                            <template v-if="scope.row.sets.display && scope.row.sets.display.length > 30">
                                 <el-popover trigger="hover" placement="top-start">
-                                    <p>{{ scope.row.testset.display }}</p>
+                                    <p>{{ scope.row.sets.display }}</p>
                                     <div slot="reference" class="name-wrapper">
-                                        {{ scope.row.testset.display }}
+                                        {{ scope.row.sets.display }}
                                     </div>
                                 </el-popover>
                             </template>
                             <template v-else>
-                                {{ scope.row.testset.display }}
+                                {{ scope.row.sets.display }}
                             </template>
                         </li>
                     </ul>
@@ -32,8 +32,8 @@
             </el-table-column>
             <el-table-column label="开始时间" min-width="100">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.executionrecord_set.start_time">
-                        {{ $moment(scope.row.executionrecord_set.start_time).format('YYYY-MM-DD HH:mm:ss') }}
+                    <template v-if="scope.row.history.start_time">
+                        {{ $moment(scope.row.history.start_time).format('YYYY-MM-DD HH:mm:ss') }}
                     </template>
                     <template v-else>
                         -
@@ -42,8 +42,8 @@
             </el-table-column>
             <el-table-column label="结束时间" min-width="100">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.executionrecord_set.end_time">
-                        {{ $moment(scope.row.executionrecord_set.end_time).format('YYYY-MM-DD HH:mm:ss') }}
+                    <template v-if="scope.row.history.end_time">
+                        {{ $moment(scope.row.history.end_time).format('YYYY-MM-DD HH:mm:ss') }}
                     </template>
                     <template v-else>
                         -
@@ -52,10 +52,10 @@
             </el-table-column>
             <el-table-column label="状态" min-width="60">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.executionrecord_set.status === 'Done'">
+                    <template v-if="scope.row.history.status === 'Done'">
                         <tag-done></tag-done>
                     </template>
-                    <template v-else-if="scope.row.executionrecord_set.status === 'Starting'">
+                    <template v-else-if="scope.row.history.status === 'Starting'">
                         <tag-running></tag-running>
                     </template>
                     <template v-else>
@@ -65,10 +65,10 @@
             </el-table-column>
             <el-table-column label="结果" min-width="60">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.executionrecord_set.result === 'Succeed'">
+                    <template v-if="scope.row.history.result === 'Succeed'">
                         <tag-success></tag-success>
                     </template>
-                    <template v-else-if="scope.row.executionrecord_set.result === 'Failed'">
+                    <template v-else-if="scope.row.history.result === 'Failed'">
                         <tag-failed></tag-failed>
                     </template>
                     <template v-else>
@@ -83,7 +83,7 @@
                             <i class="el-icon-more-outline rotating"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :command="{ type: 'view', set_name: scope.row.testset.name, set_id: scope.row.testset.id }">
+                            <el-dropdown-item :command="{ type: 'view', set_name: scope.row.sets.name, set_id: scope.row.sets.id }">
                                 详情
                             </el-dropdown-item>
                         </el-dropdown-menu>
@@ -108,7 +108,7 @@ export default {
     methods: {
         getRecordDetail() {
             this.$api.api
-                .history('task_set', this.id, '', this.batch)
+                .history('task_sets', this.id, '', this.batch)
                 .then(response => {
                     this.results = response.data
                 })

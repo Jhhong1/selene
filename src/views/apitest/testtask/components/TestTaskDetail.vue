@@ -11,13 +11,13 @@
                     <el-dropdown size="mini" split-button type="primary" @command="infoHandleCommand" style="float: right; margin-right: 50px">
                         操作
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="link" :disabled="permissions.indexOf('apitest.associate_counter') === -1">
+                            <el-dropdown-item command="link" :disabled="permissions.indexOf('services.associate_counter') === -1">
                                 关联计数器
                             </el-dropdown-item>
-                            <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.update_apitasks') === -1">
+                            <el-dropdown-item command="update" :disabled="permissions.indexOf('services.update_tasks') === -1">
                                 更新
                             </el-dropdown-item>
-                            <el-dropdown-item command="delete" :disabled="permissions.indexOf('apitest.delete_apitasks') === -1">
+                            <el-dropdown-item command="delete" :disabled="permissions.indexOf('services.delete_tasks') === -1">
                                 删除
                             </el-dropdown-item>
                         </el-dropdown-menu>
@@ -71,8 +71,8 @@
                         </el-row>
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">开始时间</el-col>
-                            <template v-if="taskDetail.hasOwnProperty('executionrecord_set') && taskDetail.executionrecord_set.length > 0">
-                                <el-col :span="22">{{ $moment(taskDetail.executionrecord_set[0].start_time).format('YYYY-MM-DD HH:mm:ss') }}</el-col>
+                            <template v-if="taskDetail.hasOwnProperty('history') && taskDetail.history.length > 0">
+                                <el-col :span="22">{{ $moment(taskDetail.history[0].start_time).format('YYYY-MM-DD HH:mm:ss') }}</el-col>
                             </template>
                             <template v-else>
                                 <el-col :span="22">-</el-col>
@@ -80,8 +80,8 @@
                         </el-row>
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">结束时间</el-col>
-                            <template v-if="taskDetail.hasOwnProperty('executionrecord_set') && taskDetail.executionrecord_set.length > 0">
-                                <el-col :span="22">{{ $moment(taskDetail.executionrecord_set[0].end_time).format('YYYY-MM-DD HH:mm:ss') }}</el-col>
+                            <template v-if="taskDetail.hasOwnProperty('history') && taskDetail.history.length > 0">
+                                <el-col :span="22">{{ $moment(taskDetail.history[0].end_time).format('YYYY-MM-DD HH:mm:ss') }}</el-col>
                             </template>
                             <template v-else>
                                 <el-col :span="22">-</el-col>
@@ -89,13 +89,13 @@
                         </el-row>
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">状态</el-col>
-                            <template v-if="taskDetail.hasOwnProperty('executionrecord_set') && taskDetail.executionrecord_set.length > 0">
-                                <template v-if="taskDetail.executionrecord_set[0].status === 'Starting'">
+                            <template v-if="taskDetail.hasOwnProperty('history') && taskDetail.history.length > 0">
+                                <template v-if="taskDetail.history[0].status === 'Starting'">
                                     <el-col :span="22">
                                         <tag-running></tag-running>
                                     </el-col>
                                 </template>
-                                <template v-else-if="taskDetail.executionrecord_set[0].status === 'Done'">
+                                <template v-else-if="taskDetail.history[0].status === 'Done'">
                                     <el-col :span="22">
                                         <tag-done></tag-done>
                                     </el-col>
@@ -109,13 +109,13 @@
                         </el-row>
                         <el-row :gutter="10" class="row-class test-left">
                             <el-col :span="2">结果</el-col>
-                            <template v-if="taskDetail.hasOwnProperty('executionrecord_set') && taskDetail.executionrecord_set.length > 0">
-                                <template v-if="taskDetail.executionrecord_set[0].result === 'Failed'">
+                            <template v-if="taskDetail.hasOwnProperty('history') && taskDetail.history.length > 0">
+                                <template v-if="taskDetail.history[0].result === 'Failed'">
                                     <el-col :span="22">
                                         <tag-failed></tag-failed>
                                     </el-col>
                                 </template>
-                                <template v-else-if="taskDetail.executionrecord_set[0].result === 'Succeed'">
+                                <template v-else-if="taskDetail.history[0].result === 'Succeed'">
                                     <el-col :span="22">
                                         <tag-success></tag-success>
                                     </el-col>
@@ -186,11 +186,11 @@
                     <el-dropdown size="mini" split-button type="primary" @command="handleCommand" style="float: right; margin-right: 50px">
                         操作
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="linked" :disabled="permissions.indexOf('apitest.associate_set') === -1">
+                            <el-dropdown-item command="linked" :disabled="permissions.indexOf('services.associate_set') === -1">
                                 关联测试集
                             </el-dropdown-item>
                             <!--<el-dropdown-item command="createCase">创建测试集</el-dropdown-item>-->
-                            <el-dropdown-item command="exec" :disabled="permissions.indexOf('apitest.execute_apitasks') === -1">
+                            <el-dropdown-item command="exec" :disabled="permissions.indexOf('services.execute_tasks') === -1">
                                 执行
                             </el-dropdown-item>
                         </el-dropdown-menu>
@@ -198,58 +198,47 @@
                     <el-table row-key="id" :data="taskSets" style="padding-left: 20px; padding-right: 20px">
                         <el-table-column label="测试集名称" min-width="150">
                             <template slot-scope="scope">
-                                <template v-if="scope.row.testset">
-                                    <ul class="ul-style">
-                                        <li>
-                                            {{ scope.row.testset.name }}
-                                        </li>
-                                        <li class="text-style">
-                                            <template v-if="scope.row.testset.display">
-                                                <template v-if="scope.row.testset.display > 30">
-                                                    <el-popover trigger="hover" placement="top-start">
-                                                        <p>{{ scope.row.testset.display }}</p>
-                                                        <div slot="reference" class="name-wrapper">
-                                                            {{ scope.row.testset.display }}
-                                                        </div>
-                                                    </el-popover>
-                                                </template>
-                                                <template v-else>
-                                                    {{ scope.row.testset.display }}
-                                                </template>
+                                <ul class="ul-style">
+                                    <li>
+                                        {{ scope.row.name }}
+                                    </li>
+                                    <li class="text-style">
+                                        <template v-if="scope.row.display">
+                                            <template v-if="scope.row.display > 30">
+                                                <el-popover trigger="hover" placement="top-start">
+                                                    <p>{{ scope.row.display }}</p>
+                                                    <div slot="reference" class="name-wrapper">
+                                                        {{ scope.row.display }}
+                                                    </div>
+                                                </el-popover>
                                             </template>
-                                        </li>
-                                    </ul>
-                                </template>
+                                            <template v-else>
+                                                {{ scope.row.display }}
+                                            </template>
+                                        </template>
+                                    </li>
+                                </ul>
                             </template>
                         </el-table-column>
                         <el-table-column label="描述信息" min-width="300">
                             <template slot-scope="scope">
-                                <template v-if="scope.row.testset">
-                                    <template v-if="scope.row.testset.description && scope.row.testset.description != 'null'">
-                                        <template v-if="scope.row.testset.description > 100">
-                                            <el-popover trigger="hover" placement="top-start">
-                                                <p>{{ scope.row.testset.description }}</p>
-                                                <div slot="reference" class="name-wrapper">
-                                                    {{ scope.row.testset.description }}
-                                                </div>
-                                            </el-popover>
-                                        </template>
-                                        <template v-else>
-                                            {{ scope.row.testset.description }}
-                                        </template>
-                                    </template>
-                                    <template v-else>
-                                        -
-                                    </template>
+                                <template v-if="scope.row.description > 100">
+                                    <el-popover trigger="hover" placement="top-start">
+                                        <p>{{ scope.row.description }}</p>
+                                        <div slot="reference" class="name-wrapper">
+                                            {{ scope.row.description }}
+                                        </div>
+                                    </el-popover>
+                                </template>
+                                <template v-else>
+                                    {{ scope.row.description }}
                                 </template>
                             </template>
                         </el-table-column>
                         <el-table-column label="标签" min-width="150">
                             <template slot-scope="scope">
-                                <template v-if="scope.row.testset">
-                                    <template v-for="(tag, index) in scope.row.testset.tags">
-                                        <j-label :text="tag" :key="index"></j-label>
-                                    </template>
+                                <template v-for="(tag, index) in scope.row.tags">
+                                    <j-label :text="tag" :key="index"></j-label>
                                 </template>
                             </template>
                         </el-table-column>
@@ -258,8 +247,8 @@
                                 <el-button
                                     type="text"
                                     size="mini"
-                                    @click="removeAction(scope.$index, taskSets, scope.row.testset.id)"
-                                    :disabled="permissions.indexOf('apitest.remove_set') === -1"
+                                    @click="removeAction(scope.$index, taskSets, scope.row.id)"
+                                    :disabled="permissions.indexOf('services.remove_set') === -1"
                                 >
                                     移除
                                 </el-button>
@@ -440,9 +429,9 @@ export default {
         },
         getCounter() {
             this.$api.api
-                .getCounters(this.projectName)
+                .getCounters(1, 1000, this.projectName)
                 .then(response => {
-                    this.counters = response.data
+                    this.counters = response.data.results
                     this.selectValue = this.counterRefer.id
                 })
                 .catch(error => {
@@ -461,7 +450,7 @@ export default {
         },
         counterToTask(payload, projectName) {
             this.$api.api
-                .linkCounter(payload, projectName)
+                .bindingCounter(payload, projectName)
                 .then(() => {
                     this.notify.success('关联计数器成功')
                     this.showCounterdialog = false
@@ -488,7 +477,7 @@ export default {
         },
         getTestSets() {
             this.$api.api
-                .apiTestSetList(this.currentPage, this.pageSize, this.projectName)
+                .setList(this.currentPage, this.pageSize, this.projectName)
                 .then(response => {
                     this.testSets = response.data.results
                     this.count = response.data.count
@@ -559,10 +548,10 @@ export default {
         choice() {
             let payload = {
                 task_id: this.taskId,
-                testSets: this.multipleSelection
+                sets: this.multipleSelection
             }
             this.$api.api
-                .testSetToTask(JSON.stringify(payload), this.projectName)
+                .bindingSets(JSON.stringify(payload), this.projectName)
                 .then(() => {
                     this.dialogFormVisible = false
                     this.notify.success('添加测试集成功')
@@ -576,10 +565,10 @@ export default {
         removeTestSetFromTask(testSetId) {
             let payload = {
                 task_id: this.taskId,
-                testSet_id: testSetId
+                set_id: testSetId
             }
             this.$api.api
-                .removeTestSetFromTask(JSON.stringify(payload), this.projectName)
+                .unboundSets(JSON.stringify(payload), this.projectName)
                 .then(() => {
                     this.notify.success('移除测试集成功')
                 })
@@ -621,15 +610,14 @@ export default {
         },
         submit(formName) {
             let payload = {
-                level: 'task',
-                tasks: this.taskId,
+                level: 'tasks',
+                id: this.taskId,
                 tags: this.labels.tags,
                 category: 'api'
             }
             this.$api.api
                 .executeCase(JSON.stringify(payload), this.projectName)
                 .then(() => {
-                    this.taskId = null
                     this.$refs[formName].resetFields()
                     this.labelDialog = false
                 })

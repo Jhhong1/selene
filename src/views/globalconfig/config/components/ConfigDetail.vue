@@ -14,10 +14,10 @@
                             <el-dropdown size="mini" split-button type="primary" @command="handleCommand">
                                 操作
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('apitest.update_config') === -1">
+                                    <el-dropdown-item command="update" :disabled="permissions.indexOf('services.update_config') === -1">
                                         更新
                                     </el-dropdown-item>
-                                    <el-dropdown-item command="del" :disabled="permissions.indexOf('apitest.delete_config') === -1">
+                                    <el-dropdown-item command="del" :disabled="permissions.indexOf('services.delete_config') === -1">
                                         删除
                                     </el-dropdown-item>
                                 </el-dropdown-menu>
@@ -59,18 +59,16 @@
                                 <el-col :span="2" class="test-left">类型</el-col>
                                 <el-col :span="22" class="test-right">{{ configDetail.category }}</el-col>
                             </el-row>
-                            <template v-if="configDetail.category === 'api'">
-                                <el-row :gutter="10" class="row-class">
-                                    <el-col :span="2" class="test-left">请求地址</el-col>
-                                    <el-col :span="22" class="test-right">{{ configDetail.baseurl }}</el-col>
-                                </el-row>
-                                <el-row :gutter="10" class="row-class">
-                                    <el-col :span="2" class="test-left">头部信息</el-col>
-                                    <el-col :span="22" class="test-right">
-                                        <j-input v-model="configDetail.headers" :edit="false"></j-input>
-                                    </el-col>
-                                </el-row>
-                            </template>
+                            <el-row :gutter="10" class="row-class" :class="{ 'is-display': configDetail.category !== 'api' }">
+                                <el-col :span="2" class="test-left">请求地址</el-col>
+                                <el-col :span="22" class="test-right">{{ configDetail.baseurl }}</el-col>
+                            </el-row>
+                            <el-row :gutter="10" class="row-class" :class="{ 'is-display': configDetail.category !== 'api' }">
+                                <el-col :span="2" class="test-left">头部信息</el-col>
+                                <el-col :span="22" class="test-right">
+                                    <j-input v-model="configDetail.headers" :edit="false"></j-input>
+                                </el-col>
+                            </el-row>
                             <el-row :gutter="10" class="row-class">
                                 <el-col :span="2" class="test-left">请求代理</el-col>
                                 <el-col :span="22" class="test-right">

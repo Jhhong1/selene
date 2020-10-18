@@ -68,7 +68,7 @@ export default {
         },
         resetpass() {
             this.$api.api
-                .resetPassword(this.$route.query.resetcode, {
+                .resetPassword(this.$route.query.code, {
                     password: this.ruleForm2.password
                 })
                 .then(() => {

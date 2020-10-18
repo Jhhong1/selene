@@ -58,7 +58,7 @@ export default {
         },
         createProject(obj, formName) {
             this.$api.api
-                .createApiProject(obj)
+                .createProject(obj)
                 .then(() => {
                     this.notify.success('创建项目成功')
                     this.$refs[formName].resetFields()

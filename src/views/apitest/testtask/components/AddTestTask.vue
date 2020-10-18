@@ -64,6 +64,7 @@ export default {
                 if (valid) {
                     let project = this.$route.query.project_name
                     this.taskForm.project = project
+                    this.taskForm.category = 'api'
                     let payload = JSON.stringify(this.taskForm)
                     this.createTestTask(formName, payload, project)
                 } else {

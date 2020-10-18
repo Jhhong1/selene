@@ -11,7 +11,7 @@
             <el-form-item label="显示名称" :label-width="formLabelWidth" prop="display">
                 <el-input v-model="configForm.display" size="mini"></el-input>
             </el-form-item>
-            <el-form-item label="类型" :label-width="formLabelWidth" prop="display">
+            <el-form-item label="类型" :label-width="formLabelWidth" prop="category">
                 <div style="text-align: left;">
                     <el-radio-group v-model="configForm.category" size="mini">
                         <el-radio-button label="api" :disabled="configForm.category === 'ui'"></el-radio-button>
@@ -19,14 +19,12 @@
                     </el-radio-group>
                 </div>
             </el-form-item>
-            <template v-if="configForm.category === 'api'">
-                <el-form-item label="请求地址" :label-width="formLabelWidth" prop="url">
-                    <el-input v-model="configForm.baseurl" maxlength="255" size="mini"></el-input>
-                </el-form-item>
-                <el-form-item label="头部信息" :label-width="formLabelWidth" prop="variables">
-                    <j-input v-model="configForm.headers"></j-input>
-                </el-form-item>
-            </template>
+            <el-form-item label="请求地址" :label-width="formLabelWidth" prop="url" :class="{ 'is-display': configForm.category !== 'api' }">
+                <el-input v-model="configForm.baseurl" maxlength="255" size="mini"></el-input>
+            </el-form-item>
+            <el-form-item label="头部信息" :label-width="formLabelWidth" prop="variables" :class="{ 'is-display': configForm.category !== 'api' }">
+                <j-input v-model="configForm.headers"></j-input>
+            </el-form-item>
             <el-form-item label="请求代理" :label-width="formLabelWidth" prop="proxy">
                 <j-proxy v-model="configForm.proxy" :category="configForm.category"></j-proxy>
             </el-form-item>

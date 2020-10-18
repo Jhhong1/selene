@@ -7,8 +7,8 @@
                         type="primary"
                         size="small"
                         @click="addProject"
-                        :disabled="permissions.indexOf('apitest.create_apiprojects') === -1"
-                        :class="{ disabled: permissions.indexOf('apitest.create_apiprojects') === -1 }"
+                        :disabled="permissions.indexOf('services.create_projects') === -1"
+                        :class="{ disabled: permissions.indexOf('services.create_projects') === -1 }"
                     >
                         创建项目
                     </el-button>
@@ -38,7 +38,7 @@
                                     <el-dropdown-menu slot="dropdown">
                                         <el-dropdown-item
                                             :command="{ type: 'delete', id: project.id, ind: index }"
-                                            :disabled="permissions.indexOf('apitest.delete_apiprojects') == -1"
+                                            :disabled="permissions.indexOf('services.delete_projects') == -1"
                                         >
                                             删除
                                         </el-dropdown-item>
@@ -88,7 +88,6 @@ export default {
     data() {
         return {
             search: '',
-            name: '',
             projects: []
         }
     },
@@ -98,7 +97,7 @@ export default {
         },
         getProjectList() {
             this.$api.api
-                .apiProjectList(this.name)
+                .ProjectList(this.username)
                 .then(response => {
                     this.projects = response.data.results
                     if (!this.search) {
@@ -111,7 +110,7 @@ export default {
         },
         deleteProject(id) {
             this.$api.api
-                .deleteApiProject(id)
+                .deleteProject(id)
                 .then(() => {
                     this.notify.success('删除项目成功')
                 })
@@ -154,6 +153,9 @@ export default {
     computed: {
         permissions() {
             return this.$store.state.userinfo.permissions
+        },
+        username() {
+            return this.$store.state.username
         }
     }
 }

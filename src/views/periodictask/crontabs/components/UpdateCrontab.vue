@@ -11,8 +11,24 @@
             <el-form-item label="显示名称" :label-width="formLabelWidth" prop="display">
                 <el-input v-model="periodictask.display" size="mini" maxlength="100"></el-input>
             </el-form-item>
+            <el-form-item label="类型" :label-width="formLabelWidth" prop="display">
+                <div style="text-align: left;">
+                    <el-radio-group v-model="periodictask.category" size="mini" @change="reset">
+                        <el-radio-button label="api"></el-radio-button>
+                        <el-radio-button label="ui"></el-radio-button>
+                    </el-radio-group>
+                </div>
+            </el-form-item>
+            <el-form-item label="定时开关" :label-width="formLabelWidth" prop="display">
+                <div style="text-align: left;">
+                    <el-radio-group v-model="periodictask.enabled" size="mini">
+                        <el-radio-button label="true"></el-radio-button>
+                        <el-radio-button label="false"></el-radio-button>
+                    </el-radio-group>
+                </div>
+            </el-form-item>
             <el-form-item label="任务" :label-width="formLabelWidth" prop="testtask">
-                <el-select v-model="periodictask.testtask" placeholder="请选择" style="display: block;" size="mini">
+                <el-select v-model="periodictask.tasks" placeholder="请选择" style="display: block;" size="mini">
                     <el-option v-for="(task, ind) in tasks" :key="ind" :label="task.name + '(' + task.display + ')'" :value="task.id"></el-option>
                 </el-select>
             </el-form-item>
@@ -55,7 +71,8 @@ export default {
             formLabelWidth: '120px',
             periodictask: {},
             tasks: [],
-            rulesList: []
+            rulesList: [],
+            category: 'api'
         }
     },
     methods: {
@@ -98,13 +115,18 @@ export default {
         },
         getTask() {
             this.$api.api
-                .getTaskList(1, 1000, this.projectName)
+                .getTaskList(1, 1000, this.projectName, this.category)
                 .then(response => {
                     this.tasks = response.data.results
                 })
                 .catch(error => {
                     this.notify.error(error.response.data)
                 })
+        },
+        reset(val) {
+            this.category = val
+            this.periodictask.tasks = null
+            this.getTask()
         },
         ruleList() {
             this.$api.api

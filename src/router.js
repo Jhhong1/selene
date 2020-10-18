@@ -60,6 +60,7 @@ import UpdateGroup from '@/views/permissions/group/components/UpdateGroup'
 
 import User from '@/views/permissions/users/Users'
 import UserList from '@/views/permissions/users/components/UserList'
+import UserDetail from '@/views/permissions/users/components/UserDetail'
 
 import PeriodicTask from '@/views/periodictask/PeriodicTask'
 
@@ -126,9 +127,9 @@ export default new Router({
             }
         },
         {
-            path: '/resetPassword/',
+            path: '/reset_password/',
             props: route => ({
-                query: route.query.reset_code
+                query: route.query.code
             }),
             name: 'ResetPassword',
             component: ResetPassword,
@@ -234,6 +235,15 @@ export default new Router({
                                     component: UserList,
                                     meta: {
                                         title: '用户列表',
+                                        requireAuth: true
+                                    }
+                                },
+                                {
+                                    path: 'detail/:id',
+                                    name: 'UserDetail',
+                                    component: UserDetail,
+                                    meta: {
+                                        title: '用户详情',
                                         requireAuth: true
                                     }
                                 }

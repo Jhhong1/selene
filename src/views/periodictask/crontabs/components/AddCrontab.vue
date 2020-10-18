@@ -11,8 +11,24 @@
             <el-form-item label="显示名称" :label-width="formLabelWidth" prop="display">
                 <el-input v-model="crontab.display" size="mini" maxlength="100"></el-input>
             </el-form-item>
+            <el-form-item label="类型" :label-width="formLabelWidth" prop="display">
+                <div style="text-align: left;">
+                    <el-radio-group v-model="crontab.category" size="mini" @change="reset">
+                        <el-radio-button label="api"></el-radio-button>
+                        <el-radio-button label="ui"></el-radio-button>
+                    </el-radio-group>
+                </div>
+            </el-form-item>
+            <el-form-item label="定时开关" :label-width="formLabelWidth" prop="display">
+                <div style="text-align: left;">
+                    <el-radio-group v-model="crontab.enabled" size="mini" @change="reset">
+                        <el-radio-button label="true"></el-radio-button>
+                        <el-radio-button label="false"></el-radio-button>
+                    </el-radio-group>
+                </div>
+            </el-form-item>
             <el-form-item label="任务" :label-width="formLabelWidth" prop="testtask">
-                <el-select v-model="crontab.testtask" placeholder="请选择" style="display: block;" size="mini">
+                <el-select v-model="crontab.tasks" placeholder="请选择" style="display: block;" size="mini">
                     <el-option v-for="(task, ind) in tasks" :key="ind" :label="task.name + '(' + task.display + ')'" :value="task.id"></el-option>
                 </el-select>
             </el-form-item>
@@ -71,7 +87,10 @@ export default {
             rules: {
                 name: [{ validator: validateName, required: true, trigger: 'blur' }]
             },
-            crontab: {},
+            crontab: {
+                category: 'api',
+                enabled: 'false'
+            },
             formLabelWidth: '120px',
             projectName: this.$route.query.project_name,
             tasks: [],
@@ -82,6 +101,11 @@ export default {
         cancel(formName) {
             this.$refs[formName].resetFields()
             this.$router.go(-1)
+        },
+        reset(val) {
+            this.crontab.category = val
+            this.crontab.tasks = null
+            this.getTask()
         },
         submit(formName) {
             this.$refs[formName].validate(valid => {
@@ -113,7 +137,7 @@ export default {
         },
         getTask() {
             this.$api.api
-                .getTaskList(1, 1000, this.projectName)
+                .getTaskList(1, 1000, this.projectName, this.crontab.category)
                 .then(response => {
                     this.tasks = response.data.results
                 })

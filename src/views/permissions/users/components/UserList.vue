@@ -13,6 +13,9 @@
                             <el-dropdown-item :command="{ type: 'del', index: scope.$index, row: scope.row.id }" :disabled="scope.row.is_superuser">
                                 删除
                             </el-dropdown-item>
+                            <el-dropdown-item :command="{ type: 'view', row: scope.row.id }">
+                                查看
+                            </el-dropdown-item>
                             <el-dropdown-item :command="{ type: 'permission', row: scope.row }" :disabled="scope.row.is_superuser">
                                 权限管理
                             </el-dropdown-item>
@@ -110,6 +113,8 @@ export default {
                 if (command.row.groups.length > 0) {
                     this.group = command.row.groups[0]
                 }
+            } else if (command.type === 'view') {
+                this.$router.push({ name: 'UserDetail', params: { id: command.row } })
             }
         },
         getGroups() {

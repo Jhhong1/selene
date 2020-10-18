@@ -76,6 +76,7 @@ export default {
                 if (valid) {
                     let project = this.$route.query.project_name
                     this.setForm.project = project
+                    this.setForm.category = 'api'
                     let payload = JSON.stringify(this.setForm)
                     this.createTestSet(formName, payload, project)
                 } else {
@@ -85,7 +86,7 @@ export default {
         },
         createTestSet(formName, payload, project) {
             this.$api.api
-                .createApiTestSet(payload, project)
+                .createSet(payload, project)
                 .then(response => {
                     let setId = response.data.id
                     let name = response.data.name

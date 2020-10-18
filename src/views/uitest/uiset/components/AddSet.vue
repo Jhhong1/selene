@@ -86,7 +86,7 @@ export default {
         },
         createTestSet(formName, payload, project) {
             this.$api.api
-                .createApiTestSet(payload, project)
+                .createSet(payload, project)
                 .then(response => {
                     let setId = response.data.id
                     let name = response.data.name
